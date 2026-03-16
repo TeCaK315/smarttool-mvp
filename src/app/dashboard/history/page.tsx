@@ -169,7 +169,7 @@ export default function HistoryPage() {
 
       {/* List */}
       {loading ? (
-        <div className="flex items-center justify-center py-20">
+        <div className="flex items-center justify-center py-10 sm:py-20">
           <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#5a67d8' }} />
         </div>
       ) : filtered.length === 0 ? (

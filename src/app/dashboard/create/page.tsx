@@ -456,7 +456,7 @@ export default function CreatePage() {
           {/* ─── Document Details ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Details</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>Number</label>
                 <input
@@ -501,7 +501,7 @@ export default function CreatePage() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>Currency</label>
                 <select

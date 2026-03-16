@@ -564,9 +564,10 @@ export default function LandingPage() {
             <span className="text-sm font-semibold">SmartTool MVP</span>
           </div>
           <div className="flex items-center gap-6 text-xs" style={{ color: '#edf2f750' }}>
-            <a href="#" className="hover:opacity-80 transition-opacity">Privacy</a>
-            <a href="#" className="hover:opacity-80 transition-opacity">Terms</a>
-            <a href="#" className="hover:opacity-80 transition-opacity">Contact</a>
+            <Link href="/privacy" className="hover:opacity-80 transition-opacity">Privacy</Link>
+            <Link href="/terms" className="hover:opacity-80 transition-opacity">Terms</Link>
+            <Link href="/about" className="hover:opacity-80 transition-opacity">About</Link>
+            <Link href="/faq" className="hover:opacity-80 transition-opacity">FAQ</Link>
           </div>
           <p className="text-xs" style={{ color: '#edf2f740' }}>
             &copy; {new Date().getFullYear()} SmartTool MVP

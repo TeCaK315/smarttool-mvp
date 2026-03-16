@@ -143,7 +143,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
           <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Total Billed</p>
           <p className="text-xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalBilled)}</p>
