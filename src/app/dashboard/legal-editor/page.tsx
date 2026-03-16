@@ -59,8 +59,11 @@ export default function LegalEditorPage() {
   };
 
   // Find unfilled placeholders
-  const placeholders = [...(currentContent.matchAll(/\{\{([A-Z_]+)\}\}/g))].map(m => m[1]);
-  const uniquePlaceholders = [...new Set(placeholders)];
+  const placeholders: string[] = [];
+  const phRegex = /\{\{([A-Z_]+)\}\}/g;
+  let phMatch: RegExpExecArray | null;
+  while ((phMatch = phRegex.exec(currentContent)) !== null) { placeholders.push(phMatch[1]); }
+  const uniquePlaceholders = placeholders.filter((v, i, a) => a.indexOf(v) === i);
 
   const replaceAll = (placeholder: string, value: string) => {
     const updated = currentContent.replace(new RegExp('\\{\\{' + placeholder + '\\}\\}', 'g'), value);

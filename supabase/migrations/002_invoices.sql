@@ -1,7 +1,7 @@
 -- Create invoices table
 CREATE TABLE IF NOT EXISTS invoices (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   invoice_number TEXT NOT NULL,
   client_name TEXT NOT NULL,
   client_email TEXT NOT NULL,
@@ -14,19 +14,15 @@ CREATE TABLE IF NOT EXISTS invoices (
   tax DECIMAL(10,2) NOT NULL DEFAULT 0,
   total DECIMAL(10,2) NOT NULL DEFAULT 0,
   notes TEXT,
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'paid')),
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'paid', 'overdue')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index for user_id
+-- Create index for faster queries
 CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON invoices(user_id);
-
--- Create index for invoice_number
-CREATE INDEX IF NOT EXISTS idx_invoices_number ON invoices(invoice_number);
-
--- Create index for status
 CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
+CREATE INDEX IF NOT EXISTS idx_invoices_invoice_number ON invoices(invoice_number);
 
 -- Enable RLS
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
@@ -44,7 +40,7 @@ CREATE POLICY "Users can update their own invoices" ON invoices
 CREATE POLICY "Users can delete their own invoices" ON invoices
   FOR DELETE USING (auth.uid() = user_id);
 
--- Create updated_at trigger
+-- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -53,6 +49,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Create trigger to automatically update updated_at
 CREATE TRIGGER update_invoices_updated_at
   BEFORE UPDATE ON invoices
   FOR EACH ROW
