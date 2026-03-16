@@ -1,14 +1,17 @@
 'use client';
 import React from 'react';
 
+import { I18nProvider } from '@/lib/i18n';
 import { ToastProvider } from '@/components/Toast';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ToastProvider>
+      <I18nProvider>
+        <ToastProvider>
         {children}
       </ToastProvider>
+      </I18nProvider>
     </>
   );
 }

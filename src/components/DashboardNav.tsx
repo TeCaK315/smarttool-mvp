@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useUser } from '@/hooks/useUser';
+import { useT } from '@/lib/i18n';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   LayoutDashboard,
   Clock,
@@ -19,20 +21,21 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/create', label: 'Create New', icon: PlusCircle },
-  { href: '/dashboard/history', label: 'History', icon: Clock },
-  { href: '/dashboard/clients', label: 'Clients', icon: Users },
-  { href: '/dashboard/reports', label: 'Reports', icon: BarChart3 },
-  { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { href: '/dashboard/legal-editor', label: 'Legal Pages', icon: FileText },
+  { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/create', labelKey: 'nav.createNew', icon: PlusCircle },
+  { href: '/dashboard/history', labelKey: 'nav.history', icon: Clock },
+  { href: '/dashboard/clients', labelKey: 'nav.clients', icon: Users },
+  { href: '/dashboard/reports', labelKey: 'nav.reports', icon: BarChart3 },
+  { href: '/dashboard/billing', labelKey: 'nav.billing', icon: CreditCard },
+  { href: '/dashboard/settings', labelKey: 'nav.settings', icon: Settings },
+  { href: '/dashboard/legal-editor', labelKey: 'nav.legalPages', icon: FileText },
 ];
 
 export default function DashboardNav({ onNavigate }: { onNavigate?: () => void } = {}) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile } = useUser();
+  const t = useT();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -106,10 +109,15 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
               }}
             >
               <Icon className="w-5 h-5" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}
+      </div>
+
+      {/* Language Switcher */}
+      <div className="px-4 pb-2">
+        <LanguageSwitcher compact />
       </div>
 
       {/* User Section */}
@@ -165,7 +173,7 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
                   style={{ color: '#ef4444' }}
                 >
                   <LogOut className="w-4 h-4" />
-                  Sign Out
+                  {t('nav.signOut')}
                 </button>
               </div>
             )}
@@ -177,7 +185,7 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
             style={{ color: '#edf2f770' }}
           >
             <LogIn className="w-5 h-5" />
-            <span className="text-sm font-medium">Sign In</span>
+            <span className="text-sm font-medium">{t('nav.signIn')}</span>
           </Link>
         )}
       </div>

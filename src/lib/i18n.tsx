@@ -1,0 +1,676 @@
+'use client';
+
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+
+export type Locale = 'en' | 'de' | 'ru';
+
+const LOCALE_KEY = 'app_locale';
+
+// ─── Translation Dictionary ───
+
+const translations: Record<Locale, Record<string, string>> = {
+  en: {
+    // Navigation
+    'nav.dashboard': 'Dashboard',
+    'nav.createNew': 'Create New',
+    'nav.history': 'History',
+    'nav.clients': 'Clients',
+    'nav.reports': 'Reports',
+    'nav.settings': 'Settings',
+    'nav.legalPages': 'Legal Pages',
+    'nav.billing': 'Billing',
+    'nav.signIn': 'Sign In',
+    'nav.signOut': 'Sign Out',
+    'nav.getStarted': 'Get Started',
+    'nav.backToHome': 'Back to Home',
+
+    // Common actions
+    'action.save': 'Save',
+    'action.saveAll': 'Save All',
+    'action.cancel': 'Cancel',
+    'action.delete': 'Delete',
+    'action.edit': 'Edit',
+    'action.create': 'Create',
+    'action.send': 'Send',
+    'action.download': 'Download',
+    'action.export': 'Export',
+    'action.import': 'Import',
+    'action.search': 'Search...',
+    'action.filter': 'Filter',
+    'action.back': 'Back',
+    'action.next': 'Next',
+    'action.preview': 'Preview',
+    'action.duplicate': 'Duplicate',
+    'action.close': 'Close',
+    'action.confirm': 'Confirm',
+    'action.add': 'Add',
+    'action.remove': 'Remove',
+    'action.upload': 'Upload',
+    'action.csv': 'CSV',
+    'action.pdf': 'PDF',
+
+    // Status
+    'status.draft': 'Draft',
+    'status.sent': 'Sent',
+    'status.paid': 'Paid',
+    'status.overdue': 'Overdue',
+    'status.cancelled': 'Cancelled',
+    'status.partial': 'Partial',
+    'status.pending': 'Pending',
+    'status.active': 'Active',
+    'status.completed': 'Completed',
+
+    // Common labels
+    'label.email': 'Email',
+    'label.password': 'Password',
+    'label.name': 'Name',
+    'label.phone': 'Phone',
+    'label.address': 'Address',
+    'label.company': 'Company',
+    'label.website': 'Website',
+    'label.date': 'Date',
+    'label.amount': 'Amount',
+    'label.total': 'Total',
+    'label.subtotal': 'Subtotal',
+    'label.tax': 'Tax',
+    'label.notes': 'Notes',
+    'label.description': 'Description',
+    'label.quantity': 'Quantity',
+    'label.rate': 'Rate',
+    'label.number': 'Number',
+    'label.currency': 'Currency',
+    'label.status': 'Status',
+    'label.client': 'Client',
+    'label.from': 'From',
+    'label.to': 'To',
+    'label.dueDate': 'Due Date',
+    'label.issueDate': 'Issue Date',
+
+    // Common messages
+    'msg.loading': 'Loading...',
+    'msg.noResults': 'No results found',
+    'msg.noData': 'No data available',
+    'msg.saved': 'Saved!',
+    'msg.deleted': 'Deleted',
+    'msg.error': 'Something went wrong',
+    'msg.success': 'Success',
+    'msg.confirmDelete': 'Are you sure you want to delete this?',
+    'msg.processing': 'Processing...',
+
+    // Dashboard
+    'dashboard.title': 'Dashboard',
+    'dashboard.revenue': 'Revenue',
+    'dashboard.revenueThisMonth': 'Revenue This Month',
+    'dashboard.outstanding': 'Outstanding',
+    'dashboard.totalItems': 'Total Автоматизированная система выставленияs',
+    'dashboard.totalClients': 'Total Clients',
+    'dashboard.recentItems': 'Recent Автоматизированная система выставленияs',
+    'dashboard.quickActions': 'Quick Actions',
+    'dashboard.overdue': 'Overdue',
+    'dashboard.newItem': 'New Автоматизированная система выставления',
+    'dashboard.viewAll': 'View All',
+    'dashboard.last30Days': 'Last 30 Days',
+    'dashboard.noItems': 'No Автоматизированная система выставленияs yet. Create your first one!',
+
+    // Create / Form
+    'create.title': 'New Автоматизированная система выставления',
+    'create.editTitle': 'Edit Автоматизированная система выставления',
+    'create.from': 'From (Your Business)',
+    'create.to': 'To (Recipient)',
+    'create.details': 'Details',
+    'create.lineItems': 'Line Items',
+    'create.addItem': 'Add Item',
+    'create.paymentTerms': 'Payment Terms',
+    'create.taxRate': 'Tax Rate',
+    'create.submit': 'Create Автоматизированная система выставления',
+    'create.update': 'Update Автоматизированная система выставления',
+    'create.itemDescription': 'Item description',
+
+    // History
+    'history.title': 'History',
+    'history.all': 'All',
+    'history.searchPlaceholder': 'Search by number, client...',
+    'history.deleteConfirm': 'Delete this item?',
+    'history.noItems': 'No items found',
+
+    // Clients
+    'clients.title': 'Clients',
+    'clients.addClient': 'Add Client',
+    'clients.editClient': 'Edit Client',
+    'clients.searchPlaceholder': 'Search clients...',
+    'clients.noClients': 'No clients yet',
+    'clients.totalBilled': 'Total Billed',
+    'clients.totalPaid': 'Total Paid',
+    'clients.invoices': 'invoices',
+
+    // Reports
+    'reports.title': 'Reports',
+    'reports.totalBilled': 'Total Billed',
+    'reports.collected': 'Collected',
+    'reports.unpaid': 'Unpaid',
+    'reports.totalTax': 'Total Tax',
+    'reports.income': 'Income',
+    'reports.byClient': 'By Client',
+    'reports.monthlyBreakdown': 'Monthly Breakdown',
+    'reports.taxSummary': 'Tax Summary',
+    'reports.revenueByClient': 'Revenue by Client',
+    'reports.noData': 'No data for this period',
+    'reports.ofTotal': 'of total',
+    'reports.billed': 'Billed',
+
+    // Settings
+    'settings.title': 'Settings',
+    'settings.business': 'Business',
+    'settings.invoiceDefaults': 'Invoice Defaults',
+    'settings.payment': 'Payment',
+    'settings.businessName': 'Business Name',
+    'settings.logo': 'Logo',
+    'settings.uploadLogo': 'Upload Logo',
+    'settings.taxId': 'Tax ID',
+    'settings.invoicePrefix': 'Invoice Prefix',
+    'settings.defaultTaxRate': 'Default Tax Rate',
+    'settings.taxLabel': 'Tax Label',
+    'settings.defaultNotes': 'Default Notes',
+    'settings.paymentInstructions': 'Payment Instructions',
+
+    // Legal
+    'legal.privacyPolicy': 'Privacy Policy',
+    'legal.termsOfService': 'Terms of Service',
+    'legal.aboutUs': 'About Us',
+    'legal.faq': 'FAQ',
+    'legal.editor': 'Legal Pages Editor',
+    'legal.editorSubtitle': 'Edit your Privacy Policy, Terms, About, and FAQ',
+    'legal.placeholdersNeedData': 'placeholders need your data',
+    'legal.typeAndEnter': 'Type a value and press Enter to replace all occurrences.',
+
+    // Landing
+    'landing.features': 'Features',
+    'landing.howItWorks': 'How It Works',
+    'landing.pricing': 'Pricing',
+    'landing.getStartedFree': 'Get Started Free',
+    'landing.seeHowItWorks': 'See How It Works',
+    'landing.startFreeTrial': 'Start Free Trial',
+    'landing.mostPopular': 'Most Popular',
+    'landing.free': 'Free',
+    'landing.perMonth': '/month',
+    'landing.readyToStart': 'Ready to get started?',
+    'landing.joinUsers': 'Join hundreds of users who already save time.',
+    'landing.threeSteps': 'Three simple steps',
+    'landing.startFree': 'Start free, upgrade when ready',
+    'landing.noCreditCard': 'No credit card required. Cancel anytime.',
+    'landing.activeUsers': 'Active Users',
+    'landing.rating': 'Rating',
+    'landing.fasterResults': 'Faster Results',
+
+    // Periods
+    'period.7d': '7 days',
+    'period.30d': '30 days',
+    'period.90d': '90 days',
+    'period.12m': '12 months',
+    'period.all': 'All time',
+  },
+
+  de: {
+    // Navigation
+    'nav.dashboard': 'Dashboard',
+    'nav.createNew': 'Neu erstellen',
+    'nav.history': 'Verlauf',
+    'nav.clients': 'Kunden',
+    'nav.reports': 'Berichte',
+    'nav.settings': 'Einstellungen',
+    'nav.legalPages': 'Rechtliches',
+    'nav.billing': 'Abrechnung',
+    'nav.signIn': 'Anmelden',
+    'nav.signOut': 'Abmelden',
+    'nav.getStarted': 'Loslegen',
+    'nav.backToHome': 'Zur Startseite',
+
+    // Common actions
+    'action.save': 'Speichern',
+    'action.saveAll': 'Alles speichern',
+    'action.cancel': 'Abbrechen',
+    'action.delete': 'L\u00f6schen',
+    'action.edit': 'Bearbeiten',
+    'action.create': 'Erstellen',
+    'action.send': 'Senden',
+    'action.download': 'Herunterladen',
+    'action.export': 'Exportieren',
+    'action.import': 'Importieren',
+    'action.search': 'Suchen...',
+    'action.filter': 'Filtern',
+    'action.back': 'Zur\u00fcck',
+    'action.next': 'Weiter',
+    'action.preview': 'Vorschau',
+    'action.duplicate': 'Duplizieren',
+    'action.close': 'Schlie\u00dfen',
+    'action.confirm': 'Best\u00e4tigen',
+    'action.add': 'Hinzuf\u00fcgen',
+    'action.remove': 'Entfernen',
+    'action.upload': 'Hochladen',
+    'action.csv': 'CSV',
+    'action.pdf': 'PDF',
+
+    // Status
+    'status.draft': 'Entwurf',
+    'status.sent': 'Gesendet',
+    'status.paid': 'Bezahlt',
+    'status.overdue': '\u00dcberf\u00e4llig',
+    'status.cancelled': 'Storniert',
+    'status.partial': 'Teilweise',
+    'status.pending': 'Ausstehend',
+    'status.active': 'Aktiv',
+    'status.completed': 'Abgeschlossen',
+
+    // Common labels
+    'label.email': 'E-Mail',
+    'label.password': 'Passwort',
+    'label.name': 'Name',
+    'label.phone': 'Telefon',
+    'label.address': 'Adresse',
+    'label.company': 'Unternehmen',
+    'label.website': 'Webseite',
+    'label.date': 'Datum',
+    'label.amount': 'Betrag',
+    'label.total': 'Gesamt',
+    'label.subtotal': 'Zwischensumme',
+    'label.tax': 'Steuer',
+    'label.notes': 'Notizen',
+    'label.description': 'Beschreibung',
+    'label.quantity': 'Menge',
+    'label.rate': 'Preis',
+    'label.number': 'Nummer',
+    'label.currency': 'W\u00e4hrung',
+    'label.status': 'Status',
+    'label.client': 'Kunde',
+    'label.from': 'Von',
+    'label.to': 'An',
+    'label.dueDate': 'F\u00e4lligkeitsdatum',
+    'label.issueDate': 'Ausstellungsdatum',
+
+    // Common messages
+    'msg.loading': 'Wird geladen...',
+    'msg.noResults': 'Keine Ergebnisse gefunden',
+    'msg.noData': 'Keine Daten verf\u00fcgbar',
+    'msg.saved': 'Gespeichert!',
+    'msg.deleted': 'Gel\u00f6scht',
+    'msg.error': 'Etwas ist schiefgelaufen',
+    'msg.success': 'Erfolgreich',
+    'msg.confirmDelete': 'M\u00f6chten Sie dies wirklich l\u00f6schen?',
+    'msg.processing': 'Verarbeitung...',
+
+    // Dashboard
+    'dashboard.title': 'Dashboard',
+    'dashboard.revenue': 'Umsatz',
+    'dashboard.revenueThisMonth': 'Umsatz diesen Monat',
+    'dashboard.outstanding': 'Ausstehend',
+    'dashboard.totalItems': 'Gesamt',
+    'dashboard.totalClients': 'Kunden gesamt',
+    'dashboard.recentItems': 'Neueste Eintr\u00e4ge',
+    'dashboard.quickActions': 'Schnellaktionen',
+    'dashboard.overdue': '\u00dcberf\u00e4llig',
+    'dashboard.newItem': 'Neu erstellen',
+    'dashboard.viewAll': 'Alle anzeigen',
+    'dashboard.last30Days': 'Letzte 30 Tage',
+    'dashboard.noItems': 'Noch keine Eintr\u00e4ge. Erstellen Sie den ersten!',
+
+    // Create / Form
+    'create.title': 'Neu erstellen',
+    'create.editTitle': 'Bearbeiten',
+    'create.from': 'Von (Ihr Unternehmen)',
+    'create.to': 'An (Empf\u00e4nger)',
+    'create.details': 'Details',
+    'create.lineItems': 'Positionen',
+    'create.addItem': 'Position hinzuf\u00fcgen',
+    'create.paymentTerms': 'Zahlungsbedingungen',
+    'create.taxRate': 'Steuersatz',
+    'create.submit': 'Erstellen',
+    'create.update': 'Aktualisieren',
+    'create.itemDescription': 'Beschreibung der Position',
+
+    // History
+    'history.title': 'Verlauf',
+    'history.all': 'Alle',
+    'history.searchPlaceholder': 'Suche nach Nummer, Kunde...',
+    'history.deleteConfirm': 'Diesen Eintrag l\u00f6schen?',
+    'history.noItems': 'Keine Eintr\u00e4ge gefunden',
+
+    // Clients
+    'clients.title': 'Kunden',
+    'clients.addClient': 'Kunde hinzuf\u00fcgen',
+    'clients.editClient': 'Kunde bearbeiten',
+    'clients.searchPlaceholder': 'Kunden suchen...',
+    'clients.noClients': 'Noch keine Kunden',
+    'clients.totalBilled': 'Gesamt berechnet',
+    'clients.totalPaid': 'Gesamt bezahlt',
+    'clients.invoices': 'Rechnungen',
+
+    // Reports
+    'reports.title': 'Berichte',
+    'reports.totalBilled': 'Gesamt berechnet',
+    'reports.collected': 'Eingegangen',
+    'reports.unpaid': 'Unbezahlt',
+    'reports.totalTax': 'Steuer gesamt',
+    'reports.income': 'Einnahmen',
+    'reports.byClient': 'Nach Kunde',
+    'reports.monthlyBreakdown': 'Monatliche Aufschl\u00fcsselung',
+    'reports.taxSummary': 'Steuer\u00fcbersicht',
+    'reports.revenueByClient': 'Umsatz nach Kunde',
+    'reports.noData': 'Keine Daten f\u00fcr diesen Zeitraum',
+    'reports.ofTotal': 'vom Gesamt',
+    'reports.billed': 'Berechnet',
+
+    // Settings
+    'settings.title': 'Einstellungen',
+    'settings.business': 'Unternehmen',
+    'settings.invoiceDefaults': 'Rechnungsstandards',
+    'settings.payment': 'Zahlung',
+    'settings.businessName': 'Unternehmensname',
+    'settings.logo': 'Logo',
+    'settings.uploadLogo': 'Logo hochladen',
+    'settings.taxId': 'Steuernummer',
+    'settings.invoicePrefix': 'Rechnungspr\u00e4fix',
+    'settings.defaultTaxRate': 'Standard-Steuersatz',
+    'settings.taxLabel': 'Steuerbezeichnung',
+    'settings.defaultNotes': 'Standardnotizen',
+    'settings.paymentInstructions': 'Zahlungsanweisungen',
+
+    // Legal
+    'legal.privacyPolicy': 'Datenschutzerkl\u00e4rung',
+    'legal.termsOfService': 'Nutzungsbedingungen',
+    'legal.aboutUs': '\u00dcber uns',
+    'legal.faq': 'FAQ',
+    'legal.editor': 'Rechtstexte bearbeiten',
+    'legal.editorSubtitle': 'Datenschutz, AGB, \u00dcber uns und FAQ bearbeiten',
+    'legal.placeholdersNeedData': 'Platzhalter ben\u00f6tigen Ihre Daten',
+    'legal.typeAndEnter': 'Wert eingeben und Enter dr\u00fccken, um alle Vorkommen zu ersetzen.',
+
+    // Landing
+    'landing.features': 'Funktionen',
+    'landing.howItWorks': 'So funktioniert es',
+    'landing.pricing': 'Preise',
+    'landing.getStartedFree': 'Kostenlos starten',
+    'landing.seeHowItWorks': 'So funktioniert es',
+    'landing.startFreeTrial': 'Kostenlos testen',
+    'landing.mostPopular': 'Am beliebtesten',
+    'landing.free': 'Kostenlos',
+    'landing.perMonth': '/Monat',
+    'landing.readyToStart': 'Bereit loszulegen?',
+    'landing.joinUsers': 'Hunderte Nutzer sparen bereits Zeit.',
+    'landing.threeSteps': 'Drei einfache Schritte',
+    'landing.startFree': 'Kostenlos starten, sp\u00e4ter upgraden',
+    'landing.noCreditCard': 'Keine Kreditkarte erforderlich. Jederzeit k\u00fcndbar.',
+    'landing.activeUsers': 'Aktive Nutzer',
+    'landing.rating': 'Bewertung',
+    'landing.fasterResults': 'Schnellere Ergebnisse',
+
+    // Periods
+    'period.7d': '7 Tage',
+    'period.30d': '30 Tage',
+    'period.90d': '90 Tage',
+    'period.12m': '12 Monate',
+    'period.all': 'Gesamter Zeitraum',
+  },
+
+  ru: {
+    // Navigation
+    'nav.dashboard': '\u041f\u0430\u043d\u0435\u043b\u044c',
+    'nav.createNew': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
+    'nav.history': '\u0418\u0441\u0442\u043e\u0440\u0438\u044f',
+    'nav.clients': '\u041a\u043b\u0438\u0435\u043d\u0442\u044b',
+    'nav.reports': '\u041e\u0442\u0447\u0451\u0442\u044b',
+    'nav.settings': '\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438',
+    'nav.legalPages': '\u042e\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043a\u043e\u0435',
+    'nav.billing': '\u041e\u043f\u043b\u0430\u0442\u0430',
+    'nav.signIn': '\u0412\u043e\u0439\u0442\u0438',
+    'nav.signOut': '\u0412\u044b\u0439\u0442\u0438',
+    'nav.getStarted': '\u041d\u0430\u0447\u0430\u0442\u044c',
+    'nav.backToHome': '\u041d\u0430 \u0433\u043b\u0430\u0432\u043d\u0443\u044e',
+
+    // Common actions
+    'action.save': '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c',
+    'action.saveAll': '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0432\u0441\u0451',
+    'action.cancel': '\u041e\u0442\u043c\u0435\u043d\u0430',
+    'action.delete': '\u0423\u0434\u0430\u043b\u0438\u0442\u044c',
+    'action.edit': '\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c',
+    'action.create': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
+    'action.send': '\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c',
+    'action.download': '\u0421\u043a\u0430\u0447\u0430\u0442\u044c',
+    'action.export': '\u042d\u043a\u0441\u043f\u043e\u0440\u0442',
+    'action.import': '\u0418\u043c\u043f\u043e\u0440\u0442',
+    'action.search': '\u041f\u043e\u0438\u0441\u043a...',
+    'action.filter': '\u0424\u0438\u043b\u044c\u0442\u0440',
+    'action.back': '\u041d\u0430\u0437\u0430\u0434',
+    'action.next': '\u0414\u0430\u043b\u0435\u0435',
+    'action.preview': '\u041f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440',
+    'action.duplicate': '\u0414\u0443\u0431\u043b\u0438\u0440\u043e\u0432\u0430\u0442\u044c',
+    'action.close': '\u0417\u0430\u043a\u0440\u044b\u0442\u044c',
+    'action.confirm': '\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c',
+    'action.add': '\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c',
+    'action.remove': '\u0423\u0431\u0440\u0430\u0442\u044c',
+    'action.upload': '\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c',
+    'action.csv': 'CSV',
+    'action.pdf': 'PDF',
+
+    // Status
+    'status.draft': '\u0427\u0435\u0440\u043d\u043e\u0432\u0438\u043a',
+    'status.sent': '\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e',
+    'status.paid': '\u041e\u043f\u043b\u0430\u0447\u0435\u043d\u043e',
+    'status.overdue': '\u041f\u0440\u043e\u0441\u0440\u043e\u0447\u0435\u043d\u043e',
+    'status.cancelled': '\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e',
+    'status.partial': '\u0427\u0430\u0441\u0442\u0438\u0447\u043d\u043e',
+    'status.pending': '\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435',
+    'status.active': '\u0410\u043a\u0442\u0438\u0432\u043d\u043e',
+    'status.completed': '\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e',
+
+    // Common labels
+    'label.email': 'Email',
+    'label.password': '\u041f\u0430\u0440\u043e\u043b\u044c',
+    'label.name': '\u0418\u043c\u044f',
+    'label.phone': '\u0422\u0435\u043b\u0435\u0444\u043e\u043d',
+    'label.address': '\u0410\u0434\u0440\u0435\u0441',
+    'label.company': '\u041a\u043e\u043c\u043f\u0430\u043d\u0438\u044f',
+    'label.website': '\u0421\u0430\u0439\u0442',
+    'label.date': '\u0414\u0430\u0442\u0430',
+    'label.amount': '\u0421\u0443\u043c\u043c\u0430',
+    'label.total': '\u0418\u0442\u043e\u0433\u043e',
+    'label.subtotal': '\u041f\u043e\u0434\u0438\u0442\u043e\u0433',
+    'label.tax': '\u041d\u0430\u043b\u043e\u0433',
+    'label.notes': '\u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u044f',
+    'label.description': '\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435',
+    'label.quantity': '\u041a\u043e\u043b-\u0432\u043e',
+    'label.rate': '\u0426\u0435\u043d\u0430',
+    'label.number': '\u041d\u043e\u043c\u0435\u0440',
+    'label.currency': '\u0412\u0430\u043b\u044e\u0442\u0430',
+    'label.status': '\u0421\u0442\u0430\u0442\u0443\u0441',
+    'label.client': '\u041a\u043b\u0438\u0435\u043d\u0442',
+    'label.from': '\u041e\u0442',
+    'label.to': '\u041a\u043e\u043c\u0443',
+    'label.dueDate': '\u0421\u0440\u043e\u043a \u043e\u043f\u043b\u0430\u0442\u044b',
+    'label.issueDate': '\u0414\u0430\u0442\u0430 \u0432\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u044f',
+
+    // Common messages
+    'msg.loading': '\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430...',
+    'msg.noResults': '\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e',
+    'msg.noData': '\u041d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445',
+    'msg.saved': '\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e!',
+    'msg.deleted': '\u0423\u0434\u0430\u043b\u0435\u043d\u043e',
+    'msg.error': '\u0427\u0442\u043e-\u0442\u043e \u043f\u043e\u0448\u043b\u043e \u043d\u0435 \u0442\u0430\u043a',
+    'msg.success': '\u0423\u0441\u043f\u0435\u0448\u043d\u043e',
+    'msg.confirmDelete': '\u0412\u044b \u0443\u0432\u0435\u0440\u0435\u043d\u044b, \u0447\u0442\u043e \u0445\u043e\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c?',
+    'msg.processing': '\u041e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0430...',
+
+    // Dashboard
+    'dashboard.title': '\u041f\u0430\u043d\u0435\u043b\u044c \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f',
+    'dashboard.revenue': '\u0414\u043e\u0445\u043e\u0434',
+    'dashboard.revenueThisMonth': '\u0414\u043e\u0445\u043e\u0434 \u0437\u0430 \u043c\u0435\u0441\u044f\u0446',
+    'dashboard.outstanding': '\u041e\u0436\u0438\u0434\u0430\u0435\u0442 \u043e\u043f\u043b\u0430\u0442\u044b',
+    'dashboard.totalItems': '\u0412\u0441\u0435\u0433\u043e',
+    'dashboard.totalClients': '\u0412\u0441\u0435\u0433\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432',
+    'dashboard.recentItems': '\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435',
+    'dashboard.quickActions': '\u0411\u044b\u0441\u0442\u0440\u044b\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f',
+    'dashboard.overdue': '\u041f\u0440\u043e\u0441\u0440\u043e\u0447\u0435\u043d\u043e',
+    'dashboard.newItem': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
+    'dashboard.viewAll': '\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0432\u0441\u0435',
+    'dashboard.last30Days': '\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 30 \u0434\u043d\u0435\u0439',
+    'dashboard.noItems': '\u041f\u043e\u043a\u0430 \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435\u0442. \u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u0435\u0440\u0432\u044b\u0439!',
+
+    // Create / Form
+    'create.title': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
+    'create.editTitle': '\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c',
+    'create.from': '\u041e\u0442 (\u0412\u0430\u0448 \u0431\u0438\u0437\u043d\u0435\u0441)',
+    'create.to': '\u041a\u043e\u043c\u0443 (\u041f\u043e\u043b\u0443\u0447\u0430\u0442\u0435\u043b\u044c)',
+    'create.details': '\u0414\u0435\u0442\u0430\u043b\u0438',
+    'create.lineItems': '\u041f\u043e\u0437\u0438\u0446\u0438\u0438',
+    'create.addItem': '\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043f\u043e\u0437\u0438\u0446\u0438\u044e',
+    'create.paymentTerms': '\u0423\u0441\u043b\u043e\u0432\u0438\u044f \u043e\u043f\u043b\u0430\u0442\u044b',
+    'create.taxRate': '\u0421\u0442\u0430\u0432\u043a\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'create.submit': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
+    'create.update': '\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c',
+    'create.itemDescription': '\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438',
+
+    // History
+    'history.title': '\u0418\u0441\u0442\u043e\u0440\u0438\u044f',
+    'history.all': '\u0412\u0441\u0435',
+    'history.searchPlaceholder': '\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u043d\u043e\u043c\u0435\u0440\u0443, \u043a\u043b\u0438\u0435\u043d\u0442\u0443...',
+    'history.deleteConfirm': '\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u044d\u0442\u043e\u0442 \u044d\u043b\u0435\u043c\u0435\u043d\u0442?',
+    'history.noItems': '\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e',
+
+    // Clients
+    'clients.title': '\u041a\u043b\u0438\u0435\u043d\u0442\u044b',
+    'clients.addClient': '\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
+    'clients.editClient': '\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
+    'clients.searchPlaceholder': '\u041f\u043e\u0438\u0441\u043a \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432...',
+    'clients.noClients': '\u041a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442',
+    'clients.totalBilled': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
+    'clients.totalPaid': '\u041e\u043f\u043b\u0430\u0447\u0435\u043d\u043e',
+    'clients.invoices': '\u0441\u0447\u0435\u0442\u043e\u0432',
+
+    // Reports
+    'reports.title': '\u041e\u0442\u0447\u0451\u0442\u044b',
+    'reports.totalBilled': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
+    'reports.collected': '\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e',
+    'reports.unpaid': '\u041d\u0435 \u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043e',
+    'reports.totalTax': '\u041d\u0430\u043b\u043e\u0433 \u0438\u0442\u043e\u0433\u043e',
+    'reports.income': '\u0414\u043e\u0445\u043e\u0434',
+    'reports.byClient': '\u041f\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
+    'reports.monthlyBreakdown': '\u041f\u043e \u043c\u0435\u0441\u044f\u0446\u0430\u043c',
+    'reports.taxSummary': '\u041d\u0430\u043b\u043e\u0433\u043e\u0432\u044b\u0439 \u043e\u0442\u0447\u0451\u0442',
+    'reports.revenueByClient': '\u0414\u043e\u0445\u043e\u0434 \u043f\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
+    'reports.noData': '\u041d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445 \u0437\u0430 \u044d\u0442\u043e\u0442 \u043f\u0435\u0440\u0438\u043e\u0434',
+    'reports.ofTotal': '\u043e\u0442 \u043e\u0431\u0449\u0435\u0433\u043e',
+    'reports.billed': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
+
+    // Settings
+    'settings.title': '\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438',
+    'settings.business': '\u0411\u0438\u0437\u043d\u0435\u0441',
+    'settings.invoiceDefaults': '\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u044b \u0441\u0447\u0435\u0442\u043e\u0432',
+    'settings.payment': '\u041e\u043f\u043b\u0430\u0442\u0430',
+    'settings.businessName': '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438',
+    'settings.logo': '\u041b\u043e\u0433\u043e\u0442\u0438\u043f',
+    'settings.uploadLogo': '\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043b\u043e\u0433\u043e',
+    'settings.taxId': '\u0418\u041d\u041d',
+    'settings.invoicePrefix': '\u041f\u0440\u0435\u0444\u0438\u043a\u0441 \u0441\u0447\u0451\u0442\u0430',
+    'settings.defaultTaxRate': '\u0421\u0442\u0430\u0432\u043a\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'settings.taxLabel': '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'settings.defaultNotes': '\u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u044f \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e',
+    'settings.paymentInstructions': '\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b \u0434\u043b\u044f \u043e\u043f\u043b\u0430\u0442\u044b',
+
+    // Legal
+    'legal.privacyPolicy': '\u041f\u043e\u043b\u0438\u0442\u0438\u043a\u0430 \u043a\u043e\u043d\u0444\u0438\u0434\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438',
+    'legal.termsOfService': '\u0423\u0441\u043b\u043e\u0432\u0438\u044f \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u044f',
+    'legal.aboutUs': '\u041e \u043d\u0430\u0441',
+    'legal.faq': '\u0427\u0430\u0412\u043e',
+    'legal.editor': '\u0420\u0435\u0434\u0430\u043a\u0442\u043e\u0440 \u044e\u0440. \u0441\u0442\u0440\u0430\u043d\u0438\u0446',
+    'legal.editorSubtitle': '\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043e\u043b\u0438\u0442\u0438\u043a\u0438, \u0443\u0441\u043b\u043e\u0432\u0438\u0439, FAQ',
+    'legal.placeholdersNeedData': '\u043f\u043e\u043b\u0435\u0439 \u0442\u0440\u0435\u0431\u0443\u044e\u0442 \u0432\u0430\u0448\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445',
+    'legal.typeAndEnter': '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u0438 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 Enter \u0434\u043b\u044f \u0437\u0430\u043c\u0435\u043d\u044b.',
+
+    // Landing
+    'landing.features': '\u0424\u0443\u043d\u043a\u0446\u0438\u0438',
+    'landing.howItWorks': '\u041a\u0430\u043a \u044d\u0442\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442',
+    'landing.pricing': '\u0426\u0435\u043d\u044b',
+    'landing.getStartedFree': '\u041d\u0430\u0447\u0430\u0442\u044c \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
+    'landing.seeHowItWorks': '\u041a\u0430\u043a \u044d\u0442\u043e \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442',
+    'landing.startFreeTrial': '\u041f\u043e\u043f\u0440\u043e\u0431\u043e\u0432\u0430\u0442\u044c \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
+    'landing.mostPopular': '\u041f\u043e\u043f\u0443\u043b\u044f\u0440\u043d\u044b\u0439',
+    'landing.free': '\u0411\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e',
+    'landing.perMonth': '/\u043c\u0435\u0441.',
+    'landing.readyToStart': '\u0413\u043e\u0442\u043e\u0432\u044b \u043d\u0430\u0447\u0430\u0442\u044c?',
+    'landing.joinUsers': '\u0421\u043e\u0442\u043d\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439 \u0443\u0436\u0435 \u044d\u043a\u043e\u043d\u043e\u043c\u044f\u0442 \u0432\u0440\u0435\u043c\u044f.',
+    'landing.threeSteps': '\u0422\u0440\u0438 \u043f\u0440\u043e\u0441\u0442\u044b\u0445 \u0448\u0430\u0433\u0430',
+    'landing.startFree': '\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e, \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u0435 \u043f\u043e\u0437\u0436\u0435',
+    'landing.noCreditCard': '\u0411\u0435\u0437 \u043a\u0440\u0435\u0434\u0438\u0442\u043d\u043e\u0439 \u043a\u0430\u0440\u0442\u044b. \u041e\u0442\u043c\u0435\u043d\u0430 \u0432 \u043b\u044e\u0431\u043e\u0435 \u0432\u0440\u0435\u043c\u044f.',
+    'landing.activeUsers': '\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0445 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439',
+    'landing.rating': '\u0420\u0435\u0439\u0442\u0438\u043d\u0433',
+    'landing.fasterResults': '\u0411\u044b\u0441\u0442\u0440\u0435\u0435 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442',
+
+    // Periods
+    'period.7d': '7 \u0434\u043d\u0435\u0439',
+    'period.30d': '30 \u0434\u043d\u0435\u0439',
+    'period.90d': '90 \u0434\u043d\u0435\u0439',
+    'period.12m': '12 \u043c\u0435\u0441\u044f\u0446\u0435\u0432',
+    'period.all': '\u0412\u0441\u0451 \u0432\u0440\u0435\u043c\u044f',
+  },
+};
+
+// ─── Locale display names ───
+
+export const LOCALE_OPTIONS: { code: Locale; name: string; flag: string }[] = [
+  { code: 'en', name: 'English', flag: '\ud83c\uddfa\ud83c\uddf8' },
+  { code: 'de', name: 'Deutsch', flag: '\ud83c\udde9\ud83c\uddea' },
+  { code: 'ru', name: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439', flag: '\ud83c\uddf7\ud83c\uddfa' },
+];
+
+// ─── Context ───
+
+interface I18nContextValue {
+  locale: Locale;
+  setLocale: (l: Locale) => void;
+  t: (key: string, fallback?: string) => string;
+}
+
+const I18nContext = createContext<I18nContextValue>({
+  locale: 'en',
+  setLocale: () => {},
+  t: (key: string, fallback?: string) => fallback || key,
+});
+
+export function I18nProvider({ children }: { children: React.ReactNode }) {
+  const [locale, setLocaleState] = useState<Locale>('en');
+
+  useEffect(() => {
+    const saved = localStorage.getItem(LOCALE_KEY) as Locale | null;
+    if (saved && translations[saved]) {
+      setLocaleState(saved);
+      document.documentElement.lang = saved;
+    }
+  }, []);
+
+  const setLocale = useCallback((l: Locale) => {
+    setLocaleState(l);
+    localStorage.setItem(LOCALE_KEY, l);
+    document.documentElement.lang = l;
+  }, []);
+
+  const t = useCallback((key: string, fallback?: string): string => {
+    return translations[locale]?.[key]
+      || translations.en[key]
+      || fallback
+      || key;
+  }, [locale]);
+
+  return (
+    <I18nContext.Provider value={{ locale, setLocale, t }}>
+      {children}
+    </I18nContext.Provider>
+  );
+}
+
+export function useT() {
+  const ctx = useContext(I18nContext);
+  return ctx.t;
+}
+
+export function useLocale() {
+  return useContext(I18nContext);
+}

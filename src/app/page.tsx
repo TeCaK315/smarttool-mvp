@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Sparkles, Check, ArrowRight, Menu, X, Star, ChevronRight, Zap, Target } from 'lucide-react';
+import { useT } from '@/lib/i18n';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const PLANS = [
   {
@@ -95,6 +97,7 @@ function AnimatedNumber({ target, suffix = '' }: { target: number; suffix?: stri
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -130,24 +133,29 @@ export default function LandingPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {['Features', 'How It Works', 'Pricing'].map(item => (
+            {[
+              { key: 'landing.features', anchor: 'features' },
+              { key: 'landing.howItWorks', anchor: 'how-it-works' },
+              { key: 'landing.pricing', anchor: 'pricing' },
+            ].map(item => (
               <a
-                key={item}
-                href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                key={item.anchor}
+                href={`#${item.anchor}`}
                 className="px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-white/[0.06]"
                 style={{ color: '#edf2f770' }}
               >
-                {item}
+                {t(item.key)}
               </a>
             ))}
+            <LanguageSwitcher compact />
             <div className="w-px h-5 mx-3" style={{ background: '#5a67d815' }} />
-            <Link href="/login" className="px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-white/[0.06]" style={{ color: '#edf2f770' }}>Sign In</Link>
+            <Link href="/login" className="px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-white/[0.06]" style={{ color: '#edf2f770' }}>{t('nav.signIn')}</Link>
             <Link
               href="/dashboard"
               className="ml-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03]"
               style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 24px #5a67d830' }}
             >
-              Get Started
+              {t('nav.getStarted')}
             </Link>
           </nav>
 
@@ -162,12 +170,13 @@ export default function LandingPage() {
 
         {mobileMenuOpen && (
           <div className="md:hidden px-6 py-4 space-y-1" style={{ background: '#1a202cf0', backdropFilter: 'blur(20px)', borderTop: '1px solid #5a67d810' }}>
-            <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>Features</a>
-            <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>How It Works</a>
-            <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>Pricing</a>
+            <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>{t('landing.features')}</a>
+            <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>{t('landing.howItWorks')}</a>
+            <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm" style={{ color: '#edf2f770' }}>{t('landing.pricing')}</a>
+            <div className="py-2"><LanguageSwitcher /></div>
             <div className="pt-2 flex flex-col gap-2">
-              <Link href="/login" className="px-3 py-2.5 rounded-lg text-sm text-center" style={{ color: '#edf2f770' }}>Sign In</Link>
-              <Link href="/dashboard" className="px-3 py-2.5 rounded-xl text-sm font-semibold text-white text-center" style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>Get Started</Link>
+              <Link href="/login" className="px-3 py-2.5 rounded-lg text-sm text-center" style={{ color: '#edf2f770' }}>{t('nav.signIn')}</Link>
+              <Link href="/dashboard" className="px-3 py-2.5 rounded-xl text-sm font-semibold text-white text-center" style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>{t('nav.getStarted')}</Link>
             </div>
           </div>
         )}
@@ -215,7 +224,7 @@ export default function LandingPage() {
               backgroundClip: 'text',
             }}
           >
-            Сокращение времени на выставление счетов и снижение ошибок благодаря автоматизации и интеграции.
+            .
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl mb-14 max-w-2xl mx-auto leading-relaxed font-light" style={{ color: '#edf2f760' }}>
@@ -228,7 +237,7 @@ export default function LandingPage() {
               className="group w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.03]"
               style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 40px #5a67d830, 0 8px 32px #5a67d820' }}
             >
-              Get Started Free
+              {t('landing.getStartedFree')}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
             <a
@@ -236,7 +245,7 @@ export default function LandingPage() {
               className="group w-full sm:w-auto px-8 py-4 rounded-2xl font-semibold transition-all duration-300 hover:bg-white/[0.06] text-center flex items-center justify-center gap-2"
               style={{ border: '1px solid #5a67d820', color: '#edf2f7' }}
             >
-              See How It Works
+              {t('landing.seeHowItWorks')}
               <ChevronRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" style={{ color: '#edf2f750' }} />
             </a>
           </div>
@@ -258,21 +267,21 @@ export default function LandingPage() {
             <div className="text-3xl md:text-4xl font-extrabold tracking-tight" style={{ color: '#5a67d8' }}>
               <AnimatedNumber target={500} suffix="+" />
             </div>
-            <div className="text-xs mt-1 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>Active Users</div>
+            <div className="text-xs mt-1 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>{t('landing.activeUsers')}</div>
           </div>
           <div className="hidden md:block w-px h-10" style={{ background: '#5a67d815' }} />
           <div className="text-center">
             <div className="flex items-center justify-center gap-1.5">
               {[0,1,2,3,4].map(i => <Star key={i} className="w-5 h-5 fill-current" style={{ color: '#facc15' }} />)}
             </div>
-            <div className="text-xs mt-2 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>4.9/5 Rating</div>
+            <div className="text-xs mt-2 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>4.9/5 {t('landing.rating')}</div>
           </div>
           <div className="hidden md:block w-px h-10" style={{ background: '#5a67d815' }} />
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-extrabold tracking-tight" style={{ color: '#f6ad55' }}>
               <AnimatedNumber target={10} suffix="x" />
             </div>
-            <div className="text-xs mt-1 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>Faster Results</div>
+            <div className="text-xs mt-1 uppercase tracking-wider font-medium" style={{ color: '#edf2f750' }}>{t('landing.fasterResults')}</div>
           </div>
         </div>
       </section>
@@ -470,7 +479,7 @@ export default function LandingPage() {
                       className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-xs font-bold text-white tracking-wide uppercase"
                       style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 20px #5a67d830' }}
                     >
-                      Most Popular
+                      {t('landing.mostPopular')}
                     </div>
                   )}
                   <div className="mb-8">
@@ -479,10 +488,10 @@ export default function LandingPage() {
                     </h3>
                     <div className="flex items-baseline gap-1">
                       <span className="text-5xl font-extrabold tracking-tight">
-                        {plan.price === 0 ? 'Free' : `$${plan.price}`}
+                        {plan.price === 0 ? t('landing.free') : `$${plan.price}`}
                       </span>
                       {plan.price > 0 && (
-                        <span className="text-sm font-medium" style={{ color: '#edf2f740' }}>/month</span>
+                        <span className="text-sm font-medium" style={{ color: '#edf2f740' }}>{t('landing.perMonth')}</span>
                       )}
                     </div>
                   </div>
@@ -506,7 +515,7 @@ export default function LandingPage() {
                       boxShadow: isPro ? '0 0 30px #5a67d825' : 'none',
                     }}
                   >
-                    {plan.price === 0 ? 'Get Started' : 'Start Free Trial'}
+                    {plan.price === 0 ? t('nav.getStarted') : t('landing.startFreeTrial')}
                   </Link>
                 </div>
               );
@@ -536,10 +545,10 @@ export default function LandingPage() {
                 className="text-3xl md:text-5xl font-bold mb-5"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                Ready to get started?
+                {t('landing.readyToStart')}
               </h2>
               <p className="text-base md:text-lg mb-10" style={{ color: '#edf2f750' }}>
-                Join hundreds of users who already save time with SmartTool MVP.
+                {t('landing.joinUsers')}
               </p>
               <Link
                 href="/dashboard"
@@ -564,10 +573,10 @@ export default function LandingPage() {
             <span className="text-sm font-semibold">SmartTool MVP</span>
           </div>
           <div className="flex items-center gap-6 text-xs" style={{ color: '#edf2f750' }}>
-            <Link href="/privacy" className="hover:opacity-80 transition-opacity">Privacy</Link>
-            <Link href="/terms" className="hover:opacity-80 transition-opacity">Terms</Link>
-            <Link href="/about" className="hover:opacity-80 transition-opacity">About</Link>
-            <Link href="/faq" className="hover:opacity-80 transition-opacity">FAQ</Link>
+            <Link href="/privacy" className="hover:opacity-80 transition-opacity">{t('legal.privacyPolicy')}</Link>
+            <Link href="/terms" className="hover:opacity-80 transition-opacity">{t('legal.termsOfService')}</Link>
+            <Link href="/about" className="hover:opacity-80 transition-opacity">{t('legal.aboutUs')}</Link>
+            <Link href="/faq" className="hover:opacity-80 transition-opacity">{t('legal.faq')}</Link>
           </div>
           <p className="text-xs" style={{ color: '#edf2f740' }}>
             &copy; {new Date().getFullYear()} SmartTool MVP

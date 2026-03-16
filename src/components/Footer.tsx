@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 export default function Footer() {
+  const t = useT();
+
   return (
     <footer
       className="border-t py-8"
@@ -27,10 +32,10 @@ export default function Footer() {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>Privacy Policy</Link>
-            <Link href="/terms" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>Terms of Service</Link>
-            <Link href="/about" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>About</Link>
-            <Link href="/faq" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>FAQ</Link>
+            <Link href="/privacy" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>{t('legal.privacyPolicy')}</Link>
+            <Link href="/terms" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>{t('legal.termsOfService')}</Link>
+            <Link href="/about" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>{t('legal.aboutUs')}</Link>
+            <Link href="/faq" className="text-xs transition-opacity hover:opacity-70" style={{ color: '#edf2f750' }}>{t('legal.faq')}</Link>
           </div>
         </div>
       </div>

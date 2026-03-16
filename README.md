@@ -88,7 +88,7 @@ smarttool-mvp/
 │   └── lib/              # Utilities & configurations
 ├── public/               # Static assets
 ├── .env.example          # Environment variables template
-└── package.json          # Dependencies (51 files total)
+└── package.json          # Dependencies (53 files total)
 ```
 
 ## Deployment
