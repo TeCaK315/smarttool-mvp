@@ -266,7 +266,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 mb-3">
             <AlertCircle className="w-4 h-4" style={{ color: '#ef4444' }} />
             <h3 className="text-sm font-semibold" style={{ color: '#ef4444' }}>
-              {overdue.length} Overdue {overdue.length === 1 ? primaryOutputCap : primaryOutputCap + 's'}
+              {overdue.length} Overdue Автоматизированная система выставленияs
             </h3>
           </div>
           <div className="space-y-2">
