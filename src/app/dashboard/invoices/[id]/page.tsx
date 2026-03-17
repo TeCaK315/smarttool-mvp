@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useUser } from '@/hooks/useUser';
 import { useParams, useRouter } from 'next/navigation';
-import { Edit, Send, Download, CheckCircle, Clock, FileText } from 'lucide-react';
+import { ArrowLeft, Send, Edit, Download, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Spinner } from '@/components/LoadingStates';
 import { generatePDF } from '@/lib/pdf-generator';
 
 interface InvoiceItem {
@@ -31,20 +32,20 @@ interface Invoice {
 }
 
 export default function InvoiceDetailPage() {
-  const { user } = useUser();
+  const { user, loading: userLoading } = useUser();
   const params = useParams();
   const router = useRouter();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     if (user && params.id) {
-      fetchInvoice();
+      loadInvoice();
     }
   }, [user, params.id]);
 
-  const fetchInvoice = async () => {
+  const loadInvoice = async () => {
     try {
       const supabase = createClient();
       const { data, error } = await supabase
@@ -57,66 +58,70 @@ export default function InvoiceDetailPage() {
       if (error) throw error;
       setInvoice(data);
     } catch (error) {
-      console.error('Error fetching invoice:', error);
-      router.push('/dashboard/invoices');
+      console.error('Error loading invoice:', error);
+      router.push('/dashboard');
     } finally {
       setLoading(false);
     }
   };
 
-  const updateInvoiceStatus = async (status: 'draft' | 'sent' | 'paid') => {
+  const sendInvoice = async () => {
     if (!invoice) return;
 
-    setUpdating(true);
+    setActionLoading(true);
     try {
       const supabase = createClient();
+      
+      // Update status to sent
       const { error } = await supabase
         .from('invoices')
-        .update({ status })
+        .update({ status: 'sent' })
         .eq('id', invoice.id);
 
       if (error) throw error;
 
-      // If sending invoice, also send email
-      if (status === 'sent' && invoice.client_email) {
-        try {
-          await fetch('/api/send-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              to: invoice.client_email,
-              subject: `Счет ${invoice.invoice_number}`,
-              body: `
-Здравствуйте!
+      // Send email
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: invoice.client_email,
+          subject: `Счет ${invoice.invoice_number}`,
+          body: `Здравствуйте, ${invoice.client_name}!\n\nВысылаем вам счет ${invoice.invoice_number} на сумму ${formatCurrency(invoice.amount)}.\n\nСрок оплаты: ${formatDate(invoice.due_date)}\n\nС уважением`
+        })
+      });
 
-Направляем вам счет ${invoice.invoice_number} на сумму ${formatCurrency(invoice.amount)}.
-
-Срок оплаты: ${formatDate(invoice.due_date)}
-
-${invoice.notes ? `Примечания: ${invoice.notes}` : ''}
-
-С уважением,
-${user?.email}
-              `
-            })
-          });
-        } catch (emailError) {
-          console.error('Error sending email:', emailError);
-        }
-      }
-
-      setInvoice(prev => prev ? { ...prev, status } : null);
+      setInvoice(prev => prev ? { ...prev, status: 'sent' } : null);
     } catch (error) {
-      console.error('Error updating invoice status:', error);
+      console.error('Error sending invoice:', error);
       alert('An error occurred');
     } finally {
-      setUpdating(false);
+      setActionLoading(false);
     }
   };
 
-  const downloadInvoicePDF = () => {
+  const markAsPaid = async () => {
+    if (!invoice) return;
+
+    setActionLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('invoices')
+        .update({ status: 'paid' })
+        .eq('id', invoice.id);
+
+      if (error) throw error;
+      setInvoice(prev => prev ? { ...prev, status: 'paid' } : null);
+    } catch (error) {
+      console.error('Error updating invoice:', error);
+      alert('An error occurred');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const downloadPDF = () => {
     if (!invoice) return;
 
     const tableRows = invoice.items.map(item => [
@@ -128,14 +133,14 @@ ${user?.email}
 
     generatePDF({
       title: `Счет ${invoice.invoice_number}`,
-      subtitle: `От: ${user?.email}\nДля: ${invoice.client_name}\nДата: ${formatDate(invoice.created_at)}\nСрок оплаты: ${formatDate(invoice.due_date)}`,
+      subtitle: `Клиент: ${invoice.client_name}`,
       sections: [
         {
-          heading: 'Детали клиента',
-          content: `${invoice.client_name}\n${invoice.client_email}${invoice.client_address ? `\n${invoice.client_address}` : ''}`
+          heading: 'Информация о клиенте',
+          content: `${invoice.client_name}\n${invoice.client_email}\n${invoice.client_address}`
         },
         {
-          heading: 'Позиции счета',
+          heading: 'Позиции',
           table: {
             headers: ['Описание', 'Кол-во', 'Цена', 'Сумма'],
             rows: tableRows,
@@ -144,54 +149,14 @@ ${user?.email}
         },
         {
           heading: 'Итого',
-          content: `Общая сумма: ${formatCurrency(invoice.amount)}`
+          content: formatCurrency(invoice.amount)
         },
         ...(invoice.notes ? [{
           heading: 'Примечания',
           content: invoice.notes
         }] : [])
-      ],
-      brandColor: '#5a67d8'
+      ]
     }, `invoice-${invoice.invoice_number}.pdf`);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'bg-green-100 text-green-800';
-      case 'sent':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'draft':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'Оплачен';
-      case 'sent':
-        return 'Отправлен';
-      case 'draft':
-        return 'Черновик';
-      default:
-        return status;
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'sent':
-        return <Clock className="h-5 w-5 text-yellow-500" />;
-      case 'draft':
-        return <FileText className="h-5 w-5 text-gray-500" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-500" />;
-    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -205,24 +170,39 @@ ${user?.email}
     return new Date(dateString).toLocaleDateString('ru-RU');
   };
 
-  if (loading) {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'draft': return 'bg-gray-100 text-gray-800';
+      case 'sent': return 'bg-blue-100 text-blue-800';
+      case 'paid': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'draft': return 'Черновик';
+      case 'sent': return 'Отправлен';
+      case 'paid': return 'Оплачен';
+      default: return status;
+    }
+  };
+
+  if (userLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-500"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner size="lg" />
       </div>
     );
   }
 
   if (!invoice) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Счет не найден</h2>
-          <Link
-            href="/dashboard/invoices"
-            className="text-indigo-400 hover:text-indigo-300"
-          >
-            Вернуться к списку счетов
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Счет не найден</h2>
+          <Link href="/dashboard" className="text-blue-600 hover:text-blue-800">
+            Вернуться к панели управления
           </Link>
         </div>
       </div>
@@ -230,148 +210,158 @@ ${user?.email}
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white font-['Montserrat'] mb-2">
-              {invoice.invoice_number}
-            </h1>
-            <div className="flex items-center gap-3">
-              {getStatusIcon(invoice.status)}
-              <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(invoice.status)}`}>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center">
+            <Link
+              href="/dashboard"
+              className="flex items-center text-gray-600 hover:text-gray-900 mr-4"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Назад
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: 'Montserrat' }}>
+                Счет {invoice.invoice_number}
+              </h1>
+              <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full mt-2 ${getStatusColor(invoice.status)}`}>
                 {getStatusText(invoice.status)}
               </span>
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex space-x-3">
             <button
-              onClick={downloadInvoicePDF}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+              onClick={downloadPDF}
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <Download className="h-4 w-4" />
-              PDF
+              <Download className="w-4 h-4 mr-2" />
+              Скачать PDF
             </button>
-
-            <Link
-              href={`/dashboard/invoices/${invoice.id}/edit`}
-              className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-            >
-              <Edit className="h-4 w-4" />
-              Редактировать
-            </Link>
 
             {invoice.status === 'draft' && (
               <button
-                onClick={() => updateInvoiceStatus('sent')}
-                disabled={updating}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                onClick={sendInvoice}
+                disabled={actionLoading}
+                className="flex items-center px-4 py-2 rounded-lg text-white transition-colors disabled:opacity-50"
+                style={{ backgroundColor: '#5a67d8' }}
               >
-                <Send className="h-4 w-4" />
+                {actionLoading ? <Spinner size="sm" className="mr-2" /> : <Send className="w-4 h-4 mr-2" />}
                 Отправить
               </button>
             )}
 
             {invoice.status === 'sent' && (
               <button
-                onClick={() => updateInvoiceStatus('paid')}
-                disabled={updating}
-                className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                onClick={markAsPaid}
+                disabled={actionLoading}
+                className="flex items-center px-4 py-2 rounded-lg text-white transition-colors disabled:opacity-50"
+                style={{ backgroundColor: '#f6ad55' }}
               >
-                <CheckCircle className="h-4 w-4" />
-                Отметить оплаченным
+                {actionLoading ? <Spinner size="sm" className="mr-2" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                Отметить как оплаченный
               </button>
             )}
           </div>
         </div>
 
-        {/* Invoice Details */}
-        <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          {/* Invoice Header */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
-              <h3 className="text-lg font-medium text-white mb-4">Информация о клиенте</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat' }}>
+                Информация о клиенте
+              </h3>
               <div className="space-y-2">
-                <div>
-                  <span className="text-gray-400">Название:</span>
-                  <span className="ml-2 text-white">{invoice.client_name}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Email:</span>
-                  <span className="ml-2 text-white">{invoice.client_email}</span>
-                </div>
+                <p className="font-medium text-gray-900">{invoice.client_name}</p>
+                <p className="text-gray-600">{invoice.client_email}</p>
                 {invoice.client_address && (
-                  <div>
-                    <span className="text-gray-400">Адрес:</span>
-                    <div className="ml-2 text-white whitespace-pre-line">{invoice.client_address}</div>
-                  </div>
+                  <p className="text-gray-600 whitespace-pre-line">{invoice.client_address}</p>
                 )}
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-medium text-white mb-4">Детали счета</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat' }}>
+                Детали счета
+              </h3>
               <div className="space-y-2">
-                <div>
-                  <span className="text-gray-400">Дата создания:</span>
-                  <span className="ml-2 text-white">{formatDate(invoice.created_at)}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Дата создания:</span>
+                  <span className="text-gray-900">{formatDate(invoice.created_at)}</span>
                 </div>
-                <div>
-                  <span className="text-gray-400">Срок оплаты:</span>
-                  <span className="ml-2 text-white">{formatDate(invoice.due_date)}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Срок оплаты:</span>
+                  <span className="text-gray-900">{formatDate(invoice.due_date)}</span>
                 </div>
-                <div>
-                  <span className="text-gray-400">Общая сумма:</span>
-                  <span className="ml-2 text-white font-bold text-xl">{formatCurrency(invoice.amount)}</span>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Статус:</span>
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(invoice.status)}`}>
+                    {getStatusText(invoice.status)}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Invoice Items */}
-        <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
-          <h3 className="text-lg font-medium text-white mb-4">Позиции счета</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="text-left py-3 text-gray-400">Описание</th>
-                  <th className="text-right py-3 text-gray-400">Кол-во</th>
-                  <th className="text-right py-3 text-gray-400">Цена</th>
-                  <th className="text-right py-3 text-gray-400">Сумма</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoice.items.map((item) => (
-                  <tr key={item.id} className="border-b border-gray-700">
-                    <td className="py-3 text-white">{item.description}</td>
-                    <td className="py-3 text-right text-white">{item.quantity}</td>
-                    <td className="py-3 text-right text-white">{formatCurrency(item.rate)}</td>
-                    <td className="py-3 text-right text-white font-medium">{formatCurrency(item.amount)}</td>
+          {/* Invoice Items */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat' }}>
+              Позиции счета
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Описание
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Кол-во
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Цена
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Сумма
+                    </th>
                   </tr>
-                ))}
-                <tr>
-                  <td colSpan={3} className="py-4 text-right text-gray-400 font-medium">
-                    Итого:
-                  </td>
-                  <td className="py-4 text-right text-white font-bold text-xl">
-                    {formatCurrency(invoice.amount)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {invoice.items.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 text-right">{item.quantity}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 text-right">{formatCurrency(item.rate)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 text-right font-medium">{formatCurrency(item.amount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-        {/* Notes */}
-        {invoice.notes && (
-          <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
-            <h3 className="text-lg font-medium text-white mb-4">Примечания</h3>
-            <p className="text-gray-300 whitespace-pre-line">{invoice.notes}</p>
+            {/* Total */}
+            <div className="mt-6 flex justify-end">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="text-xl font-bold text-gray-900">
+                  Итого: {formatCurrency(invoice.amount)}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Notes */}
+          {invoice.notes && (
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Montserrat' }}>
+                Примечания
+              </h3>
+              <p className="text-gray-600 whitespace-pre-line">{invoice.notes}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
