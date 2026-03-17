@@ -1,28 +1,32 @@
 -- Create invoices table
-CREATE TABLE IF NOT EXISTS invoices (
+CREATE TABLE invoices (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   invoice_number TEXT NOT NULL,
   client_name TEXT NOT NULL,
   client_email TEXT NOT NULL,
   client_address TEXT,
+  issue_date DATE NOT NULL,
+  due_date DATE NOT NULL,
+  items JSONB NOT NULL DEFAULT '[]',
+  notes TEXT,
+  tax_rate DECIMAL(5,2) DEFAULT 0,
+  subtotal DECIMAL(10,2) NOT NULL DEFAULT 0,
+  tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
   amount DECIMAL(10,2) NOT NULL DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'paid')),
-  due_date DATE NOT NULL,
-  notes TEXT,
-  items JSONB NOT NULL DEFAULT '[]',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Create index for user_id
-CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON invoices(user_id);
+CREATE INDEX idx_invoices_user_id ON invoices(user_id);
 
 -- Create index for status
-CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
+CREATE INDEX idx_invoices_status ON invoices(status);
 
 -- Create index for invoice_number
-CREATE INDEX IF NOT EXISTS idx_invoices_number ON invoices(invoice_number);
+CREATE INDEX idx_invoices_number ON invoices(invoice_number);
 
 -- Enable RLS
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
@@ -40,7 +44,7 @@ CREATE POLICY "Users can update their own invoices" ON invoices
 CREATE POLICY "Users can delete their own invoices" ON invoices
   FOR DELETE USING (auth.uid() = user_id);
 
--- Create trigger for updated_at
+-- Create updated_at trigger
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
