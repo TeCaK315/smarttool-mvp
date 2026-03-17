@@ -90,6 +90,20 @@ CREATE POLICY "Service role can manage usage"
 
 CREATE INDEX IF NOT EXISTS idx_usage_logs_user_metric ON public.usage_logs(user_id, metric, created_at);
 
+-- ─── App Settings (admin config) ──────────────
+CREATE TABLE IF NOT EXISTS public.app_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT '',
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.app_settings ENABLE ROW LEVEL SECURITY;
+
+-- Only service role can read/write app_settings (accessed via server-side API)
+CREATE POLICY "Service role full access on app_settings"
+  ON public.app_settings FOR ALL
+  USING (auth.role() = 'service_role');
+
 -- ─── Indexes ─────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_analyses_user_id ON public.analyses(user_id);
 CREATE INDEX IF NOT EXISTS idx_analyses_created_at ON public.analyses(created_at DESC);

@@ -290,12 +290,12 @@ export default function LandingPage() {
       <section className="py-24 md:py-32 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>THE PROBLEM</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>{t('landing.sectionProblem')}</p>
             <h2
               className="text-3xl md:text-5xl font-bold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Sound familiar?
+              {t('landing.soundFamiliar')}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -334,15 +334,15 @@ export default function LandingPage() {
 
         <div className="relative max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>FEATURES</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>{t('landing.sectionFeatures')}</p>
             <h2
               className="text-3xl md:text-5xl font-bold mb-5"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Built to solve real problems
+              {t('landing.builtToSolve')}
             </h2>
             <p className="text-base md:text-lg max-w-xl mx-auto" style={{ color: '#edf2f750' }}>
-              Every feature addresses a real pain point.
+              {t('landing.everyFeature')}
             </p>
           </div>
 
@@ -398,15 +398,15 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-24 md:py-32 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>HOW IT WORKS</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>{t('landing.sectionHowItWorks')}</p>
             <h2
               className="text-3xl md:text-5xl font-bold mb-5"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Three simple steps
+              {t('landing.threeSteps')}
             </h2>
             <p className="text-base md:text-lg" style={{ color: '#edf2f750' }}>
-              Get your Result in &lt; 2 минут
+              {t('landing.fromStartToFinish')}
             </p>
           </div>
           <div className="relative">
@@ -448,15 +448,15 @@ export default function LandingPage() {
 
         <div className="relative max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>PRICING</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: '#5a67d8' }}>{t('landing.sectionPricing')}</p>
             <h2
               className="text-3xl md:text-5xl font-bold mb-5"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Start free, upgrade when ready
+              {t('landing.startFree')}
             </h2>
             <p className="text-base md:text-lg" style={{ color: '#edf2f750' }}>
-              No credit card required. Cancel anytime.
+              {t('landing.noCreditCard')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
@@ -555,7 +555,7 @@ export default function LandingPage() {
                 className="group inline-flex items-center gap-2.5 px-10 py-4 rounded-2xl font-semibold text-white text-lg transition-all duration-300 hover:scale-[1.03]"
                 style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 40px #5a67d830, 0 8px 32px #5a67d820' }}
               >
-                Create Your First Result
+                {t('landing.createFirst')} Result
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>

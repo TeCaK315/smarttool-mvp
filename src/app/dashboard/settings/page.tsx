@@ -5,8 +5,16 @@ import { useRouter } from 'next/navigation';
 import {
   Settings, Save, Loader2, Check, LogOut, Building2, Receipt,
   CreditCard, Globe, Hash, Percent, FileText, ImageIcon,
+  AlertCircle, CheckCircle2, ExternalLink, Eye, EyeOff, Trash2,
 } from 'lucide-react';
 import { useT } from '@/lib/i18n';
+
+interface StripeConfig {
+  configured: boolean;
+  source?: string;
+  publishable_key_masked?: string;
+  secret_key_masked?: string;
+}
 
 interface BusinessSettings {
   business_name: string;
@@ -42,10 +50,10 @@ const CURRENCIES = [
 ];
 
 const PAYMENT_TERMS = [
-  { value: 'due_on_receipt', label: 'Due on Receipt' },
-  { value: 'net_15', label: 'Net 15' },
-  { value: 'net_30', label: 'Net 30' },
-  { value: 'net_60', label: 'Net 60' },
+  { value: 'due_on_receipt', labelKey: 'payment.dueOnReceipt' },
+  { value: 'net_15', labelKey: 'payment.net15' },
+  { value: 'net_30', labelKey: 'payment.net30' },
+  { value: 'net_60', labelKey: 'payment.net60' },
 ];
 
 export default function SettingsPage() {
@@ -54,6 +62,16 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'business' | 'invoice' | 'payment'>('business');
+
+  // Stripe config state
+  const [stripeConfig, setStripeConfig] = useState<StripeConfig>({ configured: false });
+  const [stripeLoading, setStripeLoading] = useState(true);
+  const [stripePubKey, setStripePubKey] = useState('');
+  const [stripeSecretKey, setStripeSecretKey] = useState('');
+  const [showSecretKey, setShowSecretKey] = useState(false);
+  const [stripeSaving, setStripeSaving] = useState(false);
+  const [stripeError, setStripeError] = useState('');
+  const [stripeSuccess, setStripeSuccess] = useState('');
 
   const [settings, setSettings] = useState<BusinessSettings>({
     business_name: '',
@@ -71,6 +89,66 @@ export default function SettingsPage() {
     default_notes: '',
     payment_instructions: '',
   });
+
+  // Load Stripe config
+  useEffect(() => {
+    async function loadStripeConfig() {
+      try {
+        const res = await fetch('/api/admin/stripe');
+        if (res.ok) {
+          const data = await res.json();
+          setStripeConfig(data);
+        }
+      } catch {}
+      setStripeLoading(false);
+    }
+    loadStripeConfig();
+  }, []);
+
+  const handleStripeSave = async () => {
+    setStripeSaving(true);
+    setStripeError('');
+    setStripeSuccess('');
+
+    try {
+      const res = await fetch('/api/admin/stripe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          publishable_key: stripePubKey,
+          secret_key: stripeSecretKey,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStripeError(data.error || 'Failed to save');
+      } else {
+        setStripeConfig({
+          configured: true,
+          source: 'database',
+          publishable_key_masked: data.publishable_key_masked,
+          secret_key_masked: data.secret_key_masked,
+        });
+        setStripePubKey('');
+        setStripeSecretKey('');
+        setStripeSuccess(t('settings.stripeTestSuccess'));
+        setTimeout(() => setStripeSuccess(''), 5000);
+      }
+    } catch (err: any) {
+      setStripeError(err.message || 'Network error');
+    }
+    setStripeSaving(false);
+  };
+
+  const handleStripeDisconnect = async () => {
+    if (!confirm(t('msg.confirmDelete'))) return;
+    try {
+      await fetch('/api/admin/stripe', { method: 'DELETE' });
+      setStripeConfig({ configured: false });
+    } catch {}
+  };
 
   useEffect(() => {
     try {
@@ -165,7 +243,7 @@ export default function SettingsPage() {
           style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-          {saving ? 'Saving...' : saved ? 'Saved!' : 'Save'}
+          {saving ? t('msg.processing') : saved ? t('msg.saved') : t('action.save')}
         </button>
       </div>
 
@@ -217,7 +295,7 @@ export default function SettingsPage() {
                   <ImageIcon className="w-4 h-4" /> {t('settings.uploadLogo')}
                   <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                 </label>
-                <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>PNG or JPG, max 500KB. Shows on invoices and PDF.</p>
+                <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('settings.logoHint')}</p>
               </div>
             </div>
           </div>
@@ -229,32 +307,32 @@ export default function SettingsPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Business Name</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('settings.businessName')}</label>
                 <input type="text" value={settings.business_name} onChange={e => update('business_name', e.target.value)}
                   placeholder="Your Company LLC" className={inputClasses} style={inputStyle} />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Email</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.email')}</label>
                 <input type="email" value={settings.email} onChange={e => update('email', e.target.value)}
                   placeholder="billing@company.com" className={inputClasses} style={inputStyle} />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Phone</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.phone')}</label>
                 <input type="tel" value={settings.phone} onChange={e => update('phone', e.target.value)}
                   placeholder="+1 (555) 123-4567" className={inputClasses} style={inputStyle} />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Website</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.website')}</label>
                 <input type="url" value={settings.website} onChange={e => update('website', e.target.value)}
                   placeholder="https://company.com" className={inputClasses} style={inputStyle} />
               </div>
               <div className="sm:col-span-2">
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Address</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.address')}</label>
                 <input type="text" value={settings.address} onChange={e => update('address', e.target.value)}
                   placeholder="123 Main St, City, State, ZIP, Country" className={inputClasses} style={inputStyle} />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Tax ID / VAT Number</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('settings.taxId')}</label>
                 <input type="text" value={settings.tax_id} onChange={e => update('tax_id', e.target.value)}
                   placeholder="US12-3456789" className={inputClasses} style={inputStyle} />
               </div>
@@ -268,12 +346,12 @@ export default function SettingsPage() {
         <div className="space-y-5">
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <Receipt className="w-4 h-4" style={{ color: '#5a67d8' }} /> Default Values
+              <Receipt className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.defaultValues')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>
-                  <Globe className="w-3 h-3 inline mr-1" /> Currency
+                  <Globe className="w-3 h-3 inline mr-1" /> {t('label.currency')}
                 </label>
                 <select value={settings.default_currency} onChange={e => update('default_currency', e.target.value)}
                   className={inputClasses} style={inputStyle}>
@@ -281,15 +359,15 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Payment Terms</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.paymentTerms')}</label>
                 <select value={settings.default_payment_terms} onChange={e => update('default_payment_terms', e.target.value)}
                   className={inputClasses} style={inputStyle}>
-                  {PAYMENT_TERMS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  {PAYMENT_TERMS.map(term => <option key={term.value} value={term.value}>{t(term.labelKey)}</option>)}
                 </select>
               </div>
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>
-                  <Hash className="w-3 h-3 inline mr-1" /> Invoice Number Prefix
+                  <Hash className="w-3 h-3 inline mr-1" /> {t('settings.invoiceNumberPrefix')}
                 </label>
                 <input type="text" value={settings.invoice_prefix} onChange={e => update('invoice_prefix', e.target.value)}
                   placeholder="INV" className={inputClasses} style={inputStyle} />
@@ -297,14 +375,14 @@ export default function SettingsPage() {
               </div>
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>
-                  <Percent className="w-3 h-3 inline mr-1" /> Default Tax Rate (%)
+                  <Percent className="w-3 h-3 inline mr-1" /> {t('settings.defaultTaxRate')}
                 </label>
                 <input type="number" min="0" max="100" step="0.5" value={settings.default_tax_rate || ''}
                   onChange={e => update('default_tax_rate', parseFloat(e.target.value) || 0)}
                   placeholder="0" className={inputClasses} style={inputStyle} />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Tax Label</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('settings.taxLabel')}</label>
                 <input type="text" value={settings.tax_label} onChange={e => update('tax_label', e.target.value)}
                   placeholder="Tax / VAT / GST / Sales Tax" className={inputClasses} style={inputStyle} />
               </div>
@@ -313,13 +391,13 @@ export default function SettingsPage() {
 
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <FileText className="w-4 h-4" style={{ color: '#5a67d8' }} /> Default Notes
+              <FileText className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.defaultNotes')}
             </h2>
             <textarea value={settings.default_notes} onChange={e => update('default_notes', e.target.value)}
               placeholder="Thank you for your business! Payment is due within the terms specified above."
               rows={3} className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 resize-none transition-all"
               style={inputStyle} />
-            <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>This will appear on every new invoice by default.</p>
+            <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('settings.defaultNotesHint')}</p>
           </div>
         </div>
       )}
@@ -327,22 +405,131 @@ export default function SettingsPage() {
       {/* Payment Tab */}
       {activeTab === 'payment' && (
         <div className="space-y-5">
+
+          {/* ─── Stripe Configuration ─── */}
+          <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-sm font-semibold flex items-center gap-2" style={{ color: '#edf2f7' }}>
+                <CreditCard className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.stripeConfig')}
+              </h2>
+              {stripeLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#edf2f740' }} />
+              ) : stripeConfig.configured ? (
+                <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: '#22c55e18', color: '#22c55e' }}>
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {t('settings.stripeConnected')}
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: '#f59e0b18', color: '#f59e0b' }}>
+                  <AlertCircle className="w-3.5 h-3.5" /> {t('settings.stripeNotConnected')}
+                </span>
+              )}
+            </div>
+            <p className="text-xs mb-5" style={{ color: '#edf2f750' }}>
+              {t('settings.stripeDescription')}
+            </p>
+
+            {/* Current connection info */}
+            {stripeConfig.configured && (
+              <div className="mb-5 p-4 rounded-xl" style={{ background: '#5a67d808', border: '1px solid #5a67d812' }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[11px] font-medium mb-1" style={{ color: '#edf2f740' }}>{t('settings.publishableKey')}</p>
+                    <p className="text-xs font-mono" style={{ color: '#edf2f770' }}>{stripeConfig.publishable_key_masked || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium mb-1" style={{ color: '#edf2f740' }}>{t('settings.secretKey')}</p>
+                    <p className="text-xs font-mono" style={{ color: '#edf2f770' }}>{stripeConfig.secret_key_masked || '—'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid #5a67d810' }}>
+                  <p className="text-[11px]" style={{ color: '#edf2f740' }}>
+                    Source: {stripeConfig.source === 'env' ? '.env file' : 'Database'}
+                  </p>
+                  {stripeConfig.source === 'database' && (
+                    <button onClick={handleStripeDisconnect}
+                      className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-lg transition-all hover:bg-red-500/10"
+                      style={{ color: '#ef4444' }}>
+                      <Trash2 className="w-3 h-3" /> Disconnect
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Enter new keys */}
+            {!stripeConfig.configured && (
+              <div className="space-y-4">
+                <div className="p-3 rounded-xl" style={{ background: '#5a67d806', border: '1px solid #5a67d810' }}>
+                  <p className="text-xs" style={{ color: '#edf2f760' }}>
+                    {t('settings.stripeInstructions')}{' '}
+                    <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-medium underline" style={{ color: '#5a67d8' }}>
+                      {t('settings.stripeDashboard')} <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </p>
+                </div>
+
+                <div>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('settings.publishableKey')}</label>
+                  <input type="text" value={stripePubKey} onChange={e => setStripePubKey(e.target.value)}
+                    placeholder="pk_live_... or pk_test_..." className={inputClasses} style={inputStyle} />
+                </div>
+
+                <div>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('settings.secretKey')}</label>
+                  <div className="relative">
+                    <input type={showSecretKey ? 'text' : 'password'} value={stripeSecretKey}
+                      onChange={e => setStripeSecretKey(e.target.value)}
+                      placeholder="sk_live_... or sk_test_..." className={inputClasses + ' pr-10'} style={inputStyle} />
+                    <button type="button" onClick={() => setShowSecretKey(!showSecretKey)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded" style={{ color: '#edf2f740' }}>
+                      {showSecretKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {stripeError && (
+                  <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: '#ef444410', border: '1px solid #ef444420' }}>
+                    <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#ef4444' }} />
+                    <p className="text-xs" style={{ color: '#ef4444' }}>{stripeError}</p>
+                  </div>
+                )}
+
+                {stripeSuccess && (
+                  <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: '#22c55e10', border: '1px solid #22c55e20' }}>
+                    <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#22c55e' }} />
+                    <p className="text-xs" style={{ color: '#22c55e' }}>{stripeSuccess}</p>
+                  </div>
+                )}
+
+                <button onClick={handleStripeSave}
+                  disabled={stripeSaving || !stripeSecretKey || !stripeSecretKey.startsWith('sk_')}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-40"
+                  style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
+                  {stripeSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+                  {stripeSaving ? t('msg.processing') : t('settings.testConnection')}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ─── Payment Instructions ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <CreditCard className="w-4 h-4" style={{ color: '#5a67d8' }} /> Payment Instructions
+              <FileText className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.paymentInstructions')}
             </h2>
             <textarea value={settings.payment_instructions} onChange={e => update('payment_instructions', e.target.value)}
               placeholder="Bank: First National Bank\nAccount: 1234567890\nRouting: 021000021\n\nOr pay via PayPal: billing@company.com\nOr pay via Wise: company.com/pay"
               rows={6} className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 resize-none transition-all font-mono"
               style={inputStyle} />
             <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>
-              These instructions will appear at the bottom of your invoices and PDF exports.
+              {t('settings.paymentInstructionsHint')}
             </p>
           </div>
 
-          {/* Account */}
+          {/* ─── Account ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-            <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Account</h2>
+            <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('settings.account')}</h2>
             <button onClick={handleSignOut}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all hover:bg-red-500/10"
               style={{ borderColor: '#ef444430', color: '#ef4444' }}>

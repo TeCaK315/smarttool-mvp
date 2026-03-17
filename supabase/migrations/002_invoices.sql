@@ -1,31 +1,28 @@
 -- Create invoices table
-CREATE TABLE IF NOT EXISTS invoices (
+CREATE TABLE invoices (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   invoice_number TEXT NOT NULL,
   client_name TEXT NOT NULL,
   client_email TEXT NOT NULL,
   client_address TEXT,
-  client_phone TEXT,
-  items JSONB NOT NULL DEFAULT '[]',
-  subtotal DECIMAL(10,2) NOT NULL DEFAULT 0,
-  tax DECIMAL(10,2) NOT NULL DEFAULT 0,
-  total DECIMAL(10,2) NOT NULL DEFAULT 0,
+  amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'paid')),
   due_date DATE NOT NULL,
   notes TEXT,
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'paid', 'overdue')),
+  items JSONB NOT NULL DEFAULT '[]',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Create index for user_id
-CREATE INDEX IF NOT EXISTS invoices_user_id_idx ON invoices(user_id);
+CREATE INDEX idx_invoices_user_id ON invoices(user_id);
 
 -- Create index for status
-CREATE INDEX IF NOT EXISTS invoices_status_idx ON invoices(status);
+CREATE INDEX idx_invoices_status ON invoices(status);
 
 -- Create index for due_date
-CREATE INDEX IF NOT EXISTS invoices_due_date_idx ON invoices(due_date);
+CREATE INDEX idx_invoices_due_date ON invoices(due_date);
 
 -- Enable RLS
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;

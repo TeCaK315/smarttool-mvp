@@ -22,12 +22,12 @@ const CURRENCIES = [
 ];
 
 const PAYMENT_STATUSES = [
-  { value: 'draft', label: 'Draft', color: '#94a3b8' },
-  { value: 'sent', label: 'Sent', color: '#3b82f6' },
-  { value: 'unpaid', label: 'Unpaid', color: '#f59e0b' },
-  { value: 'paid', label: 'Paid', color: '#22c55e' },
-  { value: 'overdue', label: 'Overdue', color: '#ef4444' },
-  { value: 'cancelled', label: 'Cancelled', color: '#6b7280' },
+  { value: 'draft', labelKey: 'status.draft', color: '#94a3b8' },
+  { value: 'sent', labelKey: 'status.sent', color: '#3b82f6' },
+  { value: 'unpaid', labelKey: 'status.overdue', color: '#f59e0b' },
+  { value: 'paid', labelKey: 'status.paid', color: '#22c55e' },
+  { value: 'overdue', labelKey: 'status.overdue', color: '#ef4444' },
+  { value: 'cancelled', labelKey: 'status.cancelled', color: '#6b7280' },
 ];
 
 interface LineItem {
@@ -45,10 +45,10 @@ interface SenderProfile {
 }
 
 const PAYMENT_TERMS = [
-  { value: 'due_on_receipt', label: 'Due on Receipt' },
-  { value: 'net_15', label: 'Net 15' },
-  { value: 'net_30', label: 'Net 30' },
-  { value: 'net_60', label: 'Net 60' },
+  { value: 'due_on_receipt', labelKey: 'payment.dueOnReceipt' },
+  { value: 'net_15', labelKey: 'payment.net15' },
+  { value: 'net_30', labelKey: 'payment.net30' },
+  { value: 'net_60', labelKey: 'payment.net60' },
 ];
 
 const PROFILE_KEY = 'SmartTool MVP_sender_profile';
@@ -332,15 +332,15 @@ export default function CreatePage() {
                   onClick={saveSenderProfile}
                   className="flex items-center gap-1 text-[11px] font-medium px-2 py-1 rounded-lg transition-all"
                   style={{ color: senderSaved ? '#f6ad55' : '#5a67d8', background: senderSaved ? '#f6ad5515' : '#5a67d810' }}
-                  title="Save as default"
+                  title={t('create.saveDefault')}
                 >
                   <Save className="w-3 h-3" />
-                  {senderSaved ? 'Saved' : 'Save'}
+                  {senderSaved ? t('create.saved') : t('action.save')}
                 </button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Business Name</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.businessName')}</label>
                   <input
                     type="text"
                     value={sender.business_name}
@@ -351,7 +351,7 @@ export default function CreatePage() {
                   />
                 </div>
                 <div>
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Email</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.email')}</label>
                   <input
                     type="email"
                     value={sender.email}
@@ -362,7 +362,7 @@ export default function CreatePage() {
                   />
                 </div>
                 <div>
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Address</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.address')}</label>
                   <input
                     type="text"
                     value={sender.address}
@@ -383,7 +383,7 @@ export default function CreatePage() {
               </div>
               <div className="space-y-3">
                 <div className="relative">
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Client Name</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.clientName')}</label>
                   <input
                     type="text"
                     value={recipient.name}
@@ -430,7 +430,7 @@ export default function CreatePage() {
                   )}
                 </div>
                 <div>
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Client Email</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.clientEmail')}</label>
                   <input
                     type="email"
                     value={recipient.email}
@@ -441,7 +441,7 @@ export default function CreatePage() {
                   />
                 </div>
                 <div>
-                  <label className={labelClasses} style={{ color: '#edf2f750' }}>Client Address</label>
+                  <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.clientAddress')}</label>
                   <input
                     type="text"
                     value={recipient.address}
@@ -460,7 +460,7 @@ export default function CreatePage() {
             <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('create.details')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Number</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.number')}</label>
                 <input
                   type="text"
                   value={docNumber}
@@ -470,7 +470,7 @@ export default function CreatePage() {
                 />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Date</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.date')}</label>
                 <input
                   type="date"
                   value={docDate}
@@ -480,20 +480,20 @@ export default function CreatePage() {
                 />
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Payment Terms</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('create.paymentTerms')}</label>
                 <select
                   value={paymentTerms}
                   onChange={(e) => setPaymentTerms(e.target.value)}
                   className={inputClasses}
                   style={inputStyle}
                 >
-                  {PAYMENT_TERMS.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
+                  {PAYMENT_TERMS.map(term => (
+                    <option key={term.value} value={term.value}>{t(term.labelKey)}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Due Date</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.dueDate')}</label>
                 <input
                   type="date"
                   value={dueDate}
@@ -505,7 +505,7 @@ export default function CreatePage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Currency</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.currency')}</label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
@@ -518,7 +518,7 @@ export default function CreatePage() {
                 </select>
               </div>
               <div>
-                <label className={labelClasses} style={{ color: '#edf2f750' }}>Status</label>
+                <label className={labelClasses} style={{ color: '#edf2f750' }}>{t('label.status')}</label>
                 <select
                   value={paymentStatus}
                   onChange={(e) => setPaymentStatus(e.target.value)}
@@ -526,7 +526,7 @@ export default function CreatePage() {
                   style={inputStyle}
                 >
                   {PAYMENT_STATUSES.map(s => (
-                    <option key={s.value} value={s.value}>{s.label}</option>
+                    <option key={s.value} value={s.value}>{t(s.labelKey)}</option>
                   ))}
                 </select>
               </div>
@@ -549,10 +549,10 @@ export default function CreatePage() {
 
             {/* Table header */}
             <div className="hidden sm:grid grid-cols-12 gap-3 mb-2 px-1">
-              <div className="col-span-5 text-xs font-medium" style={{ color: '#edf2f750' }}>Description</div>
-              <div className="col-span-2 text-xs font-medium" style={{ color: '#edf2f750' }}>Qty</div>
-              <div className="col-span-2 text-xs font-medium" style={{ color: '#edf2f750' }}>Rate</div>
-              <div className="col-span-2 text-xs font-medium text-right" style={{ color: '#edf2f750' }}>Amount</div>
+              <div className="col-span-5 text-xs font-medium" style={{ color: '#edf2f750' }}>{t('label.description')}</div>
+              <div className="col-span-2 text-xs font-medium" style={{ color: '#edf2f750' }}>{t('label.quantity')}</div>
+              <div className="col-span-2 text-xs font-medium" style={{ color: '#edf2f750' }}>{t('label.rate')}</div>
+              <div className="col-span-2 text-xs font-medium text-right" style={{ color: '#edf2f750' }}>{t('label.amount')}</div>
               <div className="col-span-1" />
             </div>
 
@@ -618,7 +618,7 @@ export default function CreatePage() {
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Payment instructions, thank you message, or additional terms..."
+              placeholder={t('create.notesPlaceholder')}
               rows={3}
               className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 resize-none transition-all"
               style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
@@ -640,7 +640,7 @@ export default function CreatePage() {
                     <p className="text-xs font-medium" style={{ color: '#edf2f770' }}>{sender.business_name}</p>
                   )}
                   {recipient.name && (
-                    <p className="text-xs mt-1" style={{ color: '#edf2f750' }}>To: {recipient.name}</p>
+                    <p className="text-xs mt-1" style={{ color: '#edf2f750' }}>{t('label.to')}: {recipient.name}</p>
                   )}
                   {docNumber && (
                     <p className="text-[11px] font-mono mt-1" style={{ color: '#edf2f740' }}>{docNumber}</p>
@@ -650,15 +650,15 @@ export default function CreatePage() {
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span style={{ color: '#edf2f750' }}>Items</span>
+                  <span style={{ color: '#edf2f750' }}>{t('create.items')}</span>
                   <span className="font-mono text-xs" style={{ color: '#edf2f750' }}>{items.filter(i => i.description).length}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span style={{ color: '#edf2f750' }}>Subtotal</span>
+                  <span style={{ color: '#edf2f750' }}>{t('label.subtotal')}</span>
                   <span style={{ color: '#edf2f7' }}>{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span style={{ color: '#edf2f750' }}>Tax</span>
+                  <span style={{ color: '#edf2f750' }}>{t('label.tax')}</span>
                   <div className="flex items-center gap-2">
                     <input
                       type="number"
@@ -676,12 +676,12 @@ export default function CreatePage() {
                 </div>
                 {taxRate > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: '#edf2f750' }}>Tax amount</span>
+                    <span style={{ color: '#edf2f750' }}>{t('create.taxAmount')}</span>
                     <span style={{ color: '#edf2f7' }}>{formatCurrency(taxAmount)}</span>
                   </div>
                 )}
                 <div className="border-t pt-3 flex justify-between" style={{ borderColor: '#5a67d815' }}>
-                  <span className="text-sm font-semibold" style={{ color: '#edf2f7' }}>Total</span>
+                  <span className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{t('label.total')}</span>
                   <span className="text-xl font-bold" style={{ color: '#5a67d8' }}>{formatCurrency(total)}</span>
                 </div>
               </div>
