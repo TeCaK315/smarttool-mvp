@@ -1,13 +1,10 @@
--- Создание таблицы счетов
+-- Создание таблицы для счетов
 CREATE TABLE IF NOT EXISTS invoices (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   invoice_number TEXT NOT NULL,
-  client_name TEXT NOT NULL,
-  client_email TEXT NOT NULL,
-  client_address TEXT,
-  client_phone TEXT,
-  items JSONB NOT NULL DEFAULT '[]',
+  client_data JSONB NOT NULL,
+  items JSONB NOT NULL,
   subtotal DECIMAL(10,2) NOT NULL DEFAULT 0,
   tax DECIMAL(10,2) NOT NULL DEFAULT 0,
   total DECIMAL(10,2) NOT NULL DEFAULT 0,
@@ -18,26 +15,32 @@ CREATE TABLE IF NOT EXISTS invoices (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Создание индексов для оптимизации запросов
-CREATE INDEX IF NOT EXISTS invoices_user_id_idx ON invoices(user_id);
-CREATE INDEX IF NOT EXISTS invoices_status_idx ON invoices(status);
-CREATE INDEX IF NOT EXISTS invoices_created_at_idx ON invoices(created_at DESC);
-CREATE INDEX IF NOT EXISTS invoices_invoice_number_idx ON invoices(invoice_number);
+-- Создание индексов
+CREATE INDEX IF NOT EXISTS idx_invoices_user_id ON invoices(user_id);
+CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
+CREATE INDEX IF NOT EXISTS idx_invoices_due_date ON invoices(due_date);
+CREATE INDEX IF NOT EXISTS idx_invoices_created_at ON invoices(created_at);
 
--- Настройка RLS (Row Level Security)
+-- Создание уникального индекса для номера счета в рамках пользователя
+CREATE UNIQUE INDEX IF NOT EXISTS idx_invoices_user_invoice_number ON invoices(user_id, invoice_number);
+
+-- RLS политики
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
 
--- Политики безопасности
-CREATE POLICY "Users can view their own invoices" ON invoices
+-- Пользователи могут видеть только свои счета
+CREATE POLICY "Users can view own invoices" ON invoices
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own invoices" ON invoices
+-- Пользователи могут создавать свои счета
+CREATE POLICY "Users can create own invoices" ON invoices
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own invoices" ON invoices
+-- Пользователи могут обновлять свои счета
+CREATE POLICY "Users can update own invoices" ON invoices
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own invoices" ON invoices
+-- Пользователи могут удалять свои счета
+CREATE POLICY "Users can delete own invoices" ON invoices
   FOR DELETE USING (auth.uid() = user_id);
 
 -- Функция для автоматического обновления updated_at
@@ -50,7 +53,7 @@ END;
 $$ language 'plpgsql';
 
 -- Триггер для автоматического обновления updated_at
-CREATE TRIGGER update_invoices_updated_at 
-  BEFORE UPDATE ON invoices 
-  FOR EACH ROW 
+CREATE TRIGGER update_invoices_updated_at
+  BEFORE UPDATE ON invoices
+  FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
