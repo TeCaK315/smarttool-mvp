@@ -42,7 +42,7 @@ export function useToast(): ToastContextValue {
 const typeConfig: Record<ToastType, { icon: typeof CheckCircle2; color: string }> = {
   success: { icon: CheckCircle2, color: '#22c55e' },
   error:   { icon: XCircle,      color: '#ef4444' },
-  info:    { icon: Info,         color: '#5a67d8' },
+  info:    { icon: Info,         color: '#4b3d66' },
 };
 
 function ToastItem({
@@ -64,18 +64,18 @@ function ToastItem({
     <div
       className="flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg max-w-sm w-full animate-[slideIn_0.3s_ease-out]"
       style={{
-        background: '#1a202c',
+        background: '#0c0a1d',
         borderColor: config.color + '40',
       }}
     >
       <Icon className="w-5 h-5 mt-0.5 shrink-0" style={{ color: config.color }} />
-      <p className="text-sm flex-1" style={{ color: '#edf2f7' }}>
+      <p className="text-sm flex-1" style={{ color: '#e4e4e4' }}>
         {toast.message}
       </p>
       <button
         onClick={() => onDismiss(toast.id)}
         className="shrink-0 hover:opacity-70 transition-opacity"
-        style={{ color: '#edf2f750' }}
+        style={{ color: '#e4e4e450' }}
       >
         <X className="w-4 h-4" />
       </button>

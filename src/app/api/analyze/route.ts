@@ -14,27 +14,37 @@ function getOpenAI(): OpenAI {
   return _openai;
 }
 
-const SYSTEM_PROMPT = `Создать счет на основе данных клиента и суммы.\\n\\nYour purpose: Автоматическое создание и отправка счетов на основе введенных данных.\\n\\nValue you provide: Сокращение времени на выставление счетов и снижение ошибок благодаря автоматизации и интеграции.\\n\\nYour key capabilities:\\n- Автоматизированное создание счетов\\n- Интеграция с популярными платежными системами\\n\\nYour advantage: Автоматизация и простота интеграции, что экономит время и снижает ошибки.\\n\\nOUTPUT INSTRUCTIONS:\\nYou must PRODUCE the actual product output — not analyze or describe it.\\nFor example: if you are an invoice generator, GENERATE the actual invoice.\\nIf you are a quiz maker, CREATE actual quiz questions.\\nIf you are a business plan generator, WRITE the actual business plan.\\n\\nALWAYS respond in English.\\n\\nReturn a JSON object with this structure:\\n{\\n  "title": "Title of the generated output",\\n  "executive_summary": "Brief 1-2 sentence summary of what was produced",\\n  "sections": [\\n    {\\n      "heading": "Section name",\\n      "content": "Detailed content for this section",\\n      "key_points": ["Important detail 1", "Important detail 2"]\\n    }\\n  ],\\n  "conclusion": "Summary or total / final note",\\n  "recommendations": ["Next step 1", "Next step 2"]\\n}\\n\\nMake the sections SPECIFIC to the actual product output.\\nUse as many sections as needed to fully represent the result.\\nBe detailed, professional, and immediately useful.`;
+const SYSTEM_PROMPT = `Analyze the input data to provide optimization suggestions.\\n\\nYour purpose: AI analyzes user data to identify inefficiencies and suggest optimizations\\n\\nValue you provide: Optimize Your Supply Chain Effortlessly\\n\\nYour key capabilities:\\n- Automated Data Analysis\\n- User-Friendly Interface\\n\\nYour advantage: Automated insights reduce complexity and errors significantly.\\n\\nOUTPUT INSTRUCTIONS:\\nYou must PRODUCE the actual product output — not analyze or describe it.\\nFor example: if you are an invoice generator, GENERATE the actual invoice.\\nIf you are a quiz maker, CREATE actual quiz questions.\\nIf you are a business plan generator, WRITE the actual business plan.\\n\\nALWAYS respond in English.\\n\\nReturn a JSON object with this structure:\\n{\\n  "title": "Title of the generated output",\\n  "executive_summary": "Brief 1-2 sentence summary of what was produced",\\n  "sections": [\\n    {\\n      "heading": "Section name",\\n      "content": "Detailed content for this section",\\n      "key_points": ["Important detail 1", "Important detail 2"]\\n    }\\n  ],\\n  "conclusion": "Summary or total / final note",\\n  "recommendations": ["Next step 1", "Next step 2"]\\n}\\n\\nMake the sections SPECIFIC to the actual product output.\\nUse as many sections as needed to fully represent the result.\\nBe detailed, professional, and immediately useful.`;
 
 // Build a contextual demo response using actual user input
 function buildDemoResponse(body: Record<string, any>): Record<string, any> {
-  const inputSummary = `${body['client_name'] || 'N/A'}, ${body['invoice_amount'] || 'N/A'}, ${body['due_date'] || 'N/A'}`;
+  const inputSummary = `${body['input_data'] || 'N/A'}, ${body['parameters'] || 'N/A'}`;
   return {
     title: `SmartTool MVP — ${inputSummary}`,
-    executive_summary: `Your . has been generated based on: ${inputSummary}. .. This is a demo preview — connect your OpenAI API key for AI-powered results.`,
+    executive_summary: `Your Supply Chain Report has been generated based on: ${inputSummary}. Optimize Your Supply Chain Effortlessly. This is a demo preview — connect your OpenAI API key for AI-powered results.`,
     sections: [
       {
-        heading: 'Details',
-        content: `.. Based on your input: client_name: ${body['client_name'] || 'N/A'} | invoice_amount: ${body['invoice_amount'] || 'N/A'} | due_date: ${body['due_date'] || 'N/A'}.`,
-        key_points: [`${body['client_name'] ? 'client_name: ' + body['client_name'] : 'client_name: pending'}`, `${body['invoice_amount'] ? 'invoice_amount: ' + body['invoice_amount'] : 'invoice_amount: pending'}`, `${body['due_date'] ? 'due_date: ' + body['due_date'] : 'due_date: pending'}`],
+        heading: 'Automated Data Analysis',
+        content: `Automatically analyze and report on data inputs.. Based on your input: input_data: ${body['input_data'] || 'N/A'} | parameters: ${body['parameters'] || 'N/A'}.`,
+        key_points: [`${body['input_data'] ? 'input_data: ' + body['input_data'] : 'input_data: pending'}`, `${body['parameters'] ? 'parameters: ' + body['parameters'] : 'parameters: pending'}`],
       },
       {
-        heading: 'Details',
-        content: `PayPal, Stripe   .. Based on your input: client_name: ${body['client_name'] || 'N/A'} | invoice_amount: ${body['invoice_amount'] || 'N/A'} | due_date: ${body['due_date'] || 'N/A'}.`,
-        key_points: [`${body['client_name'] ? 'client_name: ' + body['client_name'] : 'client_name: pending'}`, `${body['invoice_amount'] ? 'invoice_amount: ' + body['invoice_amount'] : 'invoice_amount: pending'}`, `${body['due_date'] ? 'due_date: ' + body['due_date'] : 'due_date: pending'}`],
+        heading: 'User-Friendly Interface',
+        content: `Design an intuitive interface for easy data input and report generation.. Based on your input: input_data: ${body['input_data'] || 'N/A'} | parameters: ${body['parameters'] || 'N/A'}.`,
+        key_points: [`${body['input_data'] ? 'input_data: ' + body['input_data'] : 'input_data: pending'}`, `${body['parameters'] ? 'parameters: ' + body['parameters'] : 'parameters: pending'}`],
+      },
+      {
+        heading: 'GDPR Compliance Feature',
+        content: `Implement data handling practices that comply with GDPR regulations.. Based on your input: input_data: ${body['input_data'] || 'N/A'} | parameters: ${body['parameters'] || 'N/A'}.`,
+        key_points: [`${body['input_data'] ? 'input_data: ' + body['input_data'] : 'input_data: pending'}`, `${body['parameters'] ? 'parameters: ' + body['parameters'] : 'parameters: pending'}`],
+      },
+      {
+        heading: 'Cost Optimization Suggestions',
+        content: `Provide actionable suggestions for cost reduction based on data analysis.. Based on your input: input_data: ${body['input_data'] || 'N/A'} | parameters: ${body['parameters'] || 'N/A'}.`,
+        key_points: [`${body['input_data'] ? 'input_data: ' + body['input_data'] : 'input_data: pending'}`, `${body['parameters'] ? 'parameters: ' + body['parameters'] : 'parameters: pending'}`],
       }
     ],
-    conclusion: `Your . for ${inputSummary} is ready. Connect an OpenAI API key in your environment variables for full AI-powered generation.`,
+    conclusion: `Your Supply Chain Report for ${inputSummary} is ready. Connect an OpenAI API key in your environment variables for full AI-powered generation.`,
     recommendations: ['Add OPENAI_API_KEY to your environment variables for real AI output', 'Review all sections above', 'Export or share your results'],
   };
 }
@@ -69,9 +79,8 @@ export async function POST(req: NextRequest) {
     const input = body.input || body.q || '';
     
     const missingFields: string[] = [];
-    if (!body['client_name']) missingFields.push('client_name');
-    if (!body['invoice_amount']) missingFields.push('invoice_amount');
-    if (!body['due_date']) missingFields.push('due_date');
+    if (!body['input_data']) missingFields.push('input_data');
+    if (!body['parameters']) missingFields.push('parameters');
     if (missingFields.length > 0) {
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
@@ -99,7 +108,7 @@ export async function POST(req: NextRequest) {
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: `Process the following input and produce the result:\n\nclient_name: ${body['client_name']}\ninvoice_amount: ${body['invoice_amount']}\ndue_date: ${body['due_date']}` },
+        { role: 'user', content: `Process the following input and produce the result:\n\ninput_data: ${body['input_data']}\nparameters: ${body['parameters']}` },
       ],
       temperature: 0.7,
       max_tokens: 2000,

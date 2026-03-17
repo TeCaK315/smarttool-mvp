@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,11 +9,11 @@
    ═══════════════════════════════════════════ */
 
 :root {
-  --background: #1a202c;
-  --foreground: #edf2f7;
-  --primary: #5a67d8;
-  --secondary: #4a5568;
-  --accent: #f6ad55;
+  --background: #0c0a1d;
+  --foreground: #e4e4e4;
+  --primary: #4b3d66;
+  --secondary: #6a5b8a;
+  --accent: #ff5c00;
   --surface-1: #ffffff08;
   --surface-2: #ffffff12;
   --radius-sm: 8px;
@@ -30,7 +30,7 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Roboto', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', 'Inter', system-ui, -apple-system, sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -39,7 +39,7 @@ body {
 
 /* ═══ Typography ═══ */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', 'Roboto', system-ui, sans-serif;
+  font-family: 'Cabinet Grotesk', 'Inter', system-ui, sans-serif;
   letter-spacing: -0.025em;
   line-height: 1.15;
   font-weight: 700;
@@ -82,13 +82,13 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary) !important;
-  box-shadow: 0 0 0 3px #5a67d815, 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15);
+  box-shadow: 0 0 0 3px #4b3d6615, 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15);
 }
 
 /* ═══ Cards & Surfaces ═══ */
 .surface-card {
   background: var(--surface-1);
-  border: 1px solid #5a67d808;
+  border: 1px solid #4b3d6608;
   border-radius: var(--radius-lg);
   box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15);
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
@@ -96,7 +96,7 @@ input:focus, textarea:focus, select:focus {
 
 .surface-card:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
-  border-color: #5a67d818;
+  border-color: #4b3d6618;
 }
 
 .surface-elevated {
@@ -107,7 +107,7 @@ input:focus, textarea:focus, select:focus {
 
 /* ═══ Glow effect for CTAs ═══ */
 .glow-primary {
-  box-shadow: 0 0 40px #5a67d825, 0 0 80px #5a67d810;
+  box-shadow: 0 0 40px #4b3d6625, 0 0 80px #4b3d6610;
 }
 
 /* ═══ Animations ═══ */
@@ -153,9 +153,9 @@ input:focus, textarea:focus, select:focus {
 .skeleton {
   background: linear-gradient(
     90deg,
-    #5a67d808 0%,
-    #5a67d815 50%,
-    #5a67d808 100%
+    #4b3d6608 0%,
+    #4b3d6615 50%,
+    #4b3d6608 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -165,18 +165,18 @@ input:focus, textarea:focus, select:focus {
 /* ═══ Scrollbar ═══ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #5a67d820; border-radius: 100px; }
-::-webkit-scrollbar-thumb:hover { background: #5a67d840; }
+::-webkit-scrollbar-thumb { background: #4b3d6620; border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: #4b3d6640; }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #5a67d820 transparent;
+  scrollbar-color: #4b3d6620 transparent;
 }
 
 /* ═══ Selection ═══ */
 ::selection {
-  background: #5a67d830;
-  color: #edf2f7;
+  background: #4b3d6630;
+  color: #e4e4e4;
 }
 
 /* ═══ Print ═══ */

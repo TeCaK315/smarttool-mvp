@@ -25,38 +25,38 @@ export default function PricingCard({ plan, isCurrentPlan, onUpgrade, loading, h
         isPro || highlighted ? 'ring-2' : ''
       }`}
       style={{
-        background: '#1a202c',
-        borderColor: isPro || highlighted ? '#5a67d8' : '#5a67d840',
-        ...(isPro || highlighted ? { boxShadow: '0 0 30px #5a67d820' } : {}),
+        background: '#0c0a1d',
+        borderColor: isPro || highlighted ? '#4b3d66' : '#4b3d6640',
+        ...(isPro || highlighted ? { boxShadow: '0 0 30px #4b3d6620' } : {}),
       }}
     >
       {(isPro || highlighted) && (
         <div
           className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold text-white"
-          style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+          style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
         >
           POPULAR
         </div>
       )}
 
-      <h3 className="text-xl font-heading font-bold mb-2" style={{ color: '#edf2f7' }}>
+      <h3 className="text-xl font-heading font-bold mb-2" style={{ color: '#e4e4e4' }}>
         {plan.name}
       </h3>
 
       <div className="mb-6">
-        <span className="text-4xl font-bold" style={{ color: '#edf2f7' }}>
+        <span className="text-4xl font-bold" style={{ color: '#e4e4e4' }}>
           ${plan.price === 0 ? 'Free' : `$${plan.price}`}
         </span>
         {plan.price > 0 && (
-          <span className="text-sm ml-1" style={{ color: '#edf2f770' }}>/month</span>
+          <span className="text-sm ml-1" style={{ color: '#e4e4e470' }}>/month</span>
         )}
       </div>
 
       <ul className="space-y-3 mb-8 flex-1">
         {plan.features.map((feature: string, i: number) => (
           <li key={i} className="flex items-start gap-2">
-            <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#5a67d8' }} />
-            <span className="text-sm" style={{ color: '#edf2f780' }}>{feature}</span>
+            <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#4b3d66' }} />
+            <span className="text-sm" style={{ color: '#e4e4e480' }}>{feature}</span>
           </li>
         ))}
       </ul>
@@ -66,8 +66,8 @@ export default function PricingCard({ plan, isCurrentPlan, onUpgrade, loading, h
         disabled={isCurrentPlan || loading}
         className="w-full py-3 rounded-xl font-semibold transition-all disabled:opacity-50"
         style={{
-          background: isCurrentPlan ? '#5a67d820' : '#5a67d8',
-          color: isCurrentPlan ? '#edf2f770' : 'white',
+          background: isCurrentPlan ? '#4b3d6620' : '#4b3d66',
+          color: isCurrentPlan ? '#e4e4e470' : 'white',
         }}
       >
         {loading ? (

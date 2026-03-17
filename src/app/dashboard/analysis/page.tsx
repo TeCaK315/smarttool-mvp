@@ -18,7 +18,7 @@ export default function AnalysisPage() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#5a67d8' }} />
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#4b3d66' }} />
       </div>
     }>
       <AnalysisContent />
@@ -51,7 +51,7 @@ function AnalysisContent() {
   const loadingSteps = [
     'Preparing data...',
     'Processing your request...',
-    'Generating Result...',
+    'Generating Supply Chain Report...',
     'Finalizing...',
   ];
 
@@ -238,7 +238,7 @@ function AnalysisContent() {
         });
       }
 
-      const title = result.title || 'Result';
+      const title = result.title || 'Supply Chain Report';
       const subtitle = result.doc_number ? result.doc_number + (recipient.name ? ' — ' + recipient.name : '') : undefined;
       const doc = generatePDF({ title, subtitle, sections });
       const filename = (result.doc_number || title).replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
@@ -285,7 +285,7 @@ function AnalysisContent() {
         sections.push({ heading: 'Totals', items: ['Total: $' + Number(result.total).toFixed(2)] });
       }
 
-      const title = result.title || 'Result';
+      const title = result.title || 'Supply Chain Report';
       const doc = generatePDF({ title, sections });
       const pdfBase64 = doc.output('datauristring');
 
@@ -294,7 +294,7 @@ function AnalysisContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: emailTo,
-          subject: (result.doc_number || 'Result') + ' from ' + (result.sender?.business_name || 'SmartTool MVP'),
+          subject: (result.doc_number || 'Supply Chain Report') + ' from ' + (result.sender?.business_name || 'SmartTool MVP'),
           body: 'Please find the attached ' + (result.doc_number || 'document') + '.\n\nTotal: $' + (result.total || 0).toFixed(2) + '\n\nThank you!',
           pdf_base64: pdfBase64,
           filename: (result.doc_number || 'document') + '.pdf',
@@ -354,19 +354,19 @@ function AnalysisContent() {
           <div className="relative w-20 h-20 mx-auto mb-6">
             <div
               className="absolute inset-0 rounded-full animate-ping opacity-20"
-              style={{ background: '#5a67d8' }}
+              style={{ background: '#4b3d66' }}
             />
             <div
               className="relative w-20 h-20 rounded-full flex items-center justify-center"
-              style={{ background: '#5a67d820' }}
+              style={{ background: '#4b3d6620' }}
             >
-              <Loader2 className="w-9 h-9 animate-spin" style={{ color: '#5a67d8' }} />
+              <Loader2 className="w-9 h-9 animate-spin" style={{ color: '#4b3d66' }} />
             </div>
           </div>
-          <p className="text-base font-medium mb-1" style={{ color: '#edf2f7' }}>
+          <p className="text-base font-medium mb-1" style={{ color: '#e4e4e4' }}>
             {loadingSteps[loadingStep] || loadingSteps[0]}
           </p>
-          <p className="text-sm" style={{ color: '#edf2f750' }}>
+          <p className="text-sm" style={{ color: '#e4e4e450' }}>
             This may take a moment
           </p>
           {/* Progress dots */}
@@ -376,7 +376,7 @@ function AnalysisContent() {
                 key={i}
                 className="w-2 h-2 rounded-full transition-all duration-300"
                 style={{
-                  background: i <= loadingStep ? '#5a67d8' : '#5a67d820',
+                  background: i <= loadingStep ? '#4b3d66' : '#4b3d6620',
                   transform: i === loadingStep ? 'scale(1.3)' : 'scale(1)',
                 }}
               />
@@ -398,20 +398,20 @@ function AnalysisContent() {
           >
             <AlertCircle className="w-7 h-7" style={{ color: '#ef4444' }} />
           </div>
-          <h2 className="text-lg font-bold mb-2" style={{ color: '#edf2f7' }}>Something went wrong</h2>
-          <p className="text-sm mb-6" style={{ color: '#edf2f770' }}>{error}</p>
+          <h2 className="text-lg font-bold mb-2" style={{ color: '#e4e4e4' }}>Something went wrong</h2>
+          <p className="text-sm mb-6" style={{ color: '#e4e4e470' }}>{error}</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => runAnalysis()}
               className="px-5 py-2 rounded-xl text-sm font-medium text-white flex items-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+              style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
             >
               <RefreshCw className="w-4 h-4" /> Retry
             </button>
             <Link
               href="/dashboard/create"
               className="px-5 py-2 rounded-xl text-sm font-medium border flex items-center gap-2"
-              style={{ borderColor: '#5a67d820', color: '#edf2f7' }}
+              style={{ borderColor: '#4b3d6620', color: '#e4e4e4' }}
             >
               <ArrowLeft className="w-4 h-4" /> Back
             </Link>
@@ -426,14 +426,14 @@ function AnalysisContent() {
     return (
       <div className="flex items-center justify-center py-32">
         <div className="text-center">
-          <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: '#edf2f750' }} />
-          <p className="text-sm mb-4" style={{ color: '#edf2f770' }}>No data to display</p>
+          <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: '#e4e4e450' }} />
+          <p className="text-sm mb-4" style={{ color: '#e4e4e470' }}>No data to display</p>
           <Link
             href="/dashboard/create"
             className="px-5 py-2 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+            style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
           >
-            <PlusCircle className="w-4 h-4" /> Create Result
+            <PlusCircle className="w-4 h-4" /> Create Supply Chain Report
           </Link>
         </div>
       </div>
@@ -456,17 +456,17 @@ function AnalysisContent() {
             className="p-2 rounded-lg transition-colors hover:opacity-80"
             style={{ background: '#ffffff08' }}
           >
-            <ArrowLeft className="w-5 h-5" style={{ color: '#5a67d8' }} />
+            <ArrowLeft className="w-5 h-5" style={{ color: '#4b3d66' }} />
           </Link>
           <div>
             <h1
               className="text-xl font-bold"
-              style={{ fontFamily: 'Montserrat, sans-serif', color: '#edf2f7' }}
+              style={{ fontFamily: 'Cabinet Grotesk, sans-serif', color: '#e4e4e4' }}
             >
-              {result.title || 'Result'}
+              {result.title || 'Supply Chain Report'}
             </h1>
             {result.subtitle && (
-              <p className="text-sm mt-0.5" style={{ color: '#edf2f750' }}>{result.subtitle}</p>
+              <p className="text-sm mt-0.5" style={{ color: '#e4e4e450' }}>{result.subtitle}</p>
             )}
           </div>
         </div>
@@ -503,7 +503,7 @@ function AnalysisContent() {
               router.push('/dashboard/create');
             }}
             className="p-2 rounded-lg border transition-colors hover:opacity-80 hidden sm:flex"
-            style={{ borderColor: '#5a67d820', color: '#edf2f770' }}
+            style={{ borderColor: '#4b3d6620', color: '#e4e4e470' }}
             title="Edit"
           >
             <Edit3 className="w-4 h-4" />
@@ -511,7 +511,7 @@ function AnalysisContent() {
           <button
             onClick={() => { setEmailTo(result.recipient?.email || ''); setShowEmailModal(true); }}
             className="p-2 rounded-lg border transition-colors hover:opacity-80 hidden sm:flex"
-            style={{ borderColor: '#5a67d820', color: '#edf2f770' }}
+            style={{ borderColor: '#4b3d6620', color: '#e4e4e470' }}
             title="Send Email"
           >
             <Mail className="w-4 h-4" />
@@ -519,7 +519,7 @@ function AnalysisContent() {
           <button
             onClick={handlePrint}
             className="p-2 rounded-lg border transition-colors hover:opacity-80 hidden sm:flex"
-            style={{ borderColor: '#5a67d820', color: '#edf2f770' }}
+            style={{ borderColor: '#4b3d6620', color: '#e4e4e470' }}
             title="Print"
           >
             <Printer className="w-4 h-4" />
@@ -527,7 +527,7 @@ function AnalysisContent() {
           <button
             onClick={handleExportPdf}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-colors hover:opacity-80"
-            style={{ borderColor: '#5a67d820', color: '#edf2f7' }}
+            style={{ borderColor: '#4b3d6620', color: '#e4e4e4' }}
           >
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">PDF</span>
@@ -535,7 +535,7 @@ function AnalysisContent() {
           <Link
             href="/dashboard/create"
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+            style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
           >
             <PlusCircle className="w-4 h-4" />
             <span className="hidden sm:inline">New</span>
@@ -546,7 +546,7 @@ function AnalysisContent() {
       {/* ─── Document Preview ─── */}
       <div
         className="rounded-xl border overflow-hidden print:border-0 print:rounded-none"
-        style={{ borderColor: '#5a67d808' }}
+        style={{ borderColor: '#4b3d6608' }}
       >
         {hasLineItems ? (
           <DocumentView data={result} inputData={inputData} />
@@ -561,26 +561,26 @@ function AnalysisContent() {
       {showEmailModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:hidden" style={{ background: 'rgba(0,0,0,0.5)' }}>
           <div className="w-full max-w-md rounded-2xl p-6" style={{ background: '#ffffff12', boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.25)' }}>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <Mail className="w-5 h-5" style={{ color: '#5a67d8' }} />
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: '#e4e4e4' }}>
+              <Mail className="w-5 h-5" style={{ color: '#4b3d66' }} />
               Send via Email
             </h3>
             {emailSent ? (
               <div className="text-center py-8">
                 <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: '#22c55e' }} />
-                <p className="text-sm font-medium" style={{ color: '#edf2f7' }}>Email sent successfully!</p>
+                <p className="text-sm font-medium" style={{ color: '#e4e4e4' }}>Email sent successfully!</p>
               </div>
             ) : (
               <>
                 <div className="mb-4">
-                  <label className="block text-xs font-medium mb-1.5" style={{ color: '#edf2f750' }}>Recipient Email</label>
+                  <label className="block text-xs font-medium mb-1.5" style={{ color: '#e4e4e450' }}>Recipient Email</label>
                   <input
                     type="email"
                     value={emailTo}
                     onChange={(e) => setEmailTo(e.target.value)}
                     placeholder="client@example.com"
                     className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all"
-                    style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
+                    style={{ background: '#0c0a1d', borderColor: '#4b3d6615', color: '#e4e4e4' }}
                     autoFocus
                   />
                 </div>
@@ -589,7 +589,7 @@ function AnalysisContent() {
                     onClick={handleSendEmail}
                     disabled={emailSending || !emailTo}
                     className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 disabled:opacity-50"
-                    style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+                    style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
                   >
                     {emailSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     {emailSending ? 'Sending...' : 'Send'}
@@ -597,7 +597,7 @@ function AnalysisContent() {
                   <button
                     onClick={() => setShowEmailModal(false)}
                     className="px-4 py-2.5 rounded-xl text-sm font-medium border"
-                    style={{ borderColor: '#5a67d815', color: '#edf2f750' }}
+                    style={{ borderColor: '#4b3d6615', color: '#e4e4e450' }}
                   >
                     Cancel
                   </button>
@@ -613,11 +613,11 @@ function AnalysisContent() {
         <Link
           href="/dashboard/history"
           className="text-sm flex items-center gap-1.5 hover:opacity-80 transition-opacity"
-          style={{ color: '#edf2f750' }}
+          style={{ color: '#e4e4e450' }}
         >
           <Clock className="w-3.5 h-3.5" /> View History
         </Link>
-        <p className="text-xs" style={{ color: '#edf2f750' }}>
+        <p className="text-xs" style={{ color: '#e4e4e450' }}>
           Generated by SmartTool MVP
         </p>
       </div>
@@ -659,23 +659,23 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
   };
 
   return (
-    <div className="divide-y" style={{ borderColor: '#5a67d808' }}>
+    <div className="divide-y" style={{ borderColor: '#4b3d6608' }}>
       {/* ─── Document Header with From / To ─── */}
       <div className="p-6 sm:p-8" style={{ background: '#ffffff08' }}>
         {/* Top row: title + doc number */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-              {data.title || 'Result'}
+            <h2 className="text-xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>
+              {data.title || 'Supply Chain Report'}
             </h2>
             {data.executive_summary && (
-              <p className="text-sm mt-1 max-w-lg" style={{ color: '#edf2f770' }}>
+              <p className="text-sm mt-1 max-w-lg" style={{ color: '#e4e4e470' }}>
                 {data.executive_summary}
               </p>
             )}
           </div>
-          <div className="text-sm space-y-1 sm:text-right" style={{ color: '#edf2f770' }}>
-            {docNumber && <p className="font-mono font-semibold" style={{ color: '#5a67d8' }}>{docNumber}</p>}
+          <div className="text-sm space-y-1 sm:text-right" style={{ color: '#e4e4e470' }}>
+            {docNumber && <p className="font-mono font-semibold" style={{ color: '#4b3d66' }}>{docNumber}</p>}
             {paymentStatus && (
               <span
                 className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
@@ -688,29 +688,29 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
               </span>
             )}
             {docDate && <p>{formatDate(docDate)}</p>}
-            {dueDate && <p><span style={{ color: '#edf2f750' }}>Due: </span>{formatDate(dueDate)}</p>}
-            {paymentTerms && <p className="text-xs" style={{ color: '#edf2f750' }}>{termsLabel(paymentTerms)}</p>}
+            {dueDate && <p><span style={{ color: '#e4e4e450' }}>Due: </span>{formatDate(dueDate)}</p>}
+            {paymentTerms && <p className="text-xs" style={{ color: '#e4e4e450' }}>{termsLabel(paymentTerms)}</p>}
           </div>
         </div>
 
         {/* From / To */}
         {(sender.business_name || recipient.name) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4" style={{ borderTop: '1px solid #5a67d810' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4" style={{ borderTop: '1px solid #4b3d6610' }}>
             {sender.business_name && (
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#edf2f740' }}>From</p>
-                <p className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{sender.business_name}</p>
-                {sender.email && <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{sender.email}</p>}
-                {sender.address && <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{sender.address}</p>}
-                {sender.phone && <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{sender.phone}</p>}
+                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#e4e4e440' }}>From</p>
+                <p className="text-sm font-semibold" style={{ color: '#e4e4e4' }}>{sender.business_name}</p>
+                {sender.email && <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{sender.email}</p>}
+                {sender.address && <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{sender.address}</p>}
+                {sender.phone && <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{sender.phone}</p>}
               </div>
             )}
             {recipient.name && (
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#edf2f740' }}>To</p>
-                <p className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{recipient.name}</p>
-                {recipient.email && <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{recipient.email}</p>}
-                {recipient.address && <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{recipient.address}</p>}
+                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#e4e4e440' }}>To</p>
+                <p className="text-sm font-semibold" style={{ color: '#e4e4e4' }}>{recipient.name}</p>
+                {recipient.email && <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{recipient.email}</p>}
+                {recipient.address && <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{recipient.address}</p>}
               </div>
             )}
           </div>
@@ -723,23 +723,23 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ borderBottom: '2px solid #5a67d820' }}>
-                <th className="text-left py-3 font-semibold" style={{ color: '#edf2f7', width: '50%' }}>Description</th>
-                <th className="text-center py-3 font-semibold" style={{ color: '#edf2f7' }}>Qty</th>
-                <th className="text-right py-3 font-semibold" style={{ color: '#edf2f7' }}>Rate</th>
-                <th className="text-right py-3 font-semibold" style={{ color: '#edf2f7' }}>Amount</th>
+              <tr style={{ borderBottom: '2px solid #4b3d6620' }}>
+                <th className="text-left py-3 font-semibold" style={{ color: '#e4e4e4', width: '50%' }}>Description</th>
+                <th className="text-center py-3 font-semibold" style={{ color: '#e4e4e4' }}>Qty</th>
+                <th className="text-right py-3 font-semibold" style={{ color: '#e4e4e4' }}>Rate</th>
+                <th className="text-right py-3 font-semibold" style={{ color: '#e4e4e4' }}>Amount</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item: any, i: number) => (
                 <tr
                   key={i}
-                  style={{ borderBottom: '1px solid #5a67d810' }}
+                  style={{ borderBottom: '1px solid #4b3d6610' }}
                 >
-                  <td className="py-3" style={{ color: '#edf2f7' }}>{item.description}</td>
-                  <td className="py-3 text-center" style={{ color: '#edf2f770' }}>{item.quantity || 1}</td>
-                  <td className="py-3 text-right" style={{ color: '#edf2f770' }}>{formatCurrency(item.rate || 0)}</td>
-                  <td className="py-3 text-right font-medium" style={{ color: '#edf2f7' }}>
+                  <td className="py-3" style={{ color: '#e4e4e4' }}>{item.description}</td>
+                  <td className="py-3 text-center" style={{ color: '#e4e4e470' }}>{item.quantity || 1}</td>
+                  <td className="py-3 text-right" style={{ color: '#e4e4e470' }}>{formatCurrency(item.rate || 0)}</td>
+                  <td className="py-3 text-right font-medium" style={{ color: '#e4e4e4' }}>
                     {formatCurrency((item.quantity || 1) * (item.rate || 0))}
                   </td>
                 </tr>
@@ -754,12 +754,12 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
             <div
               key={i}
               className="rounded-lg border p-3"
-              style={{ borderColor: '#5a67d808' }}
+              style={{ borderColor: '#4b3d6608' }}
             >
-              <p className="font-medium text-sm mb-1" style={{ color: '#edf2f7' }}>{item.description}</p>
-              <div className="flex justify-between text-xs" style={{ color: '#edf2f750' }}>
+              <p className="font-medium text-sm mb-1" style={{ color: '#e4e4e4' }}>{item.description}</p>
+              <div className="flex justify-between text-xs" style={{ color: '#e4e4e450' }}>
                 <span>{item.quantity || 1} x {formatCurrency(item.rate || 0)}</span>
-                <span className="font-medium" style={{ color: '#edf2f7' }}>
+                <span className="font-medium" style={{ color: '#e4e4e4' }}>
                   {formatCurrency((item.quantity || 1) * (item.rate || 0))}
                 </span>
               </div>
@@ -770,22 +770,22 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
         {/* ─── Totals ─── */}
         <div className="mt-6 flex justify-end">
           <div className="w-full sm:w-64 space-y-2">
-            <div className="flex justify-between text-sm" style={{ color: '#edf2f770' }}>
+            <div className="flex justify-between text-sm" style={{ color: '#e4e4e470' }}>
               <span>Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
             {taxRate > 0 && (
-              <div className="flex justify-between text-sm" style={{ color: '#edf2f770' }}>
+              <div className="flex justify-between text-sm" style={{ color: '#e4e4e470' }}>
                 <span>Tax ({taxRate}%)</span>
                 <span>{formatCurrency(taxAmount)}</span>
               </div>
             )}
             <div
               className="flex justify-between pt-2 border-t"
-              style={{ borderColor: '#5a67d820' }}
+              style={{ borderColor: '#4b3d6620' }}
             >
-              <span className="text-sm font-semibold" style={{ color: '#edf2f7' }}>Total</span>
-              <span className="text-lg font-bold" style={{ color: '#5a67d8' }}>
+              <span className="text-sm font-semibold" style={{ color: '#e4e4e4' }}>Total</span>
+              <span className="text-lg font-bold" style={{ color: '#4b3d66' }}>
                 {formatCurrency(total)}
               </span>
             </div>
@@ -796,24 +796,24 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
       {/* ─── Notes ─── */}
       {data.notes && (
         <div className="p-6 sm:p-8">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#edf2f750' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#e4e4e450' }}>
             Notes
           </h3>
-          <p className="text-sm" style={{ color: '#edf2f770' }}>{data.notes}</p>
+          <p className="text-sm" style={{ color: '#e4e4e470' }}>{data.notes}</p>
         </div>
       )}
 
       {/* ─── AI Recommendations (if available) ─── */}
       {data.recommendations && data.recommendations.length > 0 && (
         <div className="p-6 sm:p-8">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#edf2f750' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#e4e4e450' }}>
             Recommendations
           </h3>
           <ul className="space-y-2">
             {data.recommendations.map((rec: any, i: number) => (
               <li key={i} className="flex items-start gap-2 text-sm">
-                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#f6ad55' }} />
-                <span style={{ color: '#edf2f770' }}>
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#ff5c00' }} />
+                <span style={{ color: '#e4e4e470' }}>
                   {typeof rec === 'string' ? rec : rec.title + ': ' + (rec.description || '')}
                 </span>
               </li>
@@ -827,24 +827,24 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
         <div className="p-6 sm:p-8 space-y-5">
           {data.sections.map((section: any, i: number) => (
             <div key={i}>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: '#edf2f7' }}>
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: '#e4e4e4' }}>
                 <span
                   className="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center text-white flex-shrink-0"
-                  style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+                  style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
                 >
                   {i + 1}
                 </span>
                 {section.heading}
               </h3>
               {section.content && (
-                <p className="text-sm leading-relaxed ml-8" style={{ color: '#edf2f770' }}>{section.content}</p>
+                <p className="text-sm leading-relaxed ml-8" style={{ color: '#e4e4e470' }}>{section.content}</p>
               )}
               {section.key_points && section.key_points.length > 0 && (
                 <ul className="mt-2 ml-8 space-y-1">
                   {section.key_points.map((point: string, j: number) => (
                     <li key={j} className="flex items-start gap-2 text-sm">
-                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: '#5a67d8' }} />
-                      <span style={{ color: '#edf2f770' }}>{point}</span>
+                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: '#4b3d66' }} />
+                      <span style={{ color: '#e4e4e470' }}>{point}</span>
                     </li>
                   ))}
                 </ul>
@@ -867,14 +867,14 @@ function ReportView({ data }: { data: any }) {
   const recommendations = data.recommendations || [];
 
   return (
-    <div className="divide-y" style={{ borderColor: '#5a67d808' }}>
+    <div className="divide-y" style={{ borderColor: '#4b3d6608' }}>
       {/* Executive Summary */}
       {executiveSummary && (
         <div className="p-6 sm:p-8" style={{ background: '#ffffff08' }}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#edf2f750' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#e4e4e450' }}>
             Summary
           </h3>
-          <p className="text-sm leading-relaxed" style={{ color: '#edf2f7' }}>{executiveSummary}</p>
+          <p className="text-sm leading-relaxed" style={{ color: '#e4e4e4' }}>{executiveSummary}</p>
         </div>
       )}
 
@@ -882,24 +882,24 @@ function ReportView({ data }: { data: any }) {
       <div className="p-6 sm:p-8 space-y-6">
         {sections.map((section: any, i: number) => (
           <div key={i}>
-            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: '#edf2f7' }}>
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: '#e4e4e4' }}>
               <span
                 className="w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center text-white flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+                style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
               >
                 {i + 1}
               </span>
               {section.heading}
             </h3>
             {section.content && (
-              <p className="text-sm leading-relaxed ml-8 mb-2" style={{ color: '#edf2f770' }}>{section.content}</p>
+              <p className="text-sm leading-relaxed ml-8 mb-2" style={{ color: '#e4e4e470' }}>{section.content}</p>
             )}
             {section.key_points && section.key_points.length > 0 && (
               <ul className="ml-8 space-y-1">
                 {section.key_points.map((point: string, j: number) => (
                   <li key={j} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: '#f6ad55' }} />
-                    <span style={{ color: '#edf2f770' }}>{point}</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: '#ff5c00' }} />
+                    <span style={{ color: '#e4e4e470' }}>{point}</span>
                   </li>
                 ))}
               </ul>
@@ -911,14 +911,14 @@ function ReportView({ data }: { data: any }) {
       {/* Recommendations */}
       {recommendations.length > 0 && (
         <div className="p-6 sm:p-8">
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#edf2f750' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#e4e4e450' }}>
             Recommendations
           </h3>
           <ul className="space-y-2">
             {recommendations.map((rec: any, i: number) => (
               <li key={i} className="flex items-start gap-2 text-sm">
-                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#f6ad55' }} />
-                <span style={{ color: '#edf2f770' }}>
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#ff5c00' }} />
+                <span style={{ color: '#e4e4e470' }}>
                   {typeof rec === 'string' ? rec : rec.title + ': ' + (rec.description || '')}
                 </span>
               </li>
@@ -930,10 +930,10 @@ function ReportView({ data }: { data: any }) {
       {/* Conclusion */}
       {conclusion && (
         <div className="p-6 sm:p-8" style={{ background: '#ffffff08' }}>
-          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#edf2f750' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#e4e4e450' }}>
             Conclusion
           </h3>
-          <p className="text-sm leading-relaxed" style={{ color: '#edf2f7' }}>{conclusion}</p>
+          <p className="text-sm leading-relaxed" style={{ color: '#e4e4e4' }}>{conclusion}</p>
         </div>
       )}
     </div>
@@ -950,32 +950,32 @@ function GenericView({ data }: { data: any }) {
   );
 
   return (
-    <div className="divide-y" style={{ borderColor: '#5a67d808' }}>
+    <div className="divide-y" style={{ borderColor: '#4b3d6608' }}>
       {entries.map(([key, value], i) => (
         <div key={i} className="p-6 sm:p-8">
           <h3
             className="text-xs font-semibold uppercase tracking-wider mb-2"
-            style={{ color: '#edf2f750' }}
+            style={{ color: '#e4e4e450' }}
           >
             {key.replace(/_/g, ' ')}
           </h3>
           {typeof value === 'string' ? (
-            <p className="text-sm leading-relaxed" style={{ color: '#edf2f7' }}>{value}</p>
+            <p className="text-sm leading-relaxed" style={{ color: '#e4e4e4' }}>{value}</p>
           ) : Array.isArray(value) ? (
             <ul className="space-y-1.5">
               {value.map((item: any, j: number) => (
                 <li key={j} className="flex items-start gap-2 text-sm">
-                  <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: '#5a67d8' }} />
-                  <span style={{ color: '#edf2f770' }}>
+                  <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: '#4b3d66' }} />
+                  <span style={{ color: '#e4e4e470' }}>
                     {typeof item === 'string' ? item : JSON.stringify(item)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : typeof value === 'number' ? (
-            <p className="text-2xl font-bold" style={{ color: '#5a67d8' }}>{value}</p>
+            <p className="text-2xl font-bold" style={{ color: '#4b3d66' }}>{value}</p>
           ) : (
-            <pre className="text-xs whitespace-pre-wrap rounded-lg p-3" style={{ color: '#edf2f770', background: '#5a67d810' }}>
+            <pre className="text-xs whitespace-pre-wrap rounded-lg p-3" style={{ color: '#e4e4e470', background: '#4b3d6610' }}>
               {JSON.stringify(value, null, 2)}
             </pre>
           )}

@@ -73,20 +73,20 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
     <nav
       className="w-64 min-h-screen border-r flex flex-col"
       style={{
-        background: '#1a202c',
-        borderColor: '#5a67d810',
+        background: '#0c0a1d',
+        borderColor: '#4b3d6610',
       }}
     >
       {/* Logo */}
-      <div className="p-6 border-b" style={{ borderColor: '#5a67d810' }}>
+      <div className="p-6 border-b" style={{ borderColor: '#4b3d6610' }}>
         <Link href="/" className="flex items-center gap-3">
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+            style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
           >
             <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <span className="text-lg font-heading font-bold" style={{ color: '#edf2f7' }}>
+          <span className="text-lg font-heading font-bold" style={{ color: '#e4e4e4' }}>
             SmartTool MVP
           </span>
         </Link>
@@ -104,8 +104,8 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
               onClick={onNavigate}
               className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
               style={{
-                background: active ? '#5a67d820' : 'transparent',
-                color: active ? '#5a67d8' : '#edf2f770',
+                background: active ? '#4b3d6620' : 'transparent',
+                color: active ? '#4b3d66' : '#e4e4e470',
               }}
             >
               <Icon className="w-5 h-5" />
@@ -121,7 +121,7 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
       </div>
 
       {/* User Section */}
-      <div className="p-4 border-t" style={{ borderColor: '#5a67d810' }}>
+      <div className="p-4 border-t" style={{ borderColor: '#4b3d6610' }}>
         {user ? (
           <div className="relative" ref={dropdownRef}>
             <button
@@ -137,23 +137,23 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
               ) : (
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
-                  style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+                  style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
                 >
                   {initials}
                 </div>
               )}
               <div className="flex-1 text-left">
-                <p className="text-sm font-medium truncate" style={{ color: '#edf2f7' }}>
+                <p className="text-sm font-medium truncate" style={{ color: '#e4e4e4' }}>
                   {displayName}
                 </p>
-                <p className="text-xs truncate" style={{ color: '#edf2f750' }}>
+                <p className="text-xs truncate" style={{ color: '#e4e4e450' }}>
                   {user.email}
                 </p>
               </div>
               <ChevronDown
                 className="w-4 h-4 transition-transform"
                 style={{
-                  color: '#edf2f750',
+                  color: '#e4e4e450',
                   transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                 }}
               />
@@ -163,8 +163,8 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
               <div
                 className="absolute bottom-full left-0 right-0 mb-2 rounded-xl border shadow-lg overflow-hidden"
                 style={{
-                  background: '#1a202c',
-                  borderColor: '#5a67d820',
+                  background: '#0c0a1d',
+                  borderColor: '#4b3d6620',
                 }}
               >
                 <button
@@ -182,7 +182,7 @@ export default function DashboardNav({ onNavigate }: { onNavigate?: () => void }
           <Link
             href="/login"
             className="flex items-center gap-3 px-3 py-2 rounded-xl transition-colors hover:opacity-80"
-            style={{ color: '#edf2f770' }}
+            style={{ color: '#e4e4e470' }}
           >
             <LogIn className="w-5 h-5" />
             <span className="text-sm font-medium">{t('nav.signIn')}</span>

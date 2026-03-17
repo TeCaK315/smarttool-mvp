@@ -126,19 +126,19 @@ export default function ReportsPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="p-2 rounded-xl transition-all hover:bg-white/[0.06]">
-            <ArrowLeft className="w-5 h-5" style={{ color: '#edf2f750' }} />
+            <ArrowLeft className="w-5 h-5" style={{ color: '#e4e4e450' }} />
           </Link>
-          <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('reports.title')}</h1>
+          <h1 className="text-xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>{t('reports.title')}</h1>
         </div>
         <div className="flex items-center gap-2">
           <select value={period} onChange={e => setPeriod(e.target.value as Period)}
             className="px-3 py-2 rounded-xl border text-sm cursor-pointer"
-            style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}>
+            style={{ background: '#0c0a1d', borderColor: '#4b3d6615', color: '#e4e4e4' }}>
             {periods.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
           </select>
           <button onClick={exportCSV}
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all hover:bg-white/[0.04]"
-            style={{ borderColor: '#5a67d815', color: '#edf2f7' }}>
+            style={{ borderColor: '#4b3d6615', color: '#e4e4e4' }}>
             <Download className="w-4 h-4" /> CSV
           </button>
         </div>
@@ -146,21 +146,21 @@ export default function ReportsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.totalBilled')}</p>
-          <p className="text-xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalBilled)}</p>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#e4e4e440' }}>{t('reports.totalBilled')}</p>
+          <p className="text-xl font-bold" style={{ color: '#e4e4e4' }}>{formatCurrency(incomeStats.totalBilled)}</p>
         </div>
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.collected')}</p>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#e4e4e440' }}>{t('reports.collected')}</p>
           <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatCurrency(incomeStats.totalPaid)}</p>
         </div>
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.unpaid')}</p>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#e4e4e440' }}>{t('reports.unpaid')}</p>
           <p className="text-xl font-bold" style={{ color: '#f59e0b' }}>{formatCurrency(incomeStats.unpaid)}</p>
         </div>
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.totalTax')}</p>
-          <p className="text-xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalTax)}</p>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#e4e4e440' }}>{t('reports.totalTax')}</p>
+          <p className="text-xl font-bold" style={{ color: '#e4e4e4' }}>{formatCurrency(incomeStats.totalTax)}</p>
         </div>
       </div>
 
@@ -172,7 +172,7 @@ export default function ReportsPage() {
           return (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all"
-              style={{ background: active ? '#5a67d8' : 'transparent', color: active ? '#fff' : '#edf2f750' }}>
+              style={{ background: active ? '#4b3d66' : 'transparent', color: active ? '#fff' : '#e4e4e450' }}>
               <Icon className="w-4 h-4" /> {tab.label}
             </button>
           );
@@ -181,25 +181,25 @@ export default function ReportsPage() {
 
       {/* Income Tab */}
       {activeTab === 'income' && (
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.monthlyBreakdown')}</h3>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#e4e4e4' }}>{t('reports.monthlyBreakdown')}</h3>
           {months.length === 0 ? (
-            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
+            <p className="text-sm py-8 text-center" style={{ color: '#e4e4e450' }}>{t('reports.noData')}</p>
           ) : (
             <div className="space-y-3">
               {months.map(([month, data]) => (
                 <div key={month}>
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span style={{ color: '#edf2f7' }}>{month}</span>
+                    <span style={{ color: '#e4e4e4' }}>{month}</span>
                     <div className="flex gap-4">
-                      <span style={{ color: '#edf2f750' }}>Billed: {formatCurrency(data.billed)}</span>
+                      <span style={{ color: '#e4e4e450' }}>Billed: {formatCurrency(data.billed)}</span>
                       <span style={{ color: '#22c55e' }}>Paid: {formatCurrency(data.paid)}</span>
                     </div>
                   </div>
-                  <div className="h-3 rounded-full overflow-hidden" style={{ background: '#5a67d810' }}>
+                  <div className="h-3 rounded-full overflow-hidden" style={{ background: '#4b3d6610' }}>
                     <div className="h-full rounded-full transition-all" style={{
                       width: (data.billed / maxMonthly * 100) + '%',
-                      background: 'linear-gradient(135deg, #5a67d8, #4a5568)',
+                      background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)',
                     }} />
                   </div>
                 </div>
@@ -211,27 +211,27 @@ export default function ReportsPage() {
 
       {/* Tax Tab */}
       {activeTab === 'tax' && (
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.taxSummary')}</h3>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#e4e4e4' }}>{t('reports.taxSummary')}</h3>
           <div className="space-y-2">
             {filtered.filter(h => h.data?.tax_amount > 0).length === 0 ? (
-              <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
+              <p className="text-sm py-8 text-center" style={{ color: '#e4e4e450' }}>{t('reports.noData')}</p>
             ) : (
               <>
-                <div className="grid grid-cols-3 gap-4 py-2 border-b text-xs font-semibold" style={{ borderColor: '#5a67d810', color: '#edf2f750' }}>
+                <div className="grid grid-cols-3 gap-4 py-2 border-b text-xs font-semibold" style={{ borderColor: '#4b3d6610', color: '#e4e4e450' }}>
                   <span>Invoice</span><span className="text-right">Subtotal</span><span className="text-right">Tax</span>
                 </div>
                 {filtered.filter(h => h.data?.tax_amount > 0).map(item => (
-                  <div key={item.id} className="grid grid-cols-3 gap-4 py-2 text-xs" style={{ borderBottom: '1px solid #5a67d806' }}>
-                    <span style={{ color: '#edf2f7' }}>{item.doc_number || '#' + item.id.substring(0, 6)}</span>
-                    <span className="text-right" style={{ color: '#edf2f770' }}>{formatCurrency(item.data?.subtotal || 0)}</span>
-                    <span className="text-right font-semibold" style={{ color: '#edf2f7' }}>{formatCurrency(item.data?.tax_amount || 0)}</span>
+                  <div key={item.id} className="grid grid-cols-3 gap-4 py-2 text-xs" style={{ borderBottom: '1px solid #4b3d6606' }}>
+                    <span style={{ color: '#e4e4e4' }}>{item.doc_number || '#' + item.id.substring(0, 6)}</span>
+                    <span className="text-right" style={{ color: '#e4e4e470' }}>{formatCurrency(item.data?.subtotal || 0)}</span>
+                    <span className="text-right font-semibold" style={{ color: '#e4e4e4' }}>{formatCurrency(item.data?.tax_amount || 0)}</span>
                   </div>
                 ))}
-                <div className="grid grid-cols-3 gap-4 py-3 border-t text-sm font-bold" style={{ borderColor: '#5a67d820' }}>
-                  <span style={{ color: '#edf2f7' }}>Total</span>
-                  <span className="text-right" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalBilled - incomeStats.totalTax)}</span>
-                  <span className="text-right" style={{ color: '#5a67d8' }}>{formatCurrency(incomeStats.totalTax)}</span>
+                <div className="grid grid-cols-3 gap-4 py-3 border-t text-sm font-bold" style={{ borderColor: '#4b3d6620' }}>
+                  <span style={{ color: '#e4e4e4' }}>Total</span>
+                  <span className="text-right" style={{ color: '#e4e4e4' }}>{formatCurrency(incomeStats.totalBilled - incomeStats.totalTax)}</span>
+                  <span className="text-right" style={{ color: '#4b3d66' }}>{formatCurrency(incomeStats.totalTax)}</span>
                 </div>
               </>
             )}
@@ -241,26 +241,26 @@ export default function ReportsPage() {
 
       {/* Clients Tab */}
       {activeTab === 'clients' && (
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.revenueByClient')}</h3>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#e4e4e4' }}>{t('reports.revenueByClient')}</h3>
           {clientStats.length === 0 ? (
-            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
+            <p className="text-sm py-8 text-center" style={{ color: '#e4e4e450' }}>{t('reports.noData')}</p>
           ) : (
             <div className="space-y-3">
               {clientStats.map((client, i) => {
                 const pct = incomeStats.totalBilled > 0 ? (client.total / incomeStats.totalBilled * 100) : 0;
                 return (
                   <div key={client.name} className="flex items-center gap-4">
-                    <span className="w-6 text-xs font-mono text-right" style={{ color: '#edf2f740' }}>{i + 1}</span>
+                    <span className="w-6 text-xs font-mono text-right" style={{ color: '#e4e4e440' }}>{i + 1}</span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium truncate" style={{ color: '#edf2f7' }}>{client.name}</span>
-                        <span className="text-sm font-semibold ml-2" style={{ color: '#edf2f7' }}>{formatCurrency(client.total)}</span>
+                        <span className="text-sm font-medium truncate" style={{ color: '#e4e4e4' }}>{client.name}</span>
+                        <span className="text-sm font-semibold ml-2" style={{ color: '#e4e4e4' }}>{formatCurrency(client.total)}</span>
                       </div>
-                      <div className="h-2 rounded-full overflow-hidden" style={{ background: '#5a67d810' }}>
-                        <div className="h-full rounded-full" style={{ width: pct + '%', background: '#5a67d8' }} />
+                      <div className="h-2 rounded-full overflow-hidden" style={{ background: '#4b3d6610' }}>
+                        <div className="h-full rounded-full" style={{ width: pct + '%', background: '#4b3d66' }} />
                       </div>
-                      <div className="flex justify-between mt-0.5 text-[10px]" style={{ color: '#edf2f740' }}>
+                      <div className="flex justify-between mt-0.5 text-[10px]" style={{ color: '#e4e4e440' }}>
                         <span>{client.count} invoices</span>
                         <span>{pct.toFixed(0)}% of total</span>
                       </div>

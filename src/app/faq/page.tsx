@@ -30,31 +30,31 @@ export default function FAQPage() {
   });
 
   return (
-    <div className="min-h-screen" style={{ background: '#1a202c' }}>
+    <div className="min-h-screen" style={{ background: '#0c0a1d' }}>
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: '#5a67d8' }}>
+        <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: '#4b3d66' }}>
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
         <div className="flex items-center gap-3 mb-6">
-          <HelpCircle className="w-6 h-6" style={{ color: '#5a67d8' }} />
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('legal.faq')}</h1>
+          <HelpCircle className="w-6 h-6" style={{ color: '#4b3d66' }} />
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>{t('legal.faq')}</h1>
         </div>
         <div className="space-y-2">
           {faqItems.map((item, i) => (
             <div key={i} className="rounded-xl border overflow-hidden"
-              style={{ borderColor: openIndex === i ? '#5a67d820' : '#5a67d808' }}>
+              style={{ borderColor: openIndex === i ? '#4b3d6620' : '#4b3d6608' }}>
               <button onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full flex items-center justify-between p-4 text-left transition-colors hover:bg-white/[0.02]">
-                <span className="text-sm font-medium pr-4" style={{ color: '#edf2f7' }}>{item.question}</span>
+                <span className="text-sm font-medium pr-4" style={{ color: '#e4e4e4' }}>{item.question}</span>
                 <ChevronDown className="w-4 h-4 flex-shrink-0 transition-transform"
-                  style={{ color: '#edf2f750', transform: openIndex === i ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                  style={{ color: '#e4e4e450', transform: openIndex === i ? 'rotate(180deg)' : 'rotate(0deg)' }} />
               </button>
               {openIndex === i && (
                 <div className="px-4 pb-4">
                   {item.answer.split('\n').map((line, j) => {
                     const hasPlaceholder = /\{\{[A-Z_]+\}\}/.test(line);
                     if (!line.trim()) return <br key={j} />;
-                    return <p key={j} className="text-sm mb-1" style={{ color: hasPlaceholder ? '#ef4444' : '#edf2f770' }}>{line}</p>;
+                    return <p key={j} className="text-sm mb-1" style={{ color: hasPlaceholder ? '#ef4444' : '#e4e4e470' }}>{line}</p>;
                   })}
                 </div>
               )}

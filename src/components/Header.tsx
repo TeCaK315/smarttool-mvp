@@ -32,8 +32,8 @@ export default function Header() {
     <header
       className="sticky top-0 z-50 backdrop-blur-xl border-b"
       style={{
-        background: '#1a202cee',
-        borderColor: '#5a67d820',
+        background: '#0c0a1dee',
+        borderColor: '#4b3d6620',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,13 +42,13 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 group">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+              style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
             >
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span
               className="text-lg font-heading font-bold"
-              style={{ color: '#edf2f7' }}
+              style={{ color: '#e4e4e4' }}
             >
               SmartTool MVP
             </span>
@@ -60,7 +60,7 @@ export default function Header() {
               <Link
                 href="/dashboard"
                 className="px-5 py-2 rounded-xl text-sm font-semibold transition-colors"
-                style={{ background: '#5a67d8', color: 'white' }}
+                style={{ background: '#4b3d66', color: 'white' }}
               >
                 Dashboard
               </Link>
@@ -69,14 +69,14 @@ export default function Header() {
                 <Link
                   href="/login"
                   className="px-4 py-2 rounded-xl text-sm font-medium transition-colors hover:opacity-80"
-                  style={{ color: '#edf2f770' }}
+                  style={{ color: '#e4e4e470' }}
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/dashboard"
                   className="px-5 py-2 rounded-xl text-sm font-semibold transition-colors"
-                  style={{ background: '#5a67d8', color: 'white' }}
+                  style={{ background: '#4b3d66', color: 'white' }}
                 >
                   Get Started
                 </Link>

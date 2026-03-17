@@ -5,7 +5,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'SmartTool MVP',
-  description: '',
+  description: 'Optimize Your Supply Chain Effortlessly',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
 };
 

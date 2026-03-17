@@ -45,11 +45,20 @@ export const stripe = new Proxy({} as Stripe, {
 
 export const PLANS = [
   {
-    "name": "Pro",
-    "price": 9.99,
+    "name": "Basic",
+    "price": 19.99,
     "features": [
-      "Безлимитные счета",
-      "Интеграция с платежными системами"
+      "5 reports/month",
+      "Email support"
+    ],
+    "limits": {}
+  },
+  {
+    "name": "Pro",
+    "price": 49.99,
+    "features": [
+      "Unlimited reports",
+      "Priority support"
     ],
     "limits": {}
   }

@@ -93,13 +93,13 @@ export default function HistoryPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="p-2 rounded-xl transition-all hover:bg-white/[0.06]">
-            <ArrowLeft className="w-5 h-5" style={{ color: '#edf2f750' }} />
+            <ArrowLeft className="w-5 h-5" style={{ color: '#e4e4e450' }} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>
               {t('history.title')}
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
+            <p className="text-xs mt-0.5" style={{ color: '#e4e4e440' }}>
               {items.length} {t('dashboard.totalItems')}
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function HistoryPage() {
         <Link
           href="/dashboard/create"
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
+          style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
         >
           <Plus className="w-4 h-4" /> New
         </Link>
@@ -115,24 +115,24 @@ export default function HistoryPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
           <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4" style={{ color: '#5a67d8' }} />
-            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#edf2f750' }}>Total</span>
+            <DollarSign className="w-4 h-4" style={{ color: '#4b3d66' }} />
+            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#e4e4e450' }}>Total</span>
           </div>
-          <p className="text-2xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(totalAmount)}</p>
+          <p className="text-2xl font-bold" style={{ color: '#e4e4e4' }}>{formatCurrency(totalAmount)}</p>
         </div>
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
-            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#edf2f750' }}>Paid</span>
+            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#e4e4e450' }}>Paid</span>
           </div>
           <p className="text-2xl font-bold" style={{ color: '#22c55e' }}>{formatCurrency(paidAmount)}</p>
         </div>
-        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
+        <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle className="w-4 h-4" style={{ color: '#f59e0b' }} />
-            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#edf2f750' }}>Outstanding</span>
+            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#e4e4e450' }}>Outstanding</span>
           </div>
           <p className="text-2xl font-bold" style={{ color: '#f59e0b' }}>{formatCurrency(unpaidAmount)}</p>
         </div>
@@ -141,26 +141,26 @@ export default function HistoryPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#edf2f740' }} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#e4e4e440' }} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('history.searchPlaceholder')}
             className="w-full pl-9 pr-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all"
-            style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
+            style={{ background: '#0c0a1d', borderColor: '#4b3d6615', color: '#e4e4e4' }}
           />
         </div>
         <div className="flex items-center gap-1.5">
-          <Filter className="w-4 h-4" style={{ color: '#edf2f740' }} />
+          <Filter className="w-4 h-4" style={{ color: '#e4e4e440' }} />
           {['all', 'draft', 'sent', 'unpaid', 'paid', 'overdue'].map(status => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
               style={{
-                background: filterStatus === status ? '#5a67d8' : '#5a67d808',
-                color: filterStatus === status ? '#fff' : '#edf2f750',
+                background: filterStatus === status ? '#4b3d66' : '#4b3d6608',
+                color: filterStatus === status ? '#fff' : '#e4e4e450',
               }}
             >
               {status === 'all' ? 'All' : STATUS_LABELS[status]}
@@ -172,12 +172,12 @@ export default function HistoryPage() {
       {/* List */}
       {loading ? (
         <div className="flex items-center justify-center py-10 sm:py-20">
-          <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#5a67d8' }} />
+          <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#4b3d66' }} />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#5a67d820' }}>
-          <FileText className="w-12 h-12 mx-auto mb-3" style={{ color: '#edf2f740' }} />
-          <p className="text-sm" style={{ color: '#edf2f750' }}>
+        <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#4b3d6620' }}>
+          <FileText className="w-12 h-12 mx-auto mb-3" style={{ color: '#e4e4e440' }} />
+          <p className="text-sm" style={{ color: '#e4e4e450' }}>
             {search || filterStatus !== 'all' ? t('msg.noResults') : t('history.noItems')}
           </p>
         </div>
@@ -195,7 +195,7 @@ export default function HistoryPage() {
                 style={{
                   background: deleting === item.id ? '#ef444410' : '#ffffff08',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)',
-                  border: '1px solid #5a67d808',
+                  border: '1px solid #4b3d6608',
                   opacity: deleting === item.id ? 0.5 : 1,
                 }}
               >
@@ -212,7 +212,7 @@ export default function HistoryPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {item.doc_number && (
-                        <span className="text-xs font-mono font-semibold" style={{ color: '#5a67d8' }}>
+                        <span className="text-xs font-mono font-semibold" style={{ color: '#4b3d66' }}>
                           {item.doc_number}
                         </span>
                       )}
@@ -223,10 +223,10 @@ export default function HistoryPage() {
                         {STATUS_LABELS[item.payment_status || 'draft']}
                       </span>
                     </div>
-                    <p className="text-sm font-medium truncate mt-0.5" style={{ color: '#edf2f7' }}>
+                    <p className="text-sm font-medium truncate mt-0.5" style={{ color: '#e4e4e4' }}>
                       {item.input || 'Untitled'}
                     </p>
-                    <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
+                    <p className="text-xs mt-0.5" style={{ color: '#e4e4e440' }}>
                       {new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>
                   </div>
@@ -234,7 +234,7 @@ export default function HistoryPage() {
                   {/* Amount */}
                   {total !== undefined && total > 0 && (
                     <div className="text-right hidden sm:block">
-                      <p className="text-lg font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(total)}</p>
+                      <p className="text-lg font-bold" style={{ color: '#e4e4e4' }}>{formatCurrency(total)}</p>
                     </div>
                   )}
 
@@ -243,7 +243,7 @@ export default function HistoryPage() {
                     value={item.payment_status || 'draft'}
                     onChange={(e) => updateStatus(item.id, e.target.value)}
                     className="hidden sm:block px-2 py-1 rounded-lg text-xs border cursor-pointer"
-                    style={{ background: '#1a202c', borderColor: '#5a67d810', color: '#edf2f770' }}
+                    style={{ background: '#0c0a1d', borderColor: '#4b3d6610', color: '#e4e4e470' }}
                   >
                     {Object.entries(STATUS_LABELS).map(([val, label]) => (
                       <option key={val} value={val}>{label}</option>
@@ -257,14 +257,14 @@ export default function HistoryPage() {
                       className="p-2 rounded-lg transition-colors hover:bg-white/[0.06]"
                       title="View"
                     >
-                      <Eye className="w-4 h-4" style={{ color: '#edf2f750' }} />
+                      <Eye className="w-4 h-4" style={{ color: '#e4e4e450' }} />
                     </button>
                     <button
                       onClick={() => router.push('/dashboard/create?edit=' + item.id)}
                       className="p-2 rounded-lg transition-colors hover:bg-white/[0.06]"
                       title="Edit"
                     >
-                      <Edit3 className="w-4 h-4" style={{ color: '#edf2f750' }} />
+                      <Edit3 className="w-4 h-4" style={{ color: '#e4e4e450' }} />
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}

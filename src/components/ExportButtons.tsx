@@ -108,7 +108,7 @@ export default function ExportButtons({ title, data, filename }: ExportButtonsPr
       onClick={handleDownload}
       disabled={exporting}
       className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-all hover:opacity-80 disabled:opacity-50"
-      style={{ borderColor: '#5a67d820', color: '#edf2f7' }}
+      style={{ borderColor: '#4b3d6620', color: '#e4e4e4' }}
     >
       {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
       Download PDF
