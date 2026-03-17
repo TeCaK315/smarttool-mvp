@@ -37,38 +37,38 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#0c0a1d' }}>
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#1a202c' }}>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-               style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+               style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
             <Sparkles className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-heading font-bold" style={{ color: '#e4e4e4' }}>
+          <h1 className="text-2xl font-heading font-bold" style={{ color: '#edf2f7' }}>
             Вход в SmartTool MVP
           </h1>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm mb-2" style={{ color: '#e4e4e4' }}>Email</label>
+            <label className="block text-sm mb-2" style={{ color: '#edf2f7' }}>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2"
-              style={{ background: '#0c0a1d', borderColor: '#4b3d6640', color: '#e4e4e4' }}
+              style={{ background: '#1a202c', borderColor: '#5a67d840', color: '#edf2f7' }}
               required
             />
           </div>
           <div>
-            <label className="block text-sm mb-2" style={{ color: '#e4e4e4' }}>Пароль</label>
+            <label className="block text-sm mb-2" style={{ color: '#edf2f7' }}>Пароль</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2"
-              style={{ background: '#0c0a1d', borderColor: '#4b3d6640', color: '#e4e4e4' }}
+              style={{ background: '#1a202c', borderColor: '#5a67d840', color: '#edf2f7' }}
               required
             />
           </div>
@@ -79,7 +79,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="w-full py-3 rounded-xl font-semibold transition-colors disabled:opacity-50"
-            style={{ background: '#4b3d66', color: 'white' }}
+            style={{ background: '#5a67d8', color: 'white' }}
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Войти'}
           </button>
@@ -89,15 +89,15 @@ export default function LoginPage() {
           <button
             onClick={handleGoogleLogin}
             className="w-full py-3 rounded-xl font-semibold border transition-colors hover:bg-white/5"
-            style={{ borderColor: '#4b3d6640', color: '#e4e4e4' }}
+            style={{ borderColor: '#5a67d840', color: '#edf2f7' }}
           >
             Войти через Google
           </button>
         </div>
 
-        <p className="mt-6 text-center text-sm" style={{ color: '#e4e4e470' }}>
+        <p className="mt-6 text-center text-sm" style={{ color: '#edf2f770' }}>
           Нет аккаунта?{' '}
-          <Link href="/signup" style={{ color: '#4b3d66' }}>
+          <Link href="/signup" style={{ color: '#5a67d8' }}>
             Зарегистрироваться
           </Link>
         </p>

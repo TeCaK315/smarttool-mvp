@@ -133,7 +133,7 @@ export default function ClientsPage() {
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   const inputClasses = "w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all";
-  const inputStyle = { background: '#0c0a1d', borderColor: '#4b3d6615', color: '#e4e4e4' };
+  const inputStyle = { background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' };
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -141,13 +141,13 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="p-2 rounded-xl transition-all hover:bg-white/[0.06]">
-            <ArrowLeft className="w-5 h-5" style={{ color: '#e4e4e450' }} />
+            <ArrowLeft className="w-5 h-5" style={{ color: '#edf2f750' }} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
               {t('clients.title')}
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: '#e4e4e440' }}>
+            <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
               {clients.length} contact{clients.length !== 1 ? 's' : ''}
             </p>
           </div>
@@ -155,7 +155,7 @@ export default function ClientsPage() {
         <button
           onClick={() => { resetForm(); setShowForm(true); }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}
+          style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
         >
           <Plus className="w-4 h-4" /> {t('clients.addClient')}
         </button>
@@ -163,14 +163,14 @@ export default function ClientsPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#e4e4e440' }} />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#edf2f740' }} />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t('clients.searchPlaceholder')}
           className="w-full pl-9 pr-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all"
-          style={{ background: '#0c0a1d', borderColor: '#4b3d6615', color: '#e4e4e4' }}
+          style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
         />
       </div>
 
@@ -179,43 +179,43 @@ export default function ClientsPage() {
         <div className="lg:col-span-2 space-y-2">
           {/* Add/Edit Form */}
           {showForm && (
-            <div className="rounded-2xl p-5 mb-4" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #4b3d6610' }}>
+            <div className="rounded-2xl p-5 mb-4" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #5a67d810' }}>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-sm font-semibold" style={{ color: '#e4e4e4' }}>
+                <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>
                   {editingId ? t('clients.editClient') : t('clients.addClient')}
                 </h2>
                 <button onClick={resetForm} className="p-1 rounded-lg hover:bg-white/[0.06]">
-                  <X className="w-4 h-4" style={{ color: '#e4e4e450' }} />
+                  <X className="w-4 h-4" style={{ color: '#edf2f750' }} />
                 </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Name *</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Name *</label>
                   <input type="text" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
                     placeholder="John Doe" className={inputClasses} style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Company</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Company</label>
                   <input type="text" value={form.company} onChange={e => setForm(p => ({ ...p, company: e.target.value }))}
                     placeholder="Acme Corp" className={inputClasses} style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Email</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Email</label>
                   <input type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                     placeholder="john@acme.com" className={inputClasses} style={inputStyle} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Phone</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Phone</label>
                   <input type="tel" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
                     placeholder="+1 (555) 123-4567" className={inputClasses} style={inputStyle} />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Address</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Address</label>
                   <input type="text" value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))}
                     placeholder="123 Main St, City, State, ZIP" className={inputClasses} style={inputStyle} />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#e4e4e450' }}>Notes</label>
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#edf2f750' }}>Notes</label>
                   <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
                     placeholder="Payment preferences, special terms..." rows={2}
                     className="w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 resize-none transition-all"
@@ -225,12 +225,12 @@ export default function ClientsPage() {
               <div className="flex gap-2 mt-4">
                 <button onClick={handleSave} disabled={!form.name.trim()}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+                  style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
                   <Save className="w-4 h-4" /> {editingId ? t('create.update') : t('action.save')}
                 </button>
                 <button onClick={resetForm}
                   className="px-4 py-2 rounded-xl text-sm font-medium border"
-                  style={{ borderColor: '#4b3d6615', color: '#e4e4e450' }}>
+                  style={{ borderColor: '#5a67d815', color: '#edf2f750' }}>
                   Cancel
                 </button>
               </div>
@@ -239,18 +239,18 @@ export default function ClientsPage() {
 
           {/* List */}
           {filtered.length === 0 ? (
-            <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#4b3d6620' }}>
-              <User className="w-12 h-12 mx-auto mb-3" style={{ color: '#e4e4e440' }} />
-              <p className="text-sm font-medium mb-1" style={{ color: '#e4e4e4' }}>
+            <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#5a67d820' }}>
+              <User className="w-12 h-12 mx-auto mb-3" style={{ color: '#edf2f740' }} />
+              <p className="text-sm font-medium mb-1" style={{ color: '#edf2f7' }}>
                 {search ? t('msg.noResults') : t('clients.noClients')}
               </p>
-              <p className="text-xs mb-4" style={{ color: '#e4e4e450' }}>
+              <p className="text-xs mb-4" style={{ color: '#edf2f750' }}>
                 {!search && t('clients.addClient')}
               </p>
               {!search && (
                 <button onClick={() => { resetForm(); setShowForm(true); }}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
-                  style={{ background: '#4b3d66' }}>
+                  style={{ background: '#5a67d8' }}>
                   <Plus className="w-4 h-4" /> {t('clients.addClient')}
                 </button>
               )}
@@ -265,31 +265,31 @@ export default function ClientsPage() {
                   onClick={() => setSelectedClient(client)}
                   className="rounded-xl border p-4 cursor-pointer transition-all duration-150 group"
                   style={{
-                    background: isSelected ? '#4b3d6608' : '#ffffff08',
+                    background: isSelected ? '#5a67d808' : '#ffffff08',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)',
-                    border: isSelected ? '1px solid #4b3d6630' : '1px solid #4b3d6608',
+                    border: isSelected ? '1px solid #5a67d830' : '1px solid #5a67d808',
                   }}
                 >
                   <div className="flex items-center gap-4">
                     {/* Avatar */}
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-sm font-bold text-white"
-                      style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+                      style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
                       {client.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()}
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold truncate" style={{ color: '#e4e4e4' }}>{client.name}</p>
+                        <p className="text-sm font-semibold truncate" style={{ color: '#edf2f7' }}>{client.name}</p>
                         {client.company && (
-                          <span className="text-[11px] px-2 py-0.5 rounded-full" style={{ background: '#4b3d6610', color: '#4b3d66' }}>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full" style={{ background: '#5a67d810', color: '#5a67d8' }}>
                             {client.company}
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3 mt-0.5">
                         {client.email && (
-                          <span className="text-xs flex items-center gap-1 truncate" style={{ color: '#e4e4e450' }}>
+                          <span className="text-xs flex items-center gap-1 truncate" style={{ color: '#edf2f750' }}>
                             <Mail className="w-3 h-3" />{client.email}
                           </span>
                         )}
@@ -298,10 +298,10 @@ export default function ClientsPage() {
 
                     {/* Stats */}
                     <div className="hidden sm:block text-right">
-                      <p className="text-sm font-semibold" style={{ color: '#e4e4e4' }}>
+                      <p className="text-sm font-semibold" style={{ color: '#edf2f7' }}>
                         {stats.invoiceCount > 0 ? formatCurrency(stats.total) : '-'}
                       </p>
-                      <p className="text-[11px]" style={{ color: '#e4e4e450' }}>
+                      <p className="text-[11px]" style={{ color: '#edf2f750' }}>
                         {stats.invoiceCount} invoice{stats.invoiceCount !== 1 ? 's' : ''}
                       </p>
                     </div>
@@ -310,11 +310,11 @@ export default function ClientsPage() {
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={(e) => { e.stopPropagation(); createInvoiceForClient(client); }}
                         className="p-2 rounded-lg hover:bg-white/[0.06]" title="New invoice">
-                        <FileText className="w-4 h-4" style={{ color: '#4b3d66' }} />
+                        <FileText className="w-4 h-4" style={{ color: '#5a67d8' }} />
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); startEdit(client); }}
                         className="p-2 rounded-lg hover:bg-white/[0.06]" title="Edit">
-                        <Edit3 className="w-4 h-4" style={{ color: '#e4e4e450' }} />
+                        <Edit3 className="w-4 h-4" style={{ color: '#edf2f750' }} />
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); handleDelete(client.id); }}
                         className="p-2 rounded-lg hover:bg-red-500/10" title="Delete">
@@ -322,7 +322,7 @@ export default function ClientsPage() {
                       </button>
                     </div>
 
-                    <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: '#e4e4e440' }} />
+                    <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: '#edf2f740' }} />
                   </div>
                 </div>
               );
@@ -333,36 +333,36 @@ export default function ClientsPage() {
         {/* Client Detail Panel */}
         <div className="lg:col-span-1">
           {selectedClient ? (
-            <div className="sticky top-20 rounded-2xl p-5 space-y-5" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #4b3d6610' }}>
+            <div className="sticky top-20 rounded-2xl p-5 space-y-5" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #5a67d810' }}>
               {/* Client header */}
               <div className="text-center">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-lg font-bold text-white mb-3"
-                  style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+                  style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
                   {selectedClient.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()}
                 </div>
-                <h3 className="text-base font-semibold" style={{ color: '#e4e4e4' }}>{selectedClient.name}</h3>
+                <h3 className="text-base font-semibold" style={{ color: '#edf2f7' }}>{selectedClient.name}</h3>
                 {selectedClient.company && (
-                  <p className="text-xs mt-0.5" style={{ color: '#e4e4e450' }}>{selectedClient.company}</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#edf2f750' }}>{selectedClient.company}</p>
                 )}
               </div>
 
               {/* Contact info */}
               <div className="space-y-2">
                 {selectedClient.email && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: '#e4e4e470' }}>
-                    <Mail className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#4b3d66' }} />
+                  <div className="flex items-center gap-2 text-xs" style={{ color: '#edf2f770' }}>
+                    <Mail className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5a67d8' }} />
                     <span className="truncate">{selectedClient.email}</span>
                   </div>
                 )}
                 {selectedClient.phone && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: '#e4e4e470' }}>
-                    <Phone className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#4b3d66' }} />
+                  <div className="flex items-center gap-2 text-xs" style={{ color: '#edf2f770' }}>
+                    <Phone className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5a67d8' }} />
                     {selectedClient.phone}
                   </div>
                 )}
                 {selectedClient.address && (
-                  <div className="flex items-center gap-2 text-xs" style={{ color: '#e4e4e470' }}>
-                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#4b3d66' }} />
+                  <div className="flex items-center gap-2 text-xs" style={{ color: '#edf2f770' }}>
+                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5a67d8' }} />
                     <span className="truncate">{selectedClient.address}</span>
                   </div>
                 )}
@@ -372,18 +372,18 @@ export default function ClientsPage() {
               {(() => {
                 const stats = getClientStats(selectedClient.name);
                 return (
-                  <div className="space-y-2 pt-3" style={{ borderTop: '1px solid #4b3d6610' }}>
+                  <div className="space-y-2 pt-3" style={{ borderTop: '1px solid #5a67d810' }}>
                     <div className="flex justify-between text-xs">
-                      <span style={{ color: '#e4e4e450' }}>Total billed</span>
-                      <span className="font-semibold" style={{ color: '#e4e4e4' }}>{formatCurrency(stats.total)}</span>
+                      <span style={{ color: '#edf2f750' }}>Total billed</span>
+                      <span className="font-semibold" style={{ color: '#edf2f7' }}>{formatCurrency(stats.total)}</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span style={{ color: '#e4e4e450' }}>Paid</span>
+                      <span style={{ color: '#edf2f750' }}>Paid</span>
                       <span className="font-semibold" style={{ color: '#22c55e' }}>{formatCurrency(stats.paid)}</span>
                     </div>
                     {stats.outstanding > 0 && (
                       <div className="flex justify-between text-xs">
-                        <span style={{ color: '#e4e4e450' }}>Outstanding</span>
+                        <span style={{ color: '#edf2f750' }}>Outstanding</span>
                         <span className="font-semibold" style={{ color: '#f59e0b' }}>{formatCurrency(stats.outstanding)}</span>
                       </div>
                     )}
@@ -396,8 +396,8 @@ export default function ClientsPage() {
                 const stats = getClientStats(selectedClient.name);
                 if (stats.invoices.length === 0) return null;
                 return (
-                  <div className="pt-3" style={{ borderTop: '1px solid #4b3d6610' }}>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#e4e4e440' }}>
+                  <div className="pt-3" style={{ borderTop: '1px solid #5a67d810' }}>
+                    <p className="text-[11px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#edf2f740' }}>
                       Recent Invoices
                     </p>
                     <div className="space-y-1.5">
@@ -405,14 +405,14 @@ export default function ClientsPage() {
                         <Link key={inv.id} href={'/dashboard/analysis?id=' + inv.id}
                           className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.04] transition-colors">
                           <div>
-                            <p className="text-xs font-mono font-medium" style={{ color: '#e4e4e4' }}>
+                            <p className="text-xs font-mono font-medium" style={{ color: '#edf2f7' }}>
                               {inv.doc_number || inv.id?.substring(0, 8)}
                             </p>
-                            <p className="text-[10px]" style={{ color: '#e4e4e440' }}>
+                            <p className="text-[10px]" style={{ color: '#edf2f740' }}>
                               {new Date(inv.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                             </p>
                           </div>
-                          <span className="text-xs font-semibold" style={{ color: '#e4e4e4' }}>
+                          <span className="text-xs font-semibold" style={{ color: '#edf2f7' }}>
                             {formatCurrency(inv.data?.total || 0)}
                           </span>
                         </Link>
@@ -425,21 +425,21 @@ export default function ClientsPage() {
               {/* Actions */}
               <button onClick={() => createInvoiceForClient(selectedClient)}
                 className="w-full py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+                style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
                 <FileText className="w-4 h-4" /> {t('dashboard.newItem')}
               </button>
 
               {selectedClient.notes && (
-                <div className="pt-3" style={{ borderTop: '1px solid #4b3d6610' }}>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#e4e4e440' }}>Notes</p>
-                  <p className="text-xs" style={{ color: '#e4e4e470' }}>{selectedClient.notes}</p>
+                <div className="pt-3" style={{ borderTop: '1px solid #5a67d810' }}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Notes</p>
+                  <p className="text-xs" style={{ color: '#edf2f770' }}>{selectedClient.notes}</p>
                 </div>
               )}
             </div>
           ) : (
-            <div className="sticky top-20 rounded-2xl p-8 text-center" style={{ background: '#ffffff08', border: '1px solid #4b3d6608' }}>
-              <User className="w-10 h-10 mx-auto mb-3" style={{ color: '#e4e4e440' }} />
-              <p className="text-sm" style={{ color: '#e4e4e450' }}>{t('msg.noData')}</p>
+            <div className="sticky top-20 rounded-2xl p-8 text-center" style={{ background: '#ffffff08', border: '1px solid #5a67d808' }}>
+              <User className="w-10 h-10 mx-auto mb-3" style={{ color: '#edf2f740' }} />
+              <p className="text-sm" style={{ color: '#edf2f750' }}>{t('msg.noData')}</p>
             </div>
           )}
         </div>

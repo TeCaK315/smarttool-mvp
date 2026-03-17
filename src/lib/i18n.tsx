@@ -99,30 +99,43 @@ const translations: Record<Locale, Record<string, string>> = {
 
     // Dashboard
     'dashboard.title': 'Dashboard',
-    'dashboard.totalItems': 'Total Supply Chain Reports',
+    'dashboard.totalItems': 'Total Results',
     'dashboard.totalClients': 'Total Clients',
-    'dashboard.recentItems': 'Recent Supply Chain Reports',
+    'dashboard.recentItems': 'Recent Results',
     'dashboard.quickActions': 'Quick Actions',
-    'dashboard.newItem': 'New Supply Chain Report',
+    'dashboard.newItem': 'New Result',
     'dashboard.viewAll': 'View All',
     'dashboard.last30Days': 'Last 30 Days',
-    'dashboard.noItems': 'No Supply Chain Reports yet. Create your first one!',
+    'dashboard.noItems': 'No Results yet. Create your first one!',
     'dashboard.activityThisMonth': 'This Month',
     'dashboard.inProgress': 'In Progress',
-    
+    'dashboard.revenue': 'Revenue',
+    'dashboard.revenueThisMonth': 'Revenue This Month',
+    'dashboard.outstanding': 'Outstanding',
+    'dashboard.overdue': 'Overdue',
 
     // Create / Form
-    'create.title': 'New Supply Chain Report',
-    'create.editTitle': 'Edit Supply Chain Report',
+    'create.title': 'New Result',
+    'create.editTitle': 'Edit Result',
     'create.details': 'Details',
-    'create.submit': 'Create Supply Chain Report',
-    'create.update': 'Update Supply Chain Report',
+    'create.submit': 'Create Result',
+    'create.update': 'Update Result',
     'create.saveDefault': 'Save as default',
     'create.saved': 'Saved',
     'create.notesPlaceholder': 'Additional notes or comments...',
-    
-    
-    
+    'create.from': 'From (Your Business)',
+    'create.to': 'To (Recipient)',
+    'create.businessName': 'Business Name',
+    'create.clientName': 'Client Name',
+    'create.clientEmail': 'Client Email',
+    'create.clientAddress': 'Client Address',
+    'create.lineItems': 'Line Items',
+    'create.addItem': 'Add Item',
+    'create.itemDescription': 'Item description',
+    'create.taxAmount': 'Tax amount',
+    'create.items': 'Items',
+    'create.paymentTerms': 'Payment Terms',
+    'create.taxRate': 'Tax Rate',
 
     // History
     'history.title': 'History',
@@ -137,7 +150,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'clients.editClient': 'Edit Client',
     'clients.searchPlaceholder': 'Search clients...',
     'clients.noClients': 'No clients yet',
-    'clients.totalItems': 'Total Supply Chain Reports',
+    'clients.totalBilled': 'Total Billed',
+    'clients.totalPaid': 'Total Paid',
+    'clients.invoices': 'invoices',
 
     // Reports
     'reports.title': 'Reports',
@@ -146,8 +161,13 @@ const translations: Record<Locale, Record<string, string>> = {
     'reports.monthlyBreakdown': 'Monthly Breakdown',
     'reports.noData': 'No data for this period',
     'reports.ofTotal': 'of total',
-    'reports.totalCompleted': 'Total Completed',
-    'reports.summary': 'Summary',
+    'reports.totalBilled': 'Total Billed',
+    'reports.collected': 'Collected',
+    'reports.unpaid': 'Unpaid',
+    'reports.totalTax': 'Total Tax',
+    'reports.taxSummary': 'Tax Summary',
+    'reports.revenueByClient': 'Revenue by Client',
+    'reports.billed': 'Billed',
 
     // Settings
     'settings.title': 'Settings',
@@ -157,11 +177,18 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.businessName': 'Business Name',
     'settings.logo': 'Logo',
     'settings.uploadLogo': 'Upload Logo',
-    'settings.docPrefix': 'Supply Chain Report Prefix',
+    'settings.docPrefix': 'Result Prefix',
     'settings.defaultNotes': 'Default Notes',
-    'settings.defaultNotesHint': 'This will appear on every new Supply Chain Report by default.',
+    'settings.defaultNotesHint': 'This will appear on every new Result by default.',
     'settings.logoHint': 'PNG or JPG, max 500KB.',
-    
+    'settings.invoiceDefaults': 'Invoice Defaults',
+    'settings.taxId': 'Tax ID',
+    'settings.invoicePrefix': 'Invoice Prefix',
+    'settings.defaultTaxRate': 'Default Tax Rate',
+    'settings.taxLabel': 'Tax Label',
+    'settings.invoiceNumberPrefix': 'Invoice Number Prefix',
+    'settings.paymentInstructions': 'Payment Instructions',
+    'settings.paymentInstructionsHint': 'These instructions will appear at the bottom of your invoices and PDF exports.',
 
     // Legal
     'legal.privacyPolicy': 'Privacy Policy',
@@ -204,7 +231,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'landing.createFirst': 'Create Your First',
 
     // Payment terms
-    
+    'payment.dueOnReceipt': 'Due on Receipt',
+    'payment.net15': 'Net 15',
+    'payment.net30': 'Net 30',
+    'payment.net60': 'Net 60',
 
     // Stripe / Payment settings
     'settings.stripeConfig': 'Stripe Configuration',
@@ -329,7 +359,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'dashboard.noItems': 'Noch keine Eintr\u00e4ge. Erstellen Sie den ersten!',
     'dashboard.activityThisMonth': 'Diesen Monat',
     'dashboard.inProgress': 'In Bearbeitung',
-    
+    'dashboard.revenue': 'Umsatz',
+    'dashboard.revenueThisMonth': 'Umsatz diesen Monat',
+    'dashboard.outstanding': 'Ausstehend',
+    'dashboard.overdue': '\u00dcberf\u00e4llig',
 
     // Create / Form
     'create.title': 'Neu erstellen',
@@ -340,9 +373,19 @@ const translations: Record<Locale, Record<string, string>> = {
     'create.saveDefault': 'Als Standard speichern',
     'create.saved': 'Gespeichert',
     'create.notesPlaceholder': 'Zus\u00e4tzliche Notizen oder Kommentare...',
-    
-    
-    
+    'create.from': 'Von (Ihr Unternehmen)',
+    'create.to': 'An (Empf\u00e4nger)',
+    'create.businessName': 'Firmenname',
+    'create.clientName': 'Kundenname',
+    'create.clientEmail': 'Kunden-E-Mail',
+    'create.clientAddress': 'Kundenadresse',
+    'create.lineItems': 'Positionen',
+    'create.addItem': 'Position hinzuf\u00fcgen',
+    'create.itemDescription': 'Beschreibung der Position',
+    'create.taxAmount': 'Steuerbetrag',
+    'create.items': 'Positionen',
+    'create.paymentTerms': 'Zahlungsbedingungen',
+    'create.taxRate': 'Steuersatz',
 
     // History
     'history.title': 'Verlauf',
@@ -357,7 +400,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'clients.editClient': 'Kunde bearbeiten',
     'clients.searchPlaceholder': 'Kunden suchen...',
     'clients.noClients': 'Noch keine Kunden',
-    'clients.totalItems': 'Gesamt',
+    'clients.totalBilled': 'Gesamt berechnet',
+    'clients.totalPaid': 'Gesamt bezahlt',
+    'clients.invoices': 'Rechnungen',
 
     // Reports
     'reports.title': 'Berichte',
@@ -366,8 +411,13 @@ const translations: Record<Locale, Record<string, string>> = {
     'reports.monthlyBreakdown': 'Monatliche Aufschl\u00fcsselung',
     'reports.noData': 'Keine Daten f\u00fcr diesen Zeitraum',
     'reports.ofTotal': 'vom Gesamt',
-    'reports.totalCompleted': 'Gesamt abgeschlossen',
-    'reports.summary': '\u00dcbersicht',
+    'reports.totalBilled': 'Gesamt berechnet',
+    'reports.collected': 'Eingegangen',
+    'reports.unpaid': 'Unbezahlt',
+    'reports.totalTax': 'Steuer gesamt',
+    'reports.taxSummary': 'Steuer\u00fcbersicht',
+    'reports.revenueByClient': 'Umsatz nach Kunde',
+    'reports.billed': 'Berechnet',
 
     // Settings
     'settings.title': 'Einstellungen',
@@ -381,7 +431,14 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.defaultNotes': 'Standardnotizen',
     'settings.defaultNotesHint': 'Dies erscheint standardm\u00e4\u00dfig auf jedem neuen Eintrag.',
     'settings.logoHint': 'PNG oder JPG, max 500KB.',
-    
+    'settings.invoiceDefaults': 'Rechnungsstandards',
+    'settings.taxId': 'Steuernummer',
+    'settings.invoicePrefix': 'Rechnungspr\u00e4fix',
+    'settings.defaultTaxRate': 'Standard-Steuersatz',
+    'settings.taxLabel': 'Steuerbezeichnung',
+    'settings.invoiceNumberPrefix': 'Rechnungsnummern-Pr\u00e4fix',
+    'settings.paymentInstructions': 'Zahlungsanweisungen',
+    'settings.paymentInstructionsHint': 'Diese Anweisungen erscheinen am Ende Ihrer Rechnungen und PDF-Exporte.',
 
     // Legal
     'legal.privacyPolicy': 'Datenschutzerkl\u00e4rung',
@@ -424,7 +481,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'landing.createFirst': 'Erstellen Sie Ihr erstes',
 
     // Payment terms
-    
+    'payment.dueOnReceipt': 'Bei Erhalt f\u00e4llig',
+    'payment.net15': 'Netto 15',
+    'payment.net30': 'Netto 30',
+    'payment.net60': 'Netto 60',
 
     // Stripe / Payment settings
     'settings.stripeConfig': 'Stripe-Konfiguration',
@@ -549,7 +609,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'dashboard.noItems': '\u041f\u043e\u043a\u0430 \u043d\u0438\u0447\u0435\u0433\u043e \u043d\u0435\u0442. \u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u043f\u0435\u0440\u0432\u044b\u0439!',
     'dashboard.activityThisMonth': '\u0417\u0430 \u043c\u0435\u0441\u044f\u0446',
     'dashboard.inProgress': '\u0412 \u0440\u0430\u0431\u043e\u0442\u0435',
-    
+    'dashboard.revenue': '\u0414\u043e\u0445\u043e\u0434',
+    'dashboard.revenueThisMonth': '\u0414\u043e\u0445\u043e\u0434 \u0437\u0430 \u043c\u0435\u0441\u044f\u0446',
+    'dashboard.outstanding': '\u041e\u0436\u0438\u0434\u0430\u0435\u0442 \u043e\u043f\u043b\u0430\u0442\u044b',
+    'dashboard.overdue': '\u041f\u0440\u043e\u0441\u0440\u043e\u0447\u0435\u043d\u043e',
 
     // Create / Form
     'create.title': '\u0421\u043e\u0437\u0434\u0430\u0442\u044c',
@@ -560,9 +623,19 @@ const translations: Record<Locale, Record<string, string>> = {
     'create.saveDefault': '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u0430\u043a \u0448\u0430\u0431\u043b\u043e\u043d',
     'create.saved': '\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043e',
     'create.notesPlaceholder': '\u0414\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u0437\u0430\u043c\u0435\u0442\u043a\u0438 \u0438\u043b\u0438 \u043a\u043e\u043c\u043c\u0435\u043d\u0442\u0430\u0440\u0438\u0438...',
-    
-    
-    
+    'create.from': '\u041e\u0442 (\u0412\u0430\u0448 \u0431\u0438\u0437\u043d\u0435\u0441)',
+    'create.to': '\u041a\u043e\u043c\u0443 (\u041f\u043e\u043b\u0443\u0447\u0430\u0442\u0435\u043b\u044c)',
+    'create.businessName': '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043c\u043f\u0430\u043d\u0438\u0438',
+    'create.clientName': '\u0418\u043c\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
+    'create.clientEmail': 'Email \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
+    'create.clientAddress': '\u0410\u0434\u0440\u0435\u0441 \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
+    'create.lineItems': '\u041f\u043e\u0437\u0438\u0446\u0438\u0438',
+    'create.addItem': '\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043f\u043e\u0437\u0438\u0446\u0438\u044e',
+    'create.itemDescription': '\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u043f\u043e\u0437\u0438\u0446\u0438\u0438',
+    'create.taxAmount': '\u0421\u0443\u043c\u043c\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'create.items': '\u041f\u043e\u0437\u0438\u0446\u0438\u0438',
+    'create.paymentTerms': '\u0423\u0441\u043b\u043e\u0432\u0438\u044f \u043e\u043f\u043b\u0430\u0442\u044b',
+    'create.taxRate': '\u0421\u0442\u0430\u0432\u043a\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
 
     // History
     'history.title': '\u0418\u0441\u0442\u043e\u0440\u0438\u044f',
@@ -577,7 +650,9 @@ const translations: Record<Locale, Record<string, string>> = {
     'clients.editClient': '\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043a\u043b\u0438\u0435\u043d\u0442\u0430',
     'clients.searchPlaceholder': '\u041f\u043e\u0438\u0441\u043a \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432...',
     'clients.noClients': '\u041a\u043b\u0438\u0435\u043d\u0442\u043e\u0432 \u043f\u043e\u043a\u0430 \u043d\u0435\u0442',
-    'clients.totalItems': '\u0412\u0441\u0435\u0433\u043e',
+    'clients.totalBilled': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
+    'clients.totalPaid': '\u041e\u043f\u043b\u0430\u0447\u0435\u043d\u043e',
+    'clients.invoices': '\u0441\u0447\u0435\u0442\u043e\u0432',
 
     // Reports
     'reports.title': '\u041e\u0442\u0447\u0451\u0442\u044b',
@@ -586,8 +661,13 @@ const translations: Record<Locale, Record<string, string>> = {
     'reports.monthlyBreakdown': '\u041f\u043e \u043c\u0435\u0441\u044f\u0446\u0430\u043c',
     'reports.noData': '\u041d\u0435\u0442 \u0434\u0430\u043d\u043d\u044b\u0445 \u0437\u0430 \u044d\u0442\u043e\u0442 \u043f\u0435\u0440\u0438\u043e\u0434',
     'reports.ofTotal': '\u043e\u0442 \u043e\u0431\u0449\u0435\u0433\u043e',
-    'reports.totalCompleted': '\u0412\u0441\u0435\u0433\u043e \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e',
-    'reports.summary': '\u0421\u0432\u043e\u0434\u043a\u0430',
+    'reports.totalBilled': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
+    'reports.collected': '\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e',
+    'reports.unpaid': '\u041d\u0435 \u043e\u043f\u043b\u0430\u0447\u0435\u043d\u043e',
+    'reports.totalTax': '\u041d\u0430\u043b\u043e\u0433 \u0438\u0442\u043e\u0433\u043e',
+    'reports.taxSummary': '\u041d\u0430\u043b\u043e\u0433\u043e\u0432\u044b\u0439 \u043e\u0442\u0447\u0451\u0442',
+    'reports.revenueByClient': '\u0414\u043e\u0445\u043e\u0434 \u043f\u043e \u043a\u043b\u0438\u0435\u043d\u0442\u0430\u043c',
+    'reports.billed': '\u0412\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e',
 
     // Settings
     'settings.title': '\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438',
@@ -601,7 +681,14 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.defaultNotes': '\u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u044f \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e',
     'settings.defaultNotesHint': '\u042d\u0442\u043e \u0431\u0443\u0434\u0435\u0442 \u043d\u0430 \u043a\u0430\u0436\u0434\u043e\u043c \u043d\u043e\u0432\u043e\u043c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0435 \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e.',
     'settings.logoHint': 'PNG \u0438\u043b\u0438 JPG, \u043c\u0430\u043a\u0441. 500KB.',
-    
+    'settings.invoiceDefaults': '\u0421\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u044b \u0441\u0447\u0435\u0442\u043e\u0432',
+    'settings.taxId': '\u0418\u041d\u041d',
+    'settings.invoicePrefix': '\u041f\u0440\u0435\u0444\u0438\u043a\u0441 \u0441\u0447\u0451\u0442\u0430',
+    'settings.defaultTaxRate': '\u0421\u0442\u0430\u0432\u043a\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'settings.taxLabel': '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u043b\u043e\u0433\u0430',
+    'settings.invoiceNumberPrefix': '\u041f\u0440\u0435\u0444\u0438\u043a\u0441 \u043d\u043e\u043c\u0435\u0440\u0430 \u0441\u0447\u0451\u0442\u0430',
+    'settings.paymentInstructions': '\u0420\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b \u0434\u043b\u044f \u043e\u043f\u043b\u0430\u0442\u044b',
+    'settings.paymentInstructionsHint': '\u042d\u0442\u0438 \u0440\u0435\u043a\u0432\u0438\u0437\u0438\u0442\u044b \u0431\u0443\u0434\u0443\u0442 \u043e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0442\u044c\u0441\u044f \u0432\u043d\u0438\u0437\u0443 \u0441\u0447\u0435\u0442\u043e\u0432 \u0438 PDF.',
 
     // Legal
     'legal.privacyPolicy': '\u041f\u043e\u043b\u0438\u0442\u0438\u043a\u0430 \u043a\u043e\u043d\u0444\u0438\u0434\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438',
@@ -644,7 +731,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'landing.createFirst': '\u0421\u043e\u0437\u0434\u0430\u0439\u0442\u0435 \u0441\u0432\u043e\u0439 \u043f\u0435\u0440\u0432\u044b\u0439',
 
     // Payment terms
-    
+    'payment.dueOnReceipt': '\u041f\u0440\u0438 \u043f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0438',
+    'payment.net15': '15 \u0434\u043d\u0435\u0439',
+    'payment.net30': '30 \u0434\u043d\u0435\u0439',
+    'payment.net60': '60 \u0434\u043d\u0435\u0439',
 
     // Stripe / Payment settings
     'settings.stripeConfig': '\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430 Stripe',

@@ -21,24 +21,24 @@ export default function TermsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ background: '#0c0a1d' }}>
+    <div className="min-h-screen" style={{ background: '#1a202c' }}>
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: '#4b3d66' }}>
+        <Link href="/" className="inline-flex items-center gap-2 text-sm mb-8 hover:opacity-80 transition-opacity" style={{ color: '#5a67d8' }}>
           <ArrowLeft className="w-4 h-4" /> Back to Home
         </Link>
         <div className="flex items-center gap-3 mb-6">
-          <FileText className="w-6 h-6" style={{ color: '#4b3d66' }} />
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>{t('legal.termsOfService')}</h1>
+          <FileText className="w-6 h-6" style={{ color: '#5a67d8' }} />
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('legal.termsOfService')}</h1>
         </div>
-        <div className="prose prose-sm max-w-none" style={{ color: '#e4e4e470' }}>
+        <div className="prose prose-sm max-w-none" style={{ color: '#edf2f770' }}>
           {content.split('\n').map((line, i) => {
             const hasPlaceholder = /\{\{[A-Z_]+\}\}/.test(line);
-            if (line.startsWith('# ')) return <h1 key={i} className="text-xl font-bold mt-8 mb-4" style={{ color: '#e4e4e4' }}>{line.replace('# ', '')}</h1>;
-            if (line.startsWith('## ')) return <h2 key={i} className="text-lg font-semibold mt-6 mb-3" style={{ color: '#e4e4e4' }}>{line.replace('## ', '')}</h2>;
-            if (line.startsWith('- ')) return <li key={i} className="ml-4 mb-1" style={{ color: hasPlaceholder ? '#ef4444' : '#e4e4e470' }}>{line.replace('- ', '')}</li>;
-            if (line.match(/^\d+\./)) return <h3 key={i} className="text-base font-semibold mt-5 mb-2" style={{ color: '#e4e4e4' }}>{line}</h3>;
+            if (line.startsWith('# ')) return <h1 key={i} className="text-xl font-bold mt-8 mb-4" style={{ color: '#edf2f7' }}>{line.replace('# ', '')}</h1>;
+            if (line.startsWith('## ')) return <h2 key={i} className="text-lg font-semibold mt-6 mb-3" style={{ color: '#edf2f7' }}>{line.replace('## ', '')}</h2>;
+            if (line.startsWith('- ')) return <li key={i} className="ml-4 mb-1" style={{ color: hasPlaceholder ? '#ef4444' : '#edf2f770' }}>{line.replace('- ', '')}</li>;
+            if (line.match(/^\d+\./)) return <h3 key={i} className="text-base font-semibold mt-5 mb-2" style={{ color: '#edf2f7' }}>{line}</h3>;
             if (!line.trim()) return <br key={i} />;
-            return <p key={i} className="mb-2" style={{ color: hasPlaceholder ? '#ef4444' : '#e4e4e470' }}>{line}</p>;
+            return <p key={i} className="mb-2" style={{ color: hasPlaceholder ? '#ef4444' : '#edf2f770' }}>{line}</p>;
           })}
         </div>
       </div>

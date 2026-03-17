@@ -1,20 +1,16 @@
 # SmartTool MVP
 
-Optimize Your Supply Chain Effortlessly
+Сокращение времени на выставление счетов и снижение ошибок благодаря автоматизации и интеграции.
 
 ## Features
 
-- **Automated Data Analysis** — Automatically analyze and report on data inputs.
-- **User-Friendly Interface** — Design an intuitive interface for easy data input and report generation.
-- **GDPR Compliance Feature** — Implement data handling practices that comply with GDPR regulations.
-- **Cost Optimization Suggestions** — Provide actionable suggestions for cost reduction based on data analysis.
+- **Автоматизированное создание счетов** — Система автоматически генерирует счета на основе введенных данных.
+- **Интеграция с популярными платежными системами** — Поддержка интеграции с PayPal, Stripe и другими системами.
 
 ## How It Works
 
-1. **User logs into the platform** — Dashboard with options to input supply chain data
-2. **User inputs supply chain data and parameters** — Form fields for data entry
-3. **User submits data for analysis** — Processing screen with estimated waiting time
-4. **User receives the supply chain report** — Downloadable report with insights and recommendations
+1. **Пользователь открывает приложение и выбирает 'Создать новый счет'.** — Интерфейс для ввода данных о клиенте и счете.
+2. **Пользователь вводит данные и нажимает 'Отправить'.** — Подтверждение о том, что счет успешно создан и отправлен клиенту.
 
 ## Tech Stack
 
@@ -74,8 +70,7 @@ To enable live AI analysis, add your OpenAI API key to `.env.local`.
 
 | Plan | Price | Features |
 |------|-------|----------|
-| Basic | $19.99/mo | 5 reports/month, Email support |
-| Pro | $49.99/mo | Unlimited reports, Priority support |
+| Pro | $9.99/мес | Безлимитные счета, Интеграция с платежными системами |
 
 ## Project Structure
 
@@ -93,7 +88,7 @@ smarttool-mvp/
 │   └── lib/              # Utilities & configurations
 ├── public/               # Static assets
 ├── .env.example          # Environment variables template
-└── package.json          # Dependencies (59 files total)
+└── package.json          # Dependencies (58 files total)
 ```
 
 ## Deployment

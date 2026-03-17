@@ -61,7 +61,7 @@ export function generatePDF(options: PdfOptions, autoDownloadFilename?: string):
   const {
     title,
     subtitle,
-    brandColor = '#4b3d66',
+    brandColor = '#5a67d8',
     generatedBy = 'SmartTool MVP',
     footer,
   } = options;

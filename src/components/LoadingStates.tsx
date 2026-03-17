@@ -24,14 +24,14 @@ export function Spinner({ size = 'md', className = '' }: SpinnerProps) {
           stroke="currentColor"
           strokeWidth="3"
           strokeLinecap="round"
-          style={{ color: '#4b3d6620' }}
+          style={{ color: '#5a67d820' }}
         />
         <path
           d="M12 2a10 10 0 0 1 10 10"
           stroke="currentColor"
           strokeWidth="3"
           strokeLinecap="round"
-          style={{ color: '#4b3d66' }}
+          style={{ color: '#5a67d8' }}
         />
       </svg>
     </div>
@@ -56,7 +56,7 @@ export function Skeleton({ lines = 3, className = '' }: SkeletonProps) {
           className="h-4 rounded-lg animate-pulse"
           style={{
             width: widths[i % widths.length],
-            background: '#4b3d6610',
+            background: '#5a67d810',
           }}
         />
       ))}
@@ -88,20 +88,20 @@ export function EmptyState({
     <div className={`flex flex-col items-center justify-center py-16 px-4 text-center ${className}`}>
       <div
         className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-        style={{ background: '#4b3d6610' }}
+        style={{ background: '#5a67d810' }}
       >
-        <Icon className="w-8 h-8" style={{ color: '#4b3d66' }} />
+        <Icon className="w-8 h-8" style={{ color: '#5a67d8' }} />
       </div>
       <h3
         className="text-lg font-heading font-semibold mb-2"
-        style={{ color: '#e4e4e4' }}
+        style={{ color: '#edf2f7' }}
       >
         {title}
       </h3>
       {description && (
         <p
           className="text-sm max-w-sm mb-6"
-          style={{ color: '#e4e4e450' }}
+          style={{ color: '#edf2f750' }}
         >
           {description}
         </p>
@@ -110,7 +110,7 @@ export function EmptyState({
         <button
           onClick={action.onClick}
           className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors hover:opacity-90"
-          style={{ background: '#4b3d66', color: 'white' }}
+          style={{ background: '#5a67d8', color: 'white' }}
         >
           {action.label}
         </button>

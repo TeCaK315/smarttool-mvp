@@ -92,26 +92,26 @@ export default function LegalEditorPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="p-2 rounded-xl transition-all hover:bg-white/[0.06]">
-            <ArrowLeft className="w-5 h-5" style={{ color: '#e4e4e450' }} />
+            <ArrowLeft className="w-5 h-5" style={{ color: '#edf2f750' }} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold" style={{ fontFamily: "'Cabinet Grotesk', sans-serif", color: '#e4e4e4' }}>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
               {t('legal.editor')}
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: '#e4e4e440' }}>{t('legal.editorSubtitle')}</p>
+            <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>{t('legal.editorSubtitle')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {TABS.find(t => t.id === activeTab) && (
             <Link href={TABS.find(t => t.id === activeTab)!.url} target="_blank"
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border transition-all hover:bg-white/[0.04]"
-              style={{ borderColor: '#4b3d6615', color: '#e4e4e450' }}>
+              style={{ borderColor: '#5a67d815', color: '#edf2f750' }}>
               <Eye className="w-4 h-4" /> Preview
             </Link>
           )}
           <button onClick={handleSave} disabled={saving}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
-            style={{ background: 'linear-gradient(135deg, #4b3d66, #6a5b8a)' }}>
+            style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
             {saved ? 'Saved!' : 'Save All'}
           </button>
@@ -128,7 +128,7 @@ export default function LegalEditorPage() {
           return (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all relative"
-              style={{ background: active ? '#4b3d66' : 'transparent', color: active ? '#fff' : '#e4e4e450' }}>
+              style={{ background: active ? '#5a67d8' : 'transparent', color: active ? '#fff' : '#edf2f750' }}>
               <Icon className="w-4 h-4" />
               <span className="hidden sm:inline">{tab.label}</span>
               {hasUnfilled && (
@@ -155,7 +155,7 @@ export default function LegalEditorPage() {
                   <span className="text-xs font-mono font-bold" style={{ color: '#ef4444' }}>{'{{' + ph + '}}'}</span>
                   <input type="text" placeholder={'Enter ' + ph.toLowerCase().replace(/_/g, ' ')}
                     className="flex-1 text-xs px-2 py-1 rounded border bg-transparent focus:outline-none"
-                    style={{ borderColor: '#ef444430', color: '#e4e4e4' }}
+                    style={{ borderColor: '#ef444430', color: '#edf2f7' }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && (e.target as HTMLInputElement).value) {
                         replaceAll(ph, (e.target as HTMLInputElement).value);
@@ -166,7 +166,7 @@ export default function LegalEditorPage() {
                 </div>
                 {/* Tooltip with hint */}
                 <div className="absolute left-0 bottom-full mb-1 w-72 p-2 rounded-lg text-[11px] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10"
-                  style={{ background: '#ffffff12', color: '#e4e4e470', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #4b3d6615' }}>
+                  style={{ background: '#ffffff12', color: '#edf2f770', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #5a67d815' }}>
                   {PLACEHOLDER_HINTS[ph] || 'Replace this with your actual data'}
                 </div>
               </div>
@@ -179,13 +179,13 @@ export default function LegalEditorPage() {
       )}
 
       {/* Editor */}
-      <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #4b3d6608' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
         <textarea
           ref={textareaRef}
           value={currentContent}
           onChange={(e) => updateContent(e.target.value)}
           className="w-full min-h-[500px] p-5 text-sm font-mono leading-relaxed focus:outline-none resize-y"
-          style={{ background: 'transparent', color: '#e4e4e4', caretColor: '#4b3d66' }}
+          style={{ background: 'transparent', color: '#edf2f7', caretColor: '#5a67d8' }}
           placeholder="Enter your content here. Use ## for headings, ### for subheadings, - for bullet points."
         />
       </div>

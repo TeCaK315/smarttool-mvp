@@ -8,20 +8,11 @@ import { CreditCard, Check, Loader2 } from 'lucide-react';
 
 const PLANS = [
   {
-    "name": "Basic",
-    "price": 19.99,
-    "features": [
-      "5 reports/month",
-      "Email support"
-    ],
-    "limits": {}
-  },
-  {
     "name": "Pro",
-    "price": 49.99,
+    "price": 9.99,
     "features": [
-      "Unlimited reports",
-      "Priority support"
+      "Безлимитные счета",
+      "Интеграция с платежными системами"
     ],
     "limits": {}
   }
@@ -89,27 +80,27 @@ function BillingContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0c0a1d' }}>
-        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#4b3d66' }} />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#1a202c' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#5a67d8' }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-6 md:p-8" style={{ background: '#0c0a1d' }}>
+    <div className="min-h-screen p-6 md:p-8" style={{ background: '#1a202c' }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <CreditCard className="w-8 h-8" style={{ color: '#4b3d66' }} />
-          <h1 className="text-3xl font-heading font-bold" style={{ color: '#e4e4e4' }}>
+          <CreditCard className="w-8 h-8" style={{ color: '#5a67d8' }} />
+          <h1 className="text-3xl font-heading font-bold" style={{ color: '#edf2f7' }}>
             Billing & Plans
           </h1>
         </div>
 
         {success && (
           <div className="mb-6 p-4 rounded-xl border flex items-center gap-3"
-               style={{ background: '#4b3d6610', borderColor: '#4b3d6640' }}>
-            <Check className="w-5 h-5" style={{ color: '#4b3d66' }} />
-            <p style={{ color: '#e4e4e4' }}>
+               style={{ background: '#5a67d810', borderColor: '#5a67d840' }}>
+            <Check className="w-5 h-5" style={{ color: '#5a67d8' }} />
+            <p style={{ color: '#edf2f7' }}>
               Payment successful! Your plan has been upgraded.
             </p>
           </div>
@@ -118,16 +109,16 @@ function BillingContent() {
         {canceled && (
           <div className="mb-6 p-4 rounded-xl border"
                style={{ background: '#ef444410', borderColor: '#ef444440' }}>
-            <p style={{ color: '#e4e4e4' }}>
+            <p style={{ color: '#edf2f7' }}>
               Payment was canceled. No changes were made.
             </p>
           </div>
         )}
 
         <div className="mb-8 p-6 rounded-2xl border"
-             style={{ background: '#4b3d6610', borderColor: '#4b3d6640' }}>
-          <p className="text-sm mb-1" style={{ color: '#e4e4e470' }}>Current Plan</p>
-          <p className="text-2xl font-heading font-bold capitalize" style={{ color: '#e4e4e4' }}>
+             style={{ background: '#5a67d810', borderColor: '#5a67d840' }}>
+          <p className="text-sm mb-1" style={{ color: '#edf2f770' }}>Current Plan</p>
+          <p className="text-2xl font-heading font-bold capitalize" style={{ color: '#edf2f7' }}>
             {currentTier}
           </p>
         </div>
