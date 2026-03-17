@@ -51,7 +51,7 @@ function AnalysisContent() {
   const loadingSteps = [
     'Preparing data...',
     'Processing your request...',
-    'Generating Автоматизированная система выставления...',
+    'Generating Result...',
     'Finalizing...',
   ];
 
@@ -238,7 +238,7 @@ function AnalysisContent() {
         });
       }
 
-      const title = result.title || 'Автоматизированная система выставления';
+      const title = result.title || 'Result';
       const subtitle = result.doc_number ? result.doc_number + (recipient.name ? ' — ' + recipient.name : '') : undefined;
       const doc = generatePDF({ title, subtitle, sections });
       const filename = (result.doc_number || title).replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
@@ -285,7 +285,7 @@ function AnalysisContent() {
         sections.push({ heading: 'Totals', items: ['Total: $' + Number(result.total).toFixed(2)] });
       }
 
-      const title = result.title || 'Автоматизированная система выставления';
+      const title = result.title || 'Result';
       const doc = generatePDF({ title, sections });
       const pdfBase64 = doc.output('datauristring');
 
@@ -294,7 +294,7 @@ function AnalysisContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: emailTo,
-          subject: (result.doc_number || 'Автоматизированная система выставления') + ' from ' + (result.sender?.business_name || 'SmartTool MVP'),
+          subject: (result.doc_number || 'Result') + ' from ' + (result.sender?.business_name || 'SmartTool MVP'),
           body: 'Please find the attached ' + (result.doc_number || 'document') + '.\n\nTotal: $' + (result.total || 0).toFixed(2) + '\n\nThank you!',
           pdf_base64: pdfBase64,
           filename: (result.doc_number || 'document') + '.pdf',
@@ -433,7 +433,7 @@ function AnalysisContent() {
             className="px-5 py-2 rounded-xl text-sm font-medium text-white inline-flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
           >
-            <PlusCircle className="w-4 h-4" /> Create Автоматизированная система выставления
+            <PlusCircle className="w-4 h-4" /> Create Result
           </Link>
         </div>
       </div>
@@ -463,7 +463,7 @@ function AnalysisContent() {
               className="text-xl font-bold"
               style={{ fontFamily: 'Montserrat, sans-serif', color: '#edf2f7' }}
             >
-              {result.title || 'Автоматизированная система выставления'}
+              {result.title || 'Result'}
             </h1>
             {result.subtitle && (
               <p className="text-sm mt-0.5" style={{ color: '#edf2f750' }}>{result.subtitle}</p>
@@ -666,7 +666,7 @@ function DocumentView({ data, inputData }: { data: any; inputData: Record<string
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-              {data.title || 'Автоматизированная система выставления'}
+              {data.title || 'Result'}
             </h2>
             {data.executive_summary && (
               <p className="text-sm mt-1 max-w-lg" style={{ color: '#edf2f770' }}>

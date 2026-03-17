@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Info } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const LEGAL_KEY = 'SmartTool MVP_legal_pages';
 
 export default function AboutPage() {
+  const t = useT();
   const [content, setContent] = useState('');
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function AboutPage() {
         </Link>
         <div className="flex items-center gap-3 mb-6">
           <Info className="w-6 h-6" style={{ color: '#5a67d8' }} />
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>About Us</h1>
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('legal.aboutUs')}</h1>
         </div>
         <div className="prose prose-sm max-w-none" style={{ color: '#edf2f770' }}>
           {content.split('\n').map((line, i) => {

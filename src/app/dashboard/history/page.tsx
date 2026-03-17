@@ -8,6 +8,7 @@ import {
   Plus, Clock, DollarSign, CheckCircle2, AlertCircle, Send,
   XCircle, Loader2,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 interface HistoryItem {
   id: string;
@@ -37,6 +38,7 @@ const HISTORY_KEY = 'SmartTool MVP_history';
 
 export default function HistoryPage() {
   const router = useRouter();
+  const t = useT();
   const [items, setItems] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -95,10 +97,10 @@ export default function HistoryPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-              History
+              {t('history.title')}
             </h1>
             <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
-              {items.length} Автоматизированная система выставленияs total
+              {items.length} {t('dashboard.totalItems')}
             </p>
           </div>
         </div>
@@ -144,7 +146,7 @@ export default function HistoryPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name or number..."
+            placeholder={t('history.searchPlaceholder')}
             className="w-full pl-9 pr-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all"
             style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
           />
@@ -176,7 +178,7 @@ export default function HistoryPage() {
         <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#5a67d820' }}>
           <FileText className="w-12 h-12 mx-auto mb-3" style={{ color: '#edf2f740' }} />
           <p className="text-sm" style={{ color: '#edf2f750' }}>
-            {search || filterStatus !== 'all' ? 'No matching items found' : 'No Автоматизированная система выставленияs yet'}
+            {search || filterStatus !== 'all' ? t('msg.noResults') : t('history.noItems')}
           </p>
         </div>
       ) : (

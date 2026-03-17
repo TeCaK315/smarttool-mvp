@@ -7,6 +7,7 @@ import {
   ArrowLeft, Plus, Search, Edit3, Trash2, User, Mail, MapPin,
   Phone, FileText, DollarSign, ChevronRight, X, Save, Loader2,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 export interface Client {
   id: string;
@@ -24,6 +25,7 @@ const HISTORY_KEY = 'SmartTool MVP_history';
 
 export default function ClientsPage() {
   const router = useRouter();
+  const t = useT();
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -143,7 +145,7 @@ export default function ClientsPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-              Clients
+              {t('clients.title')}
             </h1>
             <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
               {clients.length} contact{clients.length !== 1 ? 's' : ''}
@@ -155,7 +157,7 @@ export default function ClientsPage() {
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
           style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}
         >
-          <Plus className="w-4 h-4" /> Add Client
+          <Plus className="w-4 h-4" /> {t('clients.addClient')}
         </button>
       </div>
 
@@ -166,7 +168,7 @@ export default function ClientsPage() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search clients by name, email, or company..."
+          placeholder={t('clients.searchPlaceholder')}
           className="w-full pl-9 pr-3 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition-all"
           style={{ background: '#1a202c', borderColor: '#5a67d815', color: '#edf2f7' }}
         />
@@ -180,7 +182,7 @@ export default function ClientsPage() {
             <div className="rounded-2xl p-5 mb-4" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #5a67d810' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>
-                  {editingId ? 'Edit Client' : 'New Client'}
+                  {editingId ? t('clients.editClient') : t('clients.addClient')}
                 </h2>
                 <button onClick={resetForm} className="p-1 rounded-lg hover:bg-white/[0.06]">
                   <X className="w-4 h-4" style={{ color: '#edf2f750' }} />
@@ -224,7 +226,7 @@ export default function ClientsPage() {
                 <button onClick={handleSave} disabled={!form.name.trim()}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white disabled:opacity-50"
                   style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
-                  <Save className="w-4 h-4" /> {editingId ? 'Update' : 'Save'}
+                  <Save className="w-4 h-4" /> {editingId ? t('create.update') : t('action.save')}
                 </button>
                 <button onClick={resetForm}
                   className="px-4 py-2 rounded-xl text-sm font-medium border"
@@ -240,16 +242,16 @@ export default function ClientsPage() {
             <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#5a67d820' }}>
               <User className="w-12 h-12 mx-auto mb-3" style={{ color: '#edf2f740' }} />
               <p className="text-sm font-medium mb-1" style={{ color: '#edf2f7' }}>
-                {search ? 'No clients found' : 'No clients yet'}
+                {search ? t('msg.noResults') : t('clients.noClients')}
               </p>
               <p className="text-xs mb-4" style={{ color: '#edf2f750' }}>
-                {search ? 'Try a different search term' : 'Add your first client to get started'}
+                {!search && t('clients.addClient')}
               </p>
               {!search && (
                 <button onClick={() => { resetForm(); setShowForm(true); }}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
                   style={{ background: '#5a67d8' }}>
-                  <Plus className="w-4 h-4" /> Add Client
+                  <Plus className="w-4 h-4" /> {t('clients.addClient')}
                 </button>
               )}
             </div>
@@ -424,7 +426,7 @@ export default function ClientsPage() {
               <button onClick={() => createInvoiceForClient(selectedClient)}
                 className="w-full py-2.5 rounded-xl text-sm font-medium text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
                 style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
-                <FileText className="w-4 h-4" /> New Invoice
+                <FileText className="w-4 h-4" /> {t('dashboard.newItem')}
               </button>
 
               {selectedClient.notes && (
@@ -437,7 +439,7 @@ export default function ClientsPage() {
           ) : (
             <div className="sticky top-20 rounded-2xl p-8 text-center" style={{ background: '#ffffff08', border: '1px solid #5a67d808' }}>
               <User className="w-10 h-10 mx-auto mb-3" style={{ color: '#edf2f740' }} />
-              <p className="text-sm" style={{ color: '#edf2f750' }}>Select a client to view details</p>
+              <p className="text-sm" style={{ color: '#edf2f750' }}>{t('msg.noData')}</p>
             </div>
           )}
         </div>

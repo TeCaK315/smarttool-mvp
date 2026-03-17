@@ -34,7 +34,7 @@ export default function LanguageSwitcher({ compact }: { compact?: boolean } = {}
 
       {open && (
         <div
-          className="absolute right-0 bottom-full mb-1 w-40 rounded-xl border shadow-lg z-50 py-1 overflow-hidden"
+          className="absolute right-0 top-full mt-1 w-40 rounded-xl border shadow-lg z-50 py-1 overflow-hidden"
           style={{ background: '#1a202c', borderColor: '#5a67d820', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)' }}
         >
           {LOCALE_OPTIONS.map(opt => (

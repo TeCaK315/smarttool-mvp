@@ -6,6 +6,7 @@ import {
   Settings, Save, Loader2, Check, LogOut, Building2, Receipt,
   CreditCard, Globe, Hash, Percent, FileText, ImageIcon,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 interface BusinessSettings {
   business_name: string;
@@ -49,6 +50,7 @@ const PAYMENT_TERMS = [
 
 export default function SettingsPage() {
   const router = useRouter();
+  const t = useT();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'business' | 'invoice' | 'payment'>('business');
@@ -141,9 +143,9 @@ export default function SettingsPage() {
   const labelClasses = "block text-xs font-medium mb-1.5";
 
   const tabs = [
-    { id: 'business' as const, label: 'Business', icon: Building2 },
-    { id: 'invoice' as const, label: 'Invoice Defaults', icon: Receipt },
-    { id: 'payment' as const, label: 'Payment', icon: CreditCard },
+    { id: 'business' as const, label: t('settings.business'), icon: Building2 },
+    { id: 'invoice' as const, label: t('settings.invoiceDefaults'), icon: Receipt },
+    { id: 'payment' as const, label: t('settings.payment'), icon: CreditCard },
   ];
 
   return (
@@ -153,7 +155,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-3">
           <Settings className="w-6 h-6" style={{ color: '#5a67d8' }} />
           <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-            Settings
+            {t('settings.title')}
           </h1>
         </div>
         <button
@@ -192,7 +194,7 @@ export default function SettingsPage() {
           {/* Logo */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <ImageIcon className="w-4 h-4" style={{ color: '#5a67d8' }} /> Logo
+              <ImageIcon className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.logo')}
             </h2>
             <div className="flex items-center gap-4">
               {settings.logo_url ? (
@@ -212,7 +214,7 @@ export default function SettingsPage() {
               <div>
                 <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium cursor-pointer border hover:bg-white/[0.04]"
                   style={{ borderColor: '#5a67d815', color: '#edf2f7' }}>
-                  <ImageIcon className="w-4 h-4" /> Upload Logo
+                  <ImageIcon className="w-4 h-4" /> {t('settings.uploadLogo')}
                   <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                 </label>
                 <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>PNG or JPG, max 500KB. Shows on invoices and PDF.</p>
@@ -223,7 +225,7 @@ export default function SettingsPage() {
           {/* Business Details */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <h2 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: '#edf2f7' }}>
-              <Building2 className="w-4 h-4" style={{ color: '#5a67d8' }} /> Business Information
+              <Building2 className="w-4 h-4" style={{ color: '#5a67d8' }} /> {t('settings.business')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -344,7 +346,7 @@ export default function SettingsPage() {
             <button onClick={handleSignOut}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all hover:bg-red-500/10"
               style={{ borderColor: '#ef444430', color: '#ef4444' }}>
-              <LogOut className="w-4 h-4" /> Sign Out
+              <LogOut className="w-4 h-4" /> {t('nav.signOut')}
             </button>
           </div>
         </div>

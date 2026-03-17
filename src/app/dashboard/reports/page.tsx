@@ -6,6 +6,7 @@ import {
   ArrowLeft, BarChart3, DollarSign, Users, Download, Calendar,
   TrendingUp, Percent, FileText, ChevronDown,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const HISTORY_KEY = 'SmartTool MVP_history';
 const CLIENTS_KEY = 'SmartTool MVP_clients';
@@ -13,6 +14,7 @@ const CLIENTS_KEY = 'SmartTool MVP_clients';
 type Period = '7d' | '30d' | '90d' | '12m' | 'all';
 
 export default function ReportsPage() {
+  const t = useT();
   const [history, setHistory] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>('30d');
   const [activeTab, setActiveTab] = useState<'income' | 'tax' | 'clients'>('income');
@@ -105,9 +107,9 @@ export default function ReportsPage() {
   const maxMonthly = Math.max(...months.map(([, d]) => d.billed), 1);
 
   const tabs = [
-    { id: 'income' as const, label: 'Income', icon: DollarSign },
-    { id: 'tax' as const, label: 'Tax', icon: Percent },
-    { id: 'clients' as const, label: 'By Client', icon: Users },
+    { id: 'income' as const, label: t('reports.income'), icon: DollarSign },
+    { id: 'tax' as const, label: t('label.tax'), icon: Percent },
+    { id: 'clients' as const, label: t('reports.byClient'), icon: Users },
   ];
 
   const periods: { value: Period; label: string }[] = [
@@ -126,7 +128,7 @@ export default function ReportsPage() {
           <Link href="/dashboard" className="p-2 rounded-xl transition-all hover:bg-white/[0.06]">
             <ArrowLeft className="w-5 h-5" style={{ color: '#edf2f750' }} />
           </Link>
-          <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>Reports</h1>
+          <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('reports.title')}</h1>
         </div>
         <div className="flex items-center gap-2">
           <select value={period} onChange={e => setPeriod(e.target.value as Period)}
@@ -145,19 +147,19 @@ export default function ReportsPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Total Billed</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.totalBilled')}</p>
           <p className="text-xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalBilled)}</p>
         </div>
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Collected</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.collected')}</p>
           <p className="text-xl font-bold" style={{ color: '#22c55e' }}>{formatCurrency(incomeStats.totalPaid)}</p>
         </div>
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Unpaid</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.unpaid')}</p>
           <p className="text-xl font-bold" style={{ color: '#f59e0b' }}>{formatCurrency(incomeStats.unpaid)}</p>
         </div>
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>Total Tax</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: '#edf2f740' }}>{t('reports.totalTax')}</p>
           <p className="text-xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(incomeStats.totalTax)}</p>
         </div>
       </div>
@@ -180,9 +182,9 @@ export default function ReportsPage() {
       {/* Income Tab */}
       {activeTab === 'income' && (
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Monthly Breakdown</h3>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.monthlyBreakdown')}</h3>
           {months.length === 0 ? (
-            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>No data for this period</p>
+            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
           ) : (
             <div className="space-y-3">
               {months.map(([month, data]) => (
@@ -210,10 +212,10 @@ export default function ReportsPage() {
       {/* Tax Tab */}
       {activeTab === 'tax' && (
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Tax Summary</h3>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.taxSummary')}</h3>
           <div className="space-y-2">
             {filtered.filter(h => h.data?.tax_amount > 0).length === 0 ? (
-              <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>No tax data for this period</p>
+              <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-4 py-2 border-b text-xs font-semibold" style={{ borderColor: '#5a67d810', color: '#edf2f750' }}>
@@ -240,9 +242,9 @@ export default function ReportsPage() {
       {/* Clients Tab */}
       {activeTab === 'clients' && (
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Revenue by Client</h3>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('reports.revenueByClient')}</h3>
           {clientStats.length === 0 ? (
-            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>No client data for this period</p>
+            <p className="text-sm py-8 text-center" style={{ color: '#edf2f750' }}>{t('reports.noData')}</p>
           ) : (
             <div className="space-y-3">
               {clientStats.map((client, i) => {

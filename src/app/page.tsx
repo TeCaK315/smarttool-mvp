@@ -224,11 +224,11 @@ export default function LandingPage() {
               backgroundClip: 'text',
             }}
           >
-            .
+            Smart Result for Your Business
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl mb-14 max-w-2xl mx-auto leading-relaxed font-light" style={{ color: '#edf2f760' }}>
-            Get your Автоматизированная система выставления in &lt; 2 минут. Save time, reduce errors.
+            Get your Result in &lt; 2 минут. Save time, reduce errors.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -406,7 +406,7 @@ export default function LandingPage() {
               Three simple steps
             </h2>
             <p className="text-base md:text-lg" style={{ color: '#edf2f750' }}>
-              Get your Автоматизированная система выставления in &lt; 2 минут
+              Get your Result in &lt; 2 минут
             </p>
           </div>
           <div className="relative">
@@ -555,7 +555,7 @@ export default function LandingPage() {
                 className="group inline-flex items-center gap-2.5 px-10 py-4 rounded-2xl font-semibold text-white text-lg transition-all duration-300 hover:scale-[1.03]"
                 style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 40px #5a67d830, 0 8px 32px #5a67d820' }}
               >
-                Create Your First Автоматизированная система выставления
+                Create Your First Result
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>

@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, HelpCircle, ChevronDown } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const LEGAL_KEY = 'SmartTool MVP_legal_pages';
 
 export default function FAQPage() {
+  const t = useT();
   const [content, setContent] = useState('');
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -35,7 +37,7 @@ export default function FAQPage() {
         </Link>
         <div className="flex items-center gap-3 mb-6">
           <HelpCircle className="w-6 h-6" style={{ color: '#5a67d8' }} />
-          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>FAQ</h1>
+          <h1 className="text-2xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>{t('legal.faq')}</h1>
         </div>
         <div className="space-y-2">
           {faqItems.map((item, i) => (

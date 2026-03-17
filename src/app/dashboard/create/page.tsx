@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Trash2, Loader2, FileText, Download, Save, Building2, User, Edit3 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const CURRENCIES = [
   { code: 'USD', symbol: '$', label: 'USD ($)' },
@@ -66,6 +67,7 @@ function getNextDocNumber(): string {
 
 export default function CreatePage() {
   const router = useRouter();
+  const t = useT();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
 
@@ -305,7 +307,7 @@ export default function CreatePage() {
         </Link>
         <div className="flex-1">
           <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-            {editMode ? <><Edit3 className="w-4 h-4 inline mr-2" />Edit Автоматизированная система выставления</> : 'New Автоматизированная система выставления'}
+            {editMode ? <><Edit3 className="w-4 h-4 inline mr-2" />{t('create.editTitle')}</> : t('create.title')}
           </h1>
           <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>
             {docNumber && <span className="font-mono">{docNumber}</span>}
@@ -324,7 +326,7 @@ export default function CreatePage() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Building2 className="w-4 h-4" style={{ color: '#5a67d8' }} />
-                  <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>From</h2>
+                  <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{t('label.from')}</h2>
                 </div>
                 <button
                   onClick={saveSenderProfile}
@@ -377,7 +379,7 @@ export default function CreatePage() {
             <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
               <div className="flex items-center gap-2 mb-4">
                 <User className="w-4 h-4" style={{ color: '#f6ad55' }} />
-                <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>To</h2>
+                <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{t('label.to')}</h2>
               </div>
               <div className="space-y-3">
                 <div className="relative">
@@ -455,7 +457,7 @@ export default function CreatePage() {
 
           {/* ─── Document Details ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-            <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Details</h2>
+            <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('create.details')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className={labelClasses} style={{ color: '#edf2f750' }}>Number</label>
@@ -535,13 +537,13 @@ export default function CreatePage() {
           {/* ─── Line items ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>Items</h2>
+              <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{t('create.lineItems')}</h2>
               <button
                 onClick={addItem}
                 className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl transition-all hover:scale-[1.03]"
                 style={{ color: '#5a67d8', background: '#5a67d810' }}
               >
-                <Plus className="w-3.5 h-3.5" /> Add Item
+                <Plus className="w-3.5 h-3.5" /> {t('create.addItem')}
               </button>
             </div>
 
@@ -612,7 +614,7 @@ export default function CreatePage() {
 
           {/* ─── Notes ─── */}
           <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-            <h2 className="text-sm font-semibold mb-3" style={{ color: '#edf2f7' }}>Notes</h2>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: '#edf2f7' }}>{t('label.notes')}</h2>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
@@ -629,7 +631,7 @@ export default function CreatePage() {
           <div className="sticky top-20 space-y-5">
             {/* Totals */}
             <div className="rounded-2xl p-5" style={{ background: '#ffffff12', boxShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2)', border: '1px solid #5a67d810' }}>
-              <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Summary</h2>
+              <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('label.total')}</h2>
 
               {/* Mini preview */}
               {(sender.business_name || recipient.name) && (
@@ -693,9 +695,9 @@ export default function CreatePage() {
               style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)', boxShadow: '0 0 24px #5a67d820' }}
             >
               {submitting ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> {editMode ? 'Saving...' : 'Generating...'}</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> {t('msg.processing')}</>
               ) : (
-                <><FileText className="w-4 h-4" /> {editMode ? 'Save Changes' : 'Generate Автоматизированная система выставления'}</>
+                <><FileText className="w-4 h-4" /> {editMode ? t('create.update') : t('create.submit')}</>
               )}
             </button>
 
@@ -704,7 +706,7 @@ export default function CreatePage() {
               className="block w-full py-2.5 rounded-xl text-sm font-medium text-center border transition-all duration-200 hover:bg-white/[0.04]"
               style={{ borderColor: '#5a67d815', color: '#edf2f750' }}
             >
-              Cancel
+              {t('action.cancel')}
             </Link>
           </div>
         </div>

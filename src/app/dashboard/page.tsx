@@ -8,6 +8,7 @@ import {
   AlertCircle, CheckCircle2, Users, BarChart3, ArrowUpRight,
   ArrowDownRight, Loader2, Copy,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 interface HistoryItem {
   id: string;
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const t = useT();
 
   useEffect(() => {
     try {
@@ -129,14 +131,13 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold" style={{ fontFamily: 'Montserrat, sans-serif', color: '#edf2f7' }}>
-            Dashboard
+            {t('dashboard.title')}
           </h1>
-          <p className="text-sm mt-1" style={{ color: '#edf2f750' }}>Сокращение времени на выставление счетов и снижение ошибок благодаря автоматизации и интеграции.</p>
         </div>
         <Link href="/dashboard/create"
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
           style={{ background: 'linear-gradient(135deg, #5a67d8, #4a5568)' }}>
-          <Plus className="w-4 h-4" /> New Автоматизированная система выставления
+          <Plus className="w-4 h-4" /> {t('dashboard.newItem')}
         </Link>
       </div>
 
@@ -155,7 +156,7 @@ export default function DashboardPage() {
             )}
           </div>
           <p className="text-2xl font-bold" style={{ color: '#edf2f7' }}>{formatCurrency(stats.thisMonthRevenue)}</p>
-          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>Revenue this month</p>
+          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('dashboard.revenueThisMonth')}</p>
         </div>
 
         {/* Outstanding */}
@@ -166,7 +167,7 @@ export default function DashboardPage() {
           <p className="text-2xl font-bold" style={{ color: stats.outstandingAmount > 0 ? '#f59e0b' : '#edf2f7' }}>
             {formatCurrency(stats.outstandingAmount)}
           </p>
-          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>Outstanding</p>
+          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('dashboard.outstanding')}</p>
         </div>
 
         {/* Total invoices */}
@@ -175,7 +176,7 @@ export default function DashboardPage() {
             <FileText className="w-4 h-4" style={{ color: '#4a5568' }} />
           </div>
           <p className="text-2xl font-bold" style={{ color: '#edf2f7' }}>{stats.totalInvoices}</p>
-          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>Total Автоматизированная система выставленияs</p>
+          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('dashboard.totalItems')}</p>
         </div>
 
         {/* Clients */}
@@ -184,7 +185,7 @@ export default function DashboardPage() {
             <Users className="w-4 h-4" style={{ color: '#f6ad55' }} />
           </div>
           <p className="text-2xl font-bold" style={{ color: '#edf2f7' }}>{stats.clientCount}</p>
-          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>Clients</p>
+          <p className="text-[11px] mt-1" style={{ color: '#edf2f740' }}>{t('dashboard.totalClients')}</p>
         </div>
       </div>
 
@@ -194,7 +195,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" style={{ color: '#5a67d8' }} />
-              <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>Revenue (Last 30 days)</h2>
+              <h2 className="text-sm font-semibold" style={{ color: '#edf2f7' }}>{t('dashboard.last30Days')}</h2>
             </div>
             <span className="text-lg font-bold" style={{ color: '#5a67d8' }}>{formatCurrency(stats.paidAmount)}</span>
           </div>
@@ -211,14 +212,14 @@ export default function DashboardPage() {
             ))}
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-[10px]" style={{ color: '#edf2f740' }}>30 days ago</span>
-            <span className="text-[10px]" style={{ color: '#edf2f740' }}>Today</span>
+            <span className="text-[10px]" style={{ color: '#edf2f740' }}>30d</span>
+            <span className="text-[10px]" style={{ color: '#edf2f740' }}>{t('label.date')}</span>
           </div>
         </div>
 
         {/* ─── Quick Actions (right col) ─── */}
         <div className="rounded-2xl p-5" style={{ background: '#ffffff08', boxShadow: '0 1px 2px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.15)', border: '1px solid #5a67d808' }}>
-          <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>Quick Actions</h2>
+          <h2 className="text-sm font-semibold mb-4" style={{ color: '#edf2f7' }}>{t('dashboard.quickActions')}</h2>
           <div className="space-y-2">
             <Link href="/dashboard/create"
               className="flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-white/[0.04] group"
@@ -226,7 +227,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#5a67d815' }}>
                 <Plus className="w-4 h-4" style={{ color: '#5a67d8' }} />
               </div>
-              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>New Автоматизированная система выставления</span>
+              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>{t('dashboard.newItem')}</span>
               <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100" style={{ color: '#edf2f740' }} />
             </Link>
             <Link href="/dashboard/clients"
@@ -235,7 +236,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#f6ad5515' }}>
                 <Users className="w-4 h-4" style={{ color: '#f6ad55' }} />
               </div>
-              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>Clients</span>
+              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>{t('nav.clients')}</span>
               <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100" style={{ color: '#edf2f740' }} />
             </Link>
             <Link href="/dashboard/reports"
@@ -244,7 +245,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#4a556815' }}>
                 <BarChart3 className="w-4 h-4" style={{ color: '#4a5568' }} />
               </div>
-              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>Reports</span>
+              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>{t('nav.reports')}</span>
               <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100" style={{ color: '#edf2f740' }} />
             </Link>
             <Link href="/dashboard/history"
@@ -253,7 +254,7 @@ export default function DashboardPage() {
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#f59e0b15' }}>
                 <Clock className="w-4 h-4" style={{ color: '#f59e0b' }} />
               </div>
-              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>History</span>
+              <span className="text-sm font-medium flex-1" style={{ color: '#edf2f7' }}>{t('nav.history')}</span>
               <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100" style={{ color: '#edf2f740' }} />
             </Link>
           </div>
@@ -266,7 +267,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 mb-3">
             <AlertCircle className="w-4 h-4" style={{ color: '#ef4444' }} />
             <h3 className="text-sm font-semibold" style={{ color: '#ef4444' }}>
-              {overdue.length} Overdue Автоматизированная система выставленияs
+              {overdue.length} {t('dashboard.overdue')}
             </h3>
           </div>
           <div className="space-y-2">
@@ -289,10 +290,10 @@ export default function DashboardPage() {
       {/* ─── Recent Items ─── */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold" style={{ color: '#edf2f7' }}>Recent Автоматизированная система выставленияs</h2>
+          <h2 className="text-base font-semibold" style={{ color: '#edf2f7' }}>{t('dashboard.recentItems')}</h2>
           {history.length > 5 && (
             <Link href="/dashboard/history" className="text-xs font-medium flex items-center gap-1" style={{ color: '#5a67d8' }}>
-              View all <ArrowRight className="w-3 h-3" />
+              {t('dashboard.viewAll')} <ArrowRight className="w-3 h-3" />
             </Link>
           )}
         </div>
@@ -304,12 +305,11 @@ export default function DashboardPage() {
         ) : recent.length === 0 ? (
           <div className="rounded-xl border border-dashed p-10 text-center" style={{ borderColor: '#5a67d820' }}>
             <FileText className="w-12 h-12 mx-auto mb-3" style={{ color: '#edf2f740' }} />
-            <h3 className="text-base font-semibold mb-1" style={{ color: '#edf2f7' }}>No Автоматизированная система выставленияs yet</h3>
-            <p className="text-sm mb-4" style={{ color: '#edf2f750' }}>Create your first Автоматизированная система выставления to get started.</p>
+            <h3 className="text-base font-semibold mb-1" style={{ color: '#edf2f7' }}>{t('dashboard.noItems')}</h3>
             <Link href="/dashboard/create"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
+              className="inline-flex items-center gap-2 px-4 py-2 mt-3 rounded-xl text-sm font-medium text-white"
               style={{ background: '#5a67d8' }}>
-              <Plus className="w-4 h-4" /> New Автоматизированная система выставления
+              <Plus className="w-4 h-4" /> {t('dashboard.newItem')}
             </Link>
           </div>
         ) : (
@@ -347,7 +347,7 @@ export default function DashboardPage() {
                   )}
 
                   {/* Duplicate button */}
-                  <button onClick={() => handleDuplicate(item)} title="Duplicate"
+                  <button onClick={() => handleDuplicate(item)} title={t('action.duplicate')}
                     className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/[0.06]">
                     <Copy className="w-3.5 h-3.5" style={{ color: '#edf2f750' }} />
                   </button>

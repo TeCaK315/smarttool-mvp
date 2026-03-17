@@ -6,6 +6,7 @@ import {
   ArrowLeft, Save, Check, Loader2, Shield, FileText, Info,
   HelpCircle, AlertTriangle, Eye,
 } from 'lucide-react';
+import { useT } from '@/lib/i18n';
 
 const LEGAL_KEY = 'SmartTool MVP_legal_pages';
 
@@ -35,6 +36,7 @@ const DEFAULTS: Record<string, string> = {
 };
 
 export default function LegalEditorPage() {
+  const t = useT();
   const [pages, setPages] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState('privacy');
   const [saving, setSaving] = useState(false);
@@ -94,9 +96,9 @@ export default function LegalEditorPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold" style={{ fontFamily: "'Montserrat', sans-serif", color: '#edf2f7' }}>
-              Legal Pages Editor
+              {t('legal.editor')}
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>Edit your Privacy Policy, Terms, About, and FAQ</p>
+            <p className="text-xs mt-0.5" style={{ color: '#edf2f740' }}>{t('legal.editorSubtitle')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
