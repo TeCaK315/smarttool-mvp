@@ -170,7 +170,6 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.invoicePrefix': 'Invoice Prefix',
     'settings.defaultTaxRate': 'Default Tax Rate',
     'settings.taxLabel': 'Tax Label',
-    'settings.defaultNotes': 'Default Notes',
 
     // Legal
     'legal.privacyPolicy': 'Privacy Policy',
@@ -419,7 +418,6 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.invoicePrefix': 'Rechnungspr\u00e4fix',
     'settings.defaultTaxRate': 'Standard-Steuersatz',
     'settings.taxLabel': 'Steuerbezeichnung',
-    'settings.defaultNotes': 'Standardnotizen',
 
     // Legal
     'legal.privacyPolicy': 'Datenschutzerkl\u00e4rung',
@@ -668,7 +666,6 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.invoicePrefix': '\u041f\u0440\u0435\u0444\u0438\u043a\u0441 \u0441\u0447\u0451\u0442\u0430',
     'settings.defaultTaxRate': '\u0421\u0442\u0430\u0432\u043a\u0430 \u043d\u0430\u043b\u043e\u0433\u0430',
     'settings.taxLabel': '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0430\u043b\u043e\u0433\u0430',
-    'settings.defaultNotes': '\u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u044f \u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e',
 
     // Legal
     'legal.privacyPolicy': '\u041f\u043e\u043b\u0438\u0442\u0438\u043a\u0430 \u043a\u043e\u043d\u0444\u0438\u0434\u0435\u043d\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438',
