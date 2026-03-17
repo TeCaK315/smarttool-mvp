@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Trash2, Send, Save, User, Building2, FileText, Calculator } from 'lucide-react';
-import { Spinner } from '@/components/LoadingStates';
-import { generatePDF } from '@/lib/pdf-generator';
+import { Plus, Trash2, Send, Save, FileText } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { generatePDF } from '@/lib/pdf-generator';
 
 interface InvoiceItem {
   id: string;
@@ -17,8 +16,8 @@ interface InvoiceItem {
 interface ClientData {
   name: string;
   email: string;
-  company: string;
   address: string;
+  phone?: string;
 }
 
 interface InvoiceData {
@@ -30,7 +29,7 @@ interface InvoiceData {
   subtotal: number;
   tax: number;
   total: number;
-  notes: string;
+  notes?: string;
 }
 
 interface InvoiceFormProps {
@@ -39,449 +38,406 @@ interface InvoiceFormProps {
 
 export default function InvoiceForm({ onInvoiceCreated }: InvoiceFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [isSending, setIsSending] = useState(false);
-  const [invoice, setInvoice] = useState<InvoiceData>({
+  const [client, setClient] = useState<ClientData>({
+    name: '',
+    email: '',
+    address: '',
+    phone: ''
+  });
+  
+  const [items, setItems] = useState<InvoiceItem[]>([
+    { id: crypto.randomUUID(), description: '', quantity: 1, rate: 0, amount: 0 }
+  ]);
+  
+  const [invoiceDetails, setInvoiceDetails] = useState({
     invoiceNumber: `INV-${Date.now()}`,
     date: new Date().toISOString().split('T')[0],
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    client: {
-      name: '',
-      email: '',
-      company: '',
-      address: ''
-    },
-    items: [{
-      id: crypto.randomUUID(),
-      description: '',
-      quantity: 1,
-      rate: 0,
-      amount: 0
-    }],
-    subtotal: 0,
     tax: 0,
-    total: 0,
     notes: ''
   });
 
-  const calculateTotals = (items: InvoiceItem[]) => {
-    const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
-    const tax = subtotal * 0.1; // 10% налог
-    const total = subtotal + tax;
-    return { subtotal, tax, total };
-  };
-
-  const updateItem = (id: string, field: keyof InvoiceItem, value: string | number) => {
-    const updatedItems = invoice.items.map(item => {
-      if (item.id === id) {
-        const updatedItem = { ...item, [field]: value };
-        if (field === 'quantity' || field === 'rate') {
-          updatedItem.amount = updatedItem.quantity * updatedItem.rate;
-        }
-        return updatedItem;
-      }
-      return item;
-    });
-
-    const totals = calculateTotals(updatedItems);
-    setInvoice(prev => ({
-      ...prev,
-      items: updatedItems,
-      ...totals
-    }));
-  };
-
   const addItem = () => {
-    const newItem: InvoiceItem = {
+    setItems([...items, {
       id: crypto.randomUUID(),
       description: '',
       quantity: 1,
       rate: 0,
       amount: 0
-    };
-    setInvoice(prev => ({
-      ...prev,
-      items: [...prev.items, newItem]
-    }));
+    }]);
   };
 
   const removeItem = (id: string) => {
-    if (invoice.items.length === 1) return;
-    
-    const updatedItems = invoice.items.filter(item => item.id !== id);
-    const totals = calculateTotals(updatedItems);
-    setInvoice(prev => ({
-      ...prev,
-      items: updatedItems,
-      ...totals
+    if (items.length > 1) {
+      setItems(items.filter(item => item.id !== id));
+    }
+  };
+
+  const updateItem = (id: string, field: keyof InvoiceItem, value: string | number) => {
+    setItems(items.map(item => {
+      if (item.id === id) {
+        const updated = { ...item, [field]: value };
+        if (field === 'quantity' || field === 'rate') {
+          updated.amount = updated.quantity * updated.rate;
+        }
+        return updated;
+      }
+      return item;
     }));
   };
 
-  const saveInvoice = async () => {
+  const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
+  const taxAmount = subtotal * (invoiceDetails.tax / 100);
+  const total = subtotal + taxAmount;
+
+  const saveInvoice = async (shouldSend = false) => {
+    if (!client.name || !client.email || items.some(item => !item.description)) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
     setIsLoading(true);
+    
     try {
       const supabase = createClient();
-      const { data: { user } } = supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       
-      if (!user) throw new Error('Пользователь не авторизован');
+      if (!user) {
+        alert('Please log in to create invoices');
+        return;
+      }
 
+      const invoiceData: InvoiceData = {
+        invoiceNumber: invoiceDetails.invoiceNumber,
+        date: invoiceDetails.date,
+        dueDate: invoiceDetails.dueDate,
+        client,
+        items,
+        subtotal,
+        tax: taxAmount,
+        total,
+        notes: invoiceDetails.notes
+      };
+
+      // Save to database
       const { error } = await supabase
         .from('invoices')
         .insert({
           user_id: user.id,
-          invoice_number: invoice.invoiceNumber,
-          client_data: invoice.client,
-          items: invoice.items,
-          subtotal: invoice.subtotal,
-          tax: invoice.tax,
-          total: invoice.total,
-          due_date: invoice.dueDate,
-          notes: invoice.notes,
-          status: 'draft'
+          invoice_number: invoiceData.invoiceNumber,
+          client_name: client.name,
+          client_email: client.email,
+          client_address: client.address,
+          client_phone: client.phone,
+          items: items,
+          subtotal: subtotal,
+          tax: taxAmount,
+          total: total,
+          due_date: invoiceDetails.dueDate,
+          notes: invoiceDetails.notes,
+          status: shouldSend ? 'sent' : 'draft'
         });
 
       if (error) throw error;
 
-      onInvoiceCreated?.(invoice);
-      alert('Счет успешно сохранен!');
-    } catch (error) {
-      console.error('Ошибка сохранения:', error);
-      alert('Ошибка при сохранении счета');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const sendInvoice = async () => {
-    if (!invoice.client.email) {
-      alert('Укажите email клиента для отправки');
-      return;
-    }
-
-    setIsSending(true);
-    try {
-      // Сначала сохраняем счет
-      await saveInvoice();
-
-      // Генерируем PDF
-      const pdfDoc = generatePDF({
-        title: `Счет ${invoice.invoiceNumber}`,
-        subtitle: `Дата: ${new Date(invoice.date).toLocaleDateString('ru-RU')}`,
-        sections: [
-          {
-            heading: 'Информация о клиенте',
-            content: `${invoice.client.name}\n${invoice.client.company}\n${invoice.client.address}`
-          },
-          {
-            heading: 'Позиции',
-            table: {
-              headers: ['Описание', 'Кол-во', 'Цена', 'Сумма'],
-              rows: invoice.items.map(item => [
-                item.description,
-                item.quantity.toString(),
-                `${item.rate.toFixed(2)} ₽`,
-                `${item.amount.toFixed(2)} ₽`
-              ]),
-              alignRight: [2, 3]
-            }
-          },
-          {
-            content: `Подытог: ${invoice.subtotal.toFixed(2)} ₽\nНалог: ${invoice.tax.toFixed(2)} ₽\nИтого: ${invoice.total.toFixed(2)} ₽`
-          }
-        ],
-        brandColor: '#5a67d8'
-      });
-
-      // Отправляем email
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: invoice.client.email,
-          subject: `Счет ${invoice.invoiceNumber}`,
-          body: `Здравствуйте, ${invoice.client.name}!\n\nВо вложении счет ${invoice.invoiceNumber} на сумму ${invoice.total.toFixed(2)} ₽.\n\nСрок оплаты: ${new Date(invoice.dueDate).toLocaleDateString('ru-RU')}\n\nС уважением`
-        })
-      });
-
-      if (!response.ok) throw new Error('Ошибка отправки email');
-
-      alert('Счет успешно отправлен клиенту!');
-    } catch (error) {
-      console.error('Ошибка отправки:', error);
-      alert('Ошибка при отправке счета');
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  const downloadPDF = () => {
-    generatePDF({
-      title: `Счет ${invoice.invoiceNumber}`,
-      subtitle: `Дата: ${new Date(invoice.date).toLocaleDateString('ru-RU')}`,
-      sections: [
+      // Generate PDF
+      const pdfSections = [
         {
-          heading: 'Информация о клиенте',
-          content: `${invoice.client.name}\n${invoice.client.company}\n${invoice.client.address}`
+          heading: 'Bill To:',
+          content: `${client.name}\n${client.email}\n${client.address}${client.phone ? '\n' + client.phone : ''}`
         },
         {
-          heading: 'Позиции',
+          heading: 'Invoice Details',
           table: {
-            headers: ['Описание', 'Кол-во', 'Цена', 'Сумма'],
-            rows: invoice.items.map(item => [
+            headers: ['Description', 'Qty', 'Rate', 'Amount'],
+            rows: items.map(item => [
               item.description,
               item.quantity.toString(),
-              `${item.rate.toFixed(2)} ₽`,
-              `${item.amount.toFixed(2)} ₽`
+              `$${item.rate.toFixed(2)}`,
+              `$${item.amount.toFixed(2)}`
             ]),
             alignRight: [2, 3]
           }
         },
         {
-          content: `Подытог: ${invoice.subtotal.toFixed(2)} ₽\nНалог: ${invoice.tax.toFixed(2)} ₽\nИтого: ${invoice.total.toFixed(2)} ₽`
+          content: `Subtotal: $${subtotal.toFixed(2)}\nTax: $${taxAmount.toFixed(2)}\nTotal: $${total.toFixed(2)}`
         }
-      ],
-      brandColor: '#5a67d8'
-    }, `invoice-${invoice.invoiceNumber}.pdf`);
+      ];
+
+      if (invoiceDetails.notes) {
+        pdfSections.push({
+          heading: 'Notes',
+          content: invoiceDetails.notes
+        });
+      }
+
+      generatePDF({
+        title: `Invoice ${invoiceDetails.invoiceNumber}`,
+        subtitle: `Date: ${invoiceDetails.date} | Due: ${invoiceDetails.dueDate}`,
+        sections: pdfSections,
+        brandColor: '#5a67d8'
+      }, `invoice-${invoiceDetails.invoiceNumber}.pdf`);
+
+      // Send email if requested
+      if (shouldSend) {
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: client.email,
+            subject: `Invoice ${invoiceDetails.invoiceNumber}`,
+            body: `Dear ${client.name},\n\nPlease find attached your invoice ${invoiceDetails.invoiceNumber} for $${total.toFixed(2)}.\n\nDue date: ${invoiceDetails.dueDate}\n\nThank you for your business!`
+          })
+        });
+      }
+
+      onInvoiceCreated?.(invoiceData);
+      
+      // Reset form
+      setClient({ name: '', email: '', address: '', phone: '' });
+      setItems([{ id: crypto.randomUUID(), description: '', quantity: 1, rate: 0, amount: 0 }]);
+      setInvoiceDetails({
+        ...invoiceDetails,
+        invoiceNumber: `INV-${Date.now()}`,
+        notes: ''
+      });
+
+      alert(shouldSend ? 'Invoice created and sent successfully!' : 'Invoice saved successfully!');
+      
+    } catch (error) {
+      console.error('Error saving invoice:', error);
+      alert('Failed to save invoice. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-800 rounded-lg">
+    <div className="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-lg p-6">
       <div className="flex items-center gap-3 mb-6">
         <FileText className="w-6 h-6 text-blue-400" />
-        <h2 className="text-2xl font-bold text-gray-100">Создание счета</h2>
+        <h2 className="text-2xl font-bold text-gray-100">Create Invoice</h2>
       </div>
 
-      {/* Основная информация */}
+      {/* Invoice Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Номер счета
+            Invoice Number
           </label>
           <input
             type="text"
-            value={invoice.invoiceNumber}
-            onChange={(e) => setInvoice(prev => ({ ...prev, invoiceNumber: e.target.value }))}
-            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+            value={invoiceDetails.invoiceNumber}
+            onChange={(e) => setInvoiceDetails({...invoiceDetails, invoiceNumber: e.target.value})}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Дата
+            Date
           </label>
           <input
             type="date"
-            value={invoice.date}
-            onChange={(e) => setInvoice(prev => ({ ...prev, date: e.target.value }))}
-            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+            value={invoiceDetails.date}
+            onChange={(e) => setInvoiceDetails({...invoiceDetails, date: e.target.value})}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
-            Срок оплаты
+            Due Date
           </label>
           <input
             type="date"
-            value={invoice.dueDate}
-            onChange={(e) => setInvoice(prev => ({ ...prev, dueDate: e.target.value }))}
-            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+            value={invoiceDetails.dueDate}
+            onChange={(e) => setInvoiceDetails({...invoiceDetails, dueDate: e.target.value})}
+            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      {/* Информация о клиенте */}
+      {/* Client Information */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <User className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-gray-100">Информация о клиенте</h3>
-        </div>
+        <h3 className="text-lg font-semibold text-gray-100 mb-4">Client Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Имя клиента
+              Client Name *
             </label>
             <input
               type="text"
-              value={invoice.client.name}
-              onChange={(e) => setInvoice(prev => ({
-                ...prev,
-                client: { ...prev.client, name: e.target.value }
-              }))}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+              value={client.name}
+              onChange={(e) => setClient({...client, name: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Email
+              Email *
             </label>
             <input
               type="email"
-              value={invoice.client.email}
-              onChange={(e) => setInvoice(prev => ({
-                ...prev,
-                client: { ...prev.client, email: e.target.value }
-              }))}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+              value={client.email}
+              onChange={(e) => setClient({...client, email: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Компания
+              Address
             </label>
-            <input
-              type="text"
-              value={invoice.client.company}
-              onChange={(e) => setInvoice(prev => ({
-                ...prev,
-                client: { ...prev.client, company: e.target.value }
-              }))}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+            <textarea
+              value={client.address}
+              onChange={(e) => setClient({...client, address: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={2}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Адрес
+              Phone
             </label>
             <input
-              type="text"
-              value={invoice.client.address}
-              onChange={(e) => setInvoice(prev => ({
-                ...prev,
-                client: { ...prev.client, address: e.target.value }
-              }))}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+              type="tel"
+              value={client.phone}
+              onChange={(e) => setClient({...client, phone: e.target.value})}
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
       </div>
 
-      {/* Позиции счета */}
+      {/* Invoice Items */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-blue-400" />
-            <h3 className="text-lg font-semibold text-gray-100">Позиции счета</h3>
-          </div>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-100">Invoice Items</h3>
           <button
             onClick={addItem}
             className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Добавить позицию
+            Add Item
           </button>
         </div>
 
         <div className="space-y-3">
-          {invoice.items.map((item) => (
-            <div key={item.id} className="grid grid-cols-12 gap-3 items-center bg-gray-700 p-3 rounded-md">
-              <div className="col-span-5">
+          {items.map((item, index) => (
+            <div key={item.id} className="grid grid-cols-1 md:grid-cols-5 gap-3 p-3 bg-gray-700 rounded-md">
+              <div className="md:col-span-2">
                 <input
                   type="text"
-                  placeholder="Описание услуги/товара"
+                  placeholder="Description *"
                   value={item.description}
                   onChange={(e) => updateItem(item.id, 'description', e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 />
               </div>
-              <div className="col-span-2">
+              <div>
                 <input
                   type="number"
-                  placeholder="Кол-во"
+                  placeholder="Qty"
                   value={item.quantity}
                   onChange={(e) => updateItem(item.id, 'quantity', parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="0.01"
                 />
               </div>
-              <div className="col-span-2">
+              <div>
                 <input
                   type="number"
-                  placeholder="Цена"
+                  placeholder="Rate"
                   value={item.rate}
                   onChange={(e) => updateItem(item.id, 'rate', parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="0.01"
                 />
               </div>
-              <div className="col-span-2">
-                <div className="px-3 py-2 bg-gray-600 border border-gray-500 rounded-md text-gray-100">
-                  {item.amount.toFixed(2)} ₽
-                </div>
-              </div>
-              <div className="col-span-1">
-                <button
-                  onClick={() => removeItem(item.id)}
-                  disabled={invoice.items.length === 1}
-                  className="p-2 text-red-400 hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-100 font-medium">
+                  ${item.amount.toFixed(2)}
+                </span>
+                {items.length > 1 && (
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Итоги */}
+      {/* Totals */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Calculator className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-gray-100">Итоги</h3>
-        </div>
-        <div className="bg-gray-700 p-4 rounded-md max-w-sm ml-auto">
-          <div className="flex justify-between mb-2">
-            <span className="text-gray-300">Подытог:</span>
-            <span className="text-gray-100">{invoice.subtotal.toFixed(2)} ₽</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span className="text-gray-300">Налог (10%):</span>
-            <span className="text-gray-100">{invoice.tax.toFixed(2)} ₽</span>
-          </div>
-          <div className="border-t border-gray-600 pt-2">
-            <div className="flex justify-between font-bold">
-              <span className="text-gray-100">Итого:</span>
-              <span className="text-blue-400 text-lg">{invoice.total.toFixed(2)} ₽</span>
+        <div className="flex justify-end">
+          <div className="w-full md:w-1/3 space-y-2">
+            <div className="flex justify-between">
+              <span className="text-gray-300">Subtotal:</span>
+              <span className="text-gray-100 font-medium">${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-300">Tax:</span>
+                <input
+                  type="number"
+                  value={invoiceDetails.tax}
+                  onChange={(e) => setInvoiceDetails({...invoiceDetails, tax: parseFloat(e.target.value) || 0})}
+                  className="w-16 px-2 py-1 bg-gray-700 border border-gray-600 rounded text-gray-100 text-sm"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                />
+                <span className="text-gray-300">%</span>
+              </div>
+              <span className="text-gray-100 font-medium">${taxAmount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-bold border-t border-gray-600 pt-2">
+              <span className="text-gray-100">Total:</span>
+              <span className="text-orange-400">${total.toFixed(2)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Примечания */}
+      {/* Notes */}
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Примечания
+          Notes
         </label>
         <textarea
-          value={invoice.notes}
-          onChange={(e) => setInvoice(prev => ({ ...prev, notes: e.target.value }))}
+          value={invoiceDetails.notes}
+          onChange={(e) => setInvoiceDetails({...invoiceDetails, notes: e.target.value})}
+          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           rows={3}
-          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:ring-2 focus:ring-blue-500"
-          placeholder="Дополнительная информация..."
+          placeholder="Additional notes or payment terms..."
         />
       </div>
 
-      {/* Действия */}
-      <div className="flex flex-wrap gap-3">
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-3 justify-end">
         <button
-          onClick={saveInvoice}
+          onClick={() => saveInvoice(false)}
           disabled={isLoading}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors disabled:opacity-50"
         >
-          {isLoading ? <Spinner size="sm" /> : <Save className="w-4 h-4" />}
-          Сохранить
+          <Save className="w-4 h-4" />
+          Save Draft
         </button>
-        
         <button
-          onClick={downloadPDF}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+          onClick={() => saveInvoice(true)}
+          disabled={isLoading}
+          className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
         >
-          <FileText className="w-4 h-4" />
-          Скачать PDF
-        </button>
-        
-        <button
-          onClick={sendInvoice}
-          disabled={isSending || !invoice.client.email}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-        >
-          {isSending ? <Spinner size="sm" /> : <Send className="w-4 h-4" />}
-          Отправить клиенту
+          <Send className="w-4 h-4" />
+          Create & Send
         </button>
       </div>
     </div>
